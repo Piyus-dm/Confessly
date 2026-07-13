@@ -28,10 +28,11 @@ def get_notifications():
             ''', (request.profile_id,))
             items = cursor.fetchall()
 
-            # mix in global admin announcements
+            # mix in global admin announcements, only the currently active one(s)
             cursor.execute('''
                 SELECT id, title, message, created_at
                 FROM announcements
+                WHERE is_active = 1
                 ORDER BY created_at DESC LIMIT 10
             ''')
             for a in cursor.fetchall():

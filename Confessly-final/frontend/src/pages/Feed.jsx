@@ -21,7 +21,10 @@ export default function Feed() {
     const [cursor,     setCursor]    = useState(null);
     const [hasMore,    setHasMore]   = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
     const [query,      setQuery]     = useState('');
+    const [userResults, setUserResults] = useState([]);
+    const [showUserResults, setShowUserResults] = useState(false);
     const [sharePost,  setSharePost] = useState(null);
     const [previewUrl, setPreviewUrl] = useState('');
     const [reportMeta, setReportMeta] = useState(null);
@@ -30,6 +33,18 @@ export default function Feed() {
     const composeFileRef = useRef(null);
     const debounceRef    = useRef(null);
     const sentinelRef    = useRef(null);
+    const searchBoxRef   = useRef(null);
+
+    // close the user results dropdown on an outside click
+    useEffect(() => {
+        function handleOutsideClick(e) {
+            if (searchBoxRef.current && !searchBoxRef.current.contains(e.target)) {
+                setShowUserResults(false);
+            }
+        }
+        document.addEventListener('mousedown', handleOutsideClick);
+        return () => document.removeEventListener('mousedown', handleOutsideClick);
+    }, []);
 
     // grab latest announcement on mount
     useEffect(() => {
@@ -80,6 +95,29 @@ export default function Feed() {
 
     useEffect(() => { loadFeed(true); }, []);
 
+    // home nav dispatches this when you click it while already on /feed
+    useEffect(() => {
+        async function handleHomeRefresh() {
+            if (refreshing) return;
+            setRefreshing(true);
+            try {
+                const res  = await fetch(apiUrl('/api/feed?limit=10'), { credentials: 'include' });
+                const data = await res.json();
+                if (res.ok) {
+                    setPosts(data.data);
+                    setCursor(data.nextCursor || null);
+                    setHasMore(!!data.nextCursor);
+                }
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setRefreshing(false);
+            }
+        }
+        window.addEventListener('confessly:home-refresh', handleHomeRefresh);
+        return () => window.removeEventListener('confessly:home-refresh', handleHomeRefresh);
+    }, [refreshing]);
+
     // clean up the preview blob url
     useEffect(() => {
         return () => { if (previewUrl) URL.revokeObjectURL(previewUrl); };
@@ -106,6 +144,7 @@ export default function Feed() {
     function handleSearchChange(e) {
         const val = e.target.value;
         setQuery(val);
+        setShowUserResults(val.trim().length > 0);
         clearTimeout(debounceRef.current);
         debounceRef.current = setTimeout(() => {
             async function search() {
@@ -119,7 +158,16 @@ export default function Feed() {
                 } catch (err) { console.error(err); }
                 setLoading(false);
             }
+            async function searchUsers() {
+                if (!val.trim()) { setUserResults([]); return; }
+                try {
+                    const res  = await fetch(apiUrl('/api/users/search?q=' + encodeURIComponent(val)), { credentials: 'include' });
+                    const data = await res.json();
+                    if (res.ok) setUserResults(data.data || []);
+                } catch (err) { console.error(err); }
+            }
             search();
+            searchUsers();
         }, 300);
     }
 
@@ -207,6 +255,12 @@ export default function Feed() {
                 <NotificationBell />
             </header>
 
+            {refreshing && (
+                <div className="feed-refresh-bar">
+                    <span className="feed-refresh-spinner" />
+                </div>
+            )}
+
             <main className="feed-container">
                 {/* announcement banner */}
                 {announcement && (
@@ -241,7 +295,7 @@ export default function Feed() {
                     </div>
                 )}
 
-                <div className="feed-search-box">
+                <div className="feed-search-box" style={{ position: 'relative' }} ref={searchBoxRef}>
                     <svg width="15" height="15" fill="none" stroke="currentColor"
                         strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
                         <circle cx="11" cy="11" r="7" />
@@ -249,11 +303,43 @@ export default function Feed() {
                     </svg>
                     <input
                         type="text"
-                        placeholder="Search confessions…"
+                        placeholder="Search confessions or people…"
                         value={query}
                         onChange={handleSearchChange}
+                        onFocus={() => setShowUserResults(query.trim().length > 0)}
                         className="premium-input"
                     />
+
+                    {showUserResults && userResults.length > 0 && (
+                        <div className="user-search-dropdown">
+                            {userResults.map(u => (
+                                <div
+                                    key={u.profile_id}
+                                    className="user-search-row"
+                                    onClick={() => {
+                                        setShowUserResults(false);
+                                        navigate(`/user/${u.profile_id}`);
+                                    }}
+                                >
+                                    {u.avatar_url ? (
+                                        <img src={u.avatar_url} alt="" className="user-search-avatar" />
+                                    ) : (
+                                        <div className="user-search-avatar user-search-avatar-placeholder">
+                                            <svg width="14" height="14" fill="none" stroke="currentColor"
+                                                strokeWidth="1.8" viewBox="0 0 24 24">
+                                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                                <circle cx="12" cy="7" r="4" />
+                                            </svg>
+                                        </div>
+                                    )}
+                                    <div className="user-search-info">
+                                        <span className="user-search-handle">@{u.anonymous_handle}</span>
+                                        {u.bio && <span className="user-search-bio">{u.bio}</span>}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
                 <div className="quick-post-box">

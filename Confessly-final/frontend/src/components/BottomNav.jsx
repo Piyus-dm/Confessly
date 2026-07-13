@@ -13,12 +13,21 @@ export default function BottomNav() {
         };
     }
 
+    // clicking home while already on the feed scrolls up and asks the feed to refetch
+    function handleHomeClick(e) {
+        if (pathname === '/feed') {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            window.dispatchEvent(new CustomEvent('confessly:home-refresh'));
+        }
+    }
+
     return (
         <nav className="bottom-nav" aria-label="Main navigation">
 
             <NavLink
                 to="/feed"
-                onClick={scrollTopIfActive('/feed')}
+                onClick={handleHomeClick}
                 className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}
             >
                 <span className="nav-icon-wrap">

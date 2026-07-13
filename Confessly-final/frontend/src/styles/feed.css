@@ -22,6 +22,33 @@
   color:           var(--text-primary);
 }
 
+/* facebook-style pull/refresh loader shown under the header */
+.feed-refresh-bar {
+  position:         fixed;
+  top:               var(--header-h);
+  left:              0;
+  width:             100%;
+  display:           flex;
+  justify-content:   center;
+  padding:           10px 0;
+  z-index:           190;
+  pointer-events:    none;
+}
+
+.feed-refresh-spinner {
+  width:             22px;
+  height:            22px;
+  border-radius:     50%;
+  border:            3px dotted var(--text-muted, #888);
+  border-top-color:  #6366f1;
+  border-right-color: #6366f1;
+  animation:         feed-refresh-spin 0.8s linear infinite;
+}
+
+@keyframes feed-refresh-spin {
+  to { transform: rotate(360deg); }
+}
+
 /* feed container */
 .feed-container {
   max-width:        var(--max-w);
@@ -54,6 +81,69 @@
   background: transparent;
   font-size:  0.875rem;
   color:      var(--text-primary);
+}
+
+/* matched-username dropdown under the search bar */
+.user-search-dropdown {
+  position:         absolute;
+  top:               calc(100% + 6px);
+  left:              0;
+  right:             0;
+  background-color:  #0a0a0a;
+  border:            1px solid #1a1a1a;
+  border-radius:     10px;
+  overflow:          hidden;
+  z-index:           50;
+  box-shadow:        0 8px 24px rgba(0,0,0,0.4);
+}
+
+.user-search-row {
+  display:          flex;
+  align-items:      center;
+  gap:              10px;
+  padding:          10px 14px;
+  cursor:           pointer;
+  transition:       background-color var(--t) ease;
+}
+.user-search-row:hover,
+.user-search-row:focus-visible {
+  background-color: rgba(255,255,255,0.04);
+}
+.user-search-row + .user-search-row {
+  border-top: 1px solid #1a1a1a;
+}
+
+.user-search-avatar {
+  width:            32px;
+  height:           32px;
+  border-radius:    50%;
+  object-fit:       cover;
+  flex-shrink:      0;
+}
+.user-search-avatar-placeholder {
+  display:          flex;
+  align-items:      center;
+  justify-content:  center;
+  background-color: #151515;
+  color:            var(--text-muted);
+}
+
+.user-search-info {
+  display:          flex;
+  flex-direction:   column;
+  min-width:        0;
+}
+.user-search-handle {
+  font-size:        0.85rem;
+  font-weight:      600;
+  color:            var(--text-primary);
+}
+.user-search-bio {
+  font-size:        0.72rem;
+  color:            var(--text-muted);
+  overflow:         hidden;
+  text-overflow:    ellipsis;
+  white-space:      nowrap;
 }
 .feed-search-box input::placeholder { color: var(--text-muted); }
 

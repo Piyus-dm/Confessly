@@ -11,6 +11,41 @@ from helpers import (
 bp = Blueprint('users', __name__)
 
 
+@bp.route('/api/users/search', methods=['GET'])
+@require_auth
+def search_users():
+    try:
+        q = request.args.get('q', '').strip()
+        if not q:
+            return jsonify({'status': 'success', 'data': []}), 200
+
+        conn = cursor = None
+        try:
+            conn = get_db()
+            cursor = conn.cursor(dictionary=True)
+            cursor.execute('''
+                SELECT pr.id AS profile_id, pr.anonymous_handle, pr.avatar_url, pr.bio, pr.is_private
+                FROM profiles pr
+                JOIN users u ON u.id = pr.user_id
+                WHERE LOWER(pr.anonymous_handle) LIKE LOWER(%s)
+                  AND u.is_shadowbanned = 0
+                  AND pr.user_id NOT IN (SELECT blocked_id FROM blocked_users WHERE blocker_id = %s)
+                  AND pr.user_id NOT IN (SELECT blocker_id FROM blocked_users WHERE blocked_id = %s)
+                ORDER BY pr.anonymous_handle ASC
+                LIMIT 10
+            ''', (f'%{q}%', request.user_id, request.user_id))
+            return jsonify({'status': 'success', 'data': serialize_dates(cursor.fetchall())}), 200
+        except mysql.connector.Error as err:
+            print(f'[db-error] {request.path}: {err}')
+            return jsonify({'status': 'error', 'message': 'A database error occurred'}), 500
+        finally:
+            if cursor: cursor.close()
+            if conn: conn.close()
+    except Exception as e:
+        print(f'[error] {request.path}: {e}')
+        return jsonify({'status': 'error', 'message': 'An internal error occurred'}), 500
+
+
 @bp.route('/api/users/block', methods=['POST'])
 @require_auth
 def block_user():

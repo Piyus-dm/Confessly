@@ -22,7 +22,8 @@ export default function NotificationBell() {
 
     useEffect(() => {
         fetchUnread();
-        const interval = setInterval(fetchUnread, 15000);
+        // short interval so follows/likes/comments land as close to instant as we can get without websockets
+        const interval = setInterval(fetchUnread, 4000);
         return () => clearInterval(interval);
     }, []);
 

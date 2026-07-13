@@ -450,7 +450,7 @@ def get_hybrid_feed():
                 AND (u.is_shadowbanned = 0 OR p.profile_id = %s)
                 AND {BLOCKED_FILTER}
                 {time_clause}
-                ORDER BY p.trending_score DESC, p.created_at DESC
+                ORDER BY p.created_at DESC
                 LIMIT %s
             ''', followed_params)
             followed_posts = cursor.fetchall()
@@ -473,12 +473,13 @@ def get_hybrid_feed():
                     AND (u.is_shadowbanned = 0 OR p.profile_id = %s)
                     AND {BLOCKED_FILTER}
                     {time_clause}
-                    ORDER BY p.trending_score DESC, p.created_at DESC
+                    ORDER BY p.created_at DESC
                     LIMIT %s
                 ''', global_params)
                 global_posts = cursor.fetchall()
 
             combined = list(followed_posts) + list(global_posts)
+            combined.sort(key=lambda p: p['created_at'], reverse=True)
             next_cursor = str(combined[-1]['created_at']) if len(combined) >= limit else None
 
             return jsonify({'status': 'success', 'data': serialize_dates(combined), 'nextCursor': next_cursor}), 200

@@ -101,8 +101,8 @@ export default function NotificationPanel({ onClose, onMarkRead }) {
     const [notifs, setNotifs] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    async function load() {
-        setLoading(true);
+    async function load(showSpinner = true) {
+        if (showSpinner) setLoading(true);
         try {
             const res = await apiFetch('/api/notifications');
             if (res.ok) {
@@ -110,7 +110,7 @@ export default function NotificationPanel({ onClose, onMarkRead }) {
                 setNotifs(data.data || []);
             }
         } catch { /* ignore */ }
-        setLoading(false);
+        if (showSpinner) setLoading(false);
     }
 
     useEffect(() => {
@@ -118,6 +118,13 @@ export default function NotificationPanel({ onClose, onMarkRead }) {
         // mark as read immediately
         apiFetch('/api/notifications/mark-read', { method: 'POST' }).catch(() => {});
         if (onMarkRead) setTimeout(onMarkRead, 100);
+
+        // keep refreshing while the panel stays open so new activity shows up without a reopen
+        const interval = setInterval(() => {
+            load(false);
+            apiFetch('/api/notifications/mark-read', { method: 'POST' }).catch(() => {});
+        }, 5000);
+        return () => clearInterval(interval);
     }, []);
 
     function handleNavigate(path) {
