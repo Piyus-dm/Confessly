@@ -40,7 +40,11 @@ def create_confession():
         file = request.files.get('image')
         if file and file.filename != '':
             if allowed_file(file.filename) and looks_like_image(file):
-                image_url, _ = upload_image(file, folder='confessly/uploads')
+                try:
+                    image_url, _ = upload_image(file, folder='confessly/uploads')
+                except Exception as e:
+                    print(f'[cloudinary-error] {request.path}: {e}')
+                    return jsonify({'status': 'error', 'message': 'Image upload failed, try again'}), 500
             else:
                 return jsonify({'status': 'error', 'message': 'Invalid file type. Only JPG, PNG, WEBP allowed.'}), 400
 

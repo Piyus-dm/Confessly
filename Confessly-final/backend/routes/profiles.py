@@ -92,7 +92,11 @@ def update_user_profile():
             avatar_url = None
             if file and file.filename != '':
                 if allowed_file(file.filename) and looks_like_image(file):
-                    avatar_url, _ = upload_image(file, folder='confessly/avatars')
+                    try:
+                        avatar_url, _ = upload_image(file, folder='confessly/avatars')
+                    except Exception as e:
+                        print(f'[cloudinary-error] {request.path}: {e}')
+                        return jsonify({'status': 'error', 'message': 'Image upload failed, try again'}), 500
                 else:
                     return jsonify({'status': 'error', 'message': 'Invalid image type'}), 400
 
