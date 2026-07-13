@@ -14,8 +14,9 @@ from routes import auth, oauth, posts, users, profiles, notifications, admin
 app = Flask(__name__)
 app.secret_key = FLASK_SECRET_KEY
 
-# only the frontend may make credentialed cross-origin calls
-ALLOWED_ORIGINS = list({FRONTEND_URL, 'http://localhost:5173', 'http://127.0.0.1:5173'})
+ALLOWED_ORIGINS = [FRONTEND_URL]
+if FRONTEND_URL.startswith('http://localhost') or FRONTEND_URL.startswith('http://127.0.0.1'):
+    ALLOWED_ORIGINS += ['http://localhost:5173', 'http://127.0.0.1:5173']
 CORS(app, supports_credentials=True, resources={r"/api/*": {"origins": ALLOWED_ORIGINS, "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"], "allow_headers": ["Content-Type", "Authorization"]}})
 
 

@@ -61,6 +61,27 @@ def _decode_pending_token(token):
         return None
 
 
+def _make_login_token(user_id):
+    return pyjwt.encode(
+        {
+            'purpose': 'oauth_login',
+            'user_id': user_id,
+            'exp': datetime.now(timezone.utc) + timedelta(minutes=5),
+        },
+        JWT_SECRET, algorithm=JWT_ALGORITHM,
+    )
+
+
+def _decode_login_token(token):
+    try:
+        payload = pyjwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        if payload.get('purpose') != 'oauth_login':
+            return None
+        return payload
+    except pyjwt.InvalidTokenError:
+        return None
+
+
 def _exchange_google_code(code):
     # swap auth code for user info
     token_resp = requests.post('https://oauth2.googleapis.com/token', data={
@@ -221,9 +242,12 @@ def _oauth_login_or_intercept(user_info):
             existing_user = cursor.fetchone()
 
         if existing_user:
-            resp = redirect(f"{FRONTEND_URL}/")
-            _oauth_set_token_cookie(resp, existing_user['id'])
-            return resp
+            # google/fb redirect straight to this backend domain, not through
+            # the frontend's proxy, so setting the cookie here would scope it
+            # to the wrong domain. hand off a one-time token instead and let
+            # the frontend swap it for a cookie through its own proxied call
+            login_token = _make_login_token(existing_user['id'])
+            return redirect(f"{FRONTEND_URL}/oauth-complete?token={quote(login_token)}")
         else:
             # identity travels in a signed token; the display params are cosmetic
             pending = _make_pending_token(user_info)
@@ -235,6 +259,22 @@ def _oauth_login_or_intercept(user_info):
     finally:
         if cursor: cursor.close()
         if conn: conn.close()
+
+
+@bp.route('/api/auth/oauth-session', methods=['POST'])
+def oauth_session():
+    try:
+        data = request.get_json()
+        payload = _decode_login_token(data.get('token', ''))
+        if not payload:
+            return jsonify({'status': 'error', 'message': 'Invalid or expired login session'}), 400
+
+        response = jsonify({'status': 'success', 'message': 'Logged in successfully'})
+        _oauth_set_token_cookie(response, payload['user_id'])
+        return response, 200
+    except Exception as e:
+        print(f'[error] {request.path}: {e}')
+        return jsonify({'status': 'error', 'message': 'An internal error occurred'}), 500
 
 
 @bp.route('/api/auth/finalize-social', methods=['POST'])

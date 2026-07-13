@@ -7,6 +7,7 @@ import Welcome from './pages/Welcome.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
 import SetupUsername from './pages/SetupUsername.jsx';
+import OAuthComplete from './pages/OAuthComplete.jsx';
 import ForgotPassword from './pages/ForgotPassword.jsx';
 import Feed from './pages/Feed.jsx';
 import Trending from './pages/Trending.jsx';
@@ -68,6 +69,12 @@ function AppRouter() {
                 path="/setup-username"
                 element={
                     <SetupUsername />
+                }
+            />
+            <Route
+                path="/oauth-complete"
+                element={
+                    <OAuthComplete />
                 }
             />
             <Route
