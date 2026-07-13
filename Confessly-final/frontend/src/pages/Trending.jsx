@@ -34,6 +34,27 @@ export default function Trending() {
         return () => clearInterval(interval);
     }, []);
 
+    async function toggleLike(postId) {
+        setItems(prev => prev.map(p => {
+            if (p.id !== postId) return p;
+            const liked = p.liked_by_user > 0;
+            return {
+                ...p,
+                liked_by_user: liked ? 0 : 1,
+                likes_count:   liked ? Math.max(0, p.likes_count - 1) : p.likes_count + 1,
+            };
+        }));
+        try {
+            const res  = await fetch(apiUrl(`/api/confessions/${postId}/react`), { method: 'POST', credentials: 'include' });
+            const data = await res.json();
+            if (res.ok) {
+                setItems(prev => prev.map(p =>
+                    p.id === postId ? { ...p, likes_count: data.likes_count } : p
+                ));
+            }
+        } catch (err) { console.error(err); }
+    }
+
     const filtered = items.filter(post => {
         const term = search.toLowerCase();
         return (
@@ -115,7 +136,7 @@ export default function Trending() {
                                     <div className="tr-card-wrap">
                                         <FeedCard
                                             post={post}
-                                            onLike={() => {}}
+                                            onLike={toggleLike}
                                             onShare={(p) => setSharePost({ id: p.id, title: p.title })}
                                             onComment={(id) => navigate(`/post/${id}#comments`)}
                                             onCardClick={() => navigate(`/post/${post.id}`)}
