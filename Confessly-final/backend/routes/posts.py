@@ -1,11 +1,7 @@
 # confessions, comments, trending, feed
-import os
-import uuid
-
 from flask import Blueprint, request, jsonify
 import mysql.connector
 
-from config import UPLOAD_FOLDER, BACKEND_URL
 from db import get_db
 from helpers import (
     require_auth, serialize_dates, allowed_file, moderate_content,
@@ -13,6 +9,7 @@ from helpers import (
     POST_SELECT_COMMON, SHADOWBAN_FILTER, BLOCKED_FILTER,
 )
 from security import looks_like_image
+from cloudinary_client import upload_image, delete_image
 
 bp = Blueprint('posts', __name__)
 
@@ -43,11 +40,7 @@ def create_confession():
         file = request.files.get('image')
         if file and file.filename != '':
             if allowed_file(file.filename) and looks_like_image(file):
-                ext = file.filename.rsplit('.', 1)[1].lower()
-                secure_name = f"{uuid.uuid4().hex}.{ext}"
-                file_path = os.path.join(UPLOAD_FOLDER, secure_name)
-                file.save(file_path)
-                image_url = f"{BACKEND_URL}/static/uploads/{secure_name}"
+                image_url, _ = upload_image(file, folder='confessly/uploads')
             else:
                 return jsonify({'status': 'error', 'message': 'Invalid file type. Only JPG, PNG, WEBP allowed.'}), 400
 
@@ -181,15 +174,7 @@ def delete_own_confession(post_id):
             cursor.execute('DELETE FROM posts WHERE id = %s', (post_id,))
             conn.commit()
 
-            # best-effort cleanup of the uploaded image, basename only so paths can't escape
-            if post['image_url']:
-                try:
-                    filename = os.path.basename(post['image_url'])
-                    file_path = os.path.join(UPLOAD_FOLDER, filename)
-                    if os.path.isfile(file_path):
-                        os.remove(file_path)
-                except OSError:
-                    pass
+            delete_image(post['image_url'])
 
             return jsonify({'status': 'success', 'message': 'Post deleted'}), 200
         except mysql.connector.Error as err:

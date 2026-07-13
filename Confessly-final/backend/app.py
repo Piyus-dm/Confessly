@@ -2,11 +2,11 @@ import os
 import json
 from datetime import datetime, timezone
 
-from flask import Flask, send_from_directory
+from flask import Flask
 from flask_cors import CORS
 from apscheduler.schedulers.background import BackgroundScheduler
 
-from config import UPLOAD_FOLDER, AVATAR_FOLDER, MAX_CONTENT_LENGTH, FLASK_SECRET_KEY, FRONTEND_URL
+from config import MAX_CONTENT_LENGTH, FLASK_SECRET_KEY, FRONTEND_URL
 from db import init_db_pool, get_db, ensure_categories
 from scoring import calculate_trending_score
 from routes import auth, oauth, posts, users, profiles, notifications, admin
@@ -28,9 +28,6 @@ def set_security_headers(response):
     return response
 
 app.config['MAX_CONTENT_LENGTH'] = MAX_CONTENT_LENGTH
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-os.makedirs(AVATAR_FOLDER, exist_ok=True)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 # datetimes as iso strings in json responses
@@ -87,16 +84,6 @@ def recalculate_trending_scores():
     finally:
         if cursor: cursor.close()
         if conn: conn.close()
-
-
-@app.route('/static/uploads/<filename>')
-def serve_upload(filename):
-    return send_from_directory(UPLOAD_FOLDER, filename)
-
-
-@app.route('/static/avatars/<filename>')
-def serve_avatar(filename):
-    return send_from_directory(AVATAR_FOLDER, filename)
 
 
 # module-level so it also runs under gunicorn, not just `python app.py`

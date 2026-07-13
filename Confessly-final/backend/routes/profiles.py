@@ -1,11 +1,7 @@
 # own profile + public profile views
-import os
-import uuid
-
 from flask import Blueprint, request, jsonify
 import mysql.connector
 
-from config import AVATAR_FOLDER, BACKEND_URL
 from db import get_db
 from auth_utils import hash_password, check_password
 from helpers import (
@@ -13,6 +9,7 @@ from helpers import (
     fetch_profile_by_profile_id, fetch_profile_by_user_id,
 )
 from security import looks_like_image
+from cloudinary_client import upload_image
 
 bp = Blueprint('profiles', __name__)
 
@@ -95,10 +92,7 @@ def update_user_profile():
             avatar_url = None
             if file and file.filename != '':
                 if allowed_file(file.filename) and looks_like_image(file):
-                    ext = file.filename.rsplit('.', 1)[1].lower()
-                    secure_name = f"avatar_{uuid.uuid4().hex}.{ext}"
-                    file.save(os.path.join(AVATAR_FOLDER, secure_name))
-                    avatar_url = f"{BACKEND_URL}/static/avatars/{secure_name}"
+                    avatar_url, _ = upload_image(file, folder='confessly/avatars')
                 else:
                     return jsonify({'status': 'error', 'message': 'Invalid image type'}), 400
 

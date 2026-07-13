@@ -48,7 +48,9 @@ FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:5173').strip().strip(
 # needs to match the oauth redirect uri registered on google/facebook
 BACKEND_URL = os.getenv('BACKEND_URL', 'http://localhost:5000').strip().strip('"')
 
-UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'uploads')
-AVATAR_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'avatars')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
 MAX_CONTENT_LENGTH = 5 * 1024 * 1024  # 5mb
+
+CLOUDINARY_CLOUD_NAME = os.getenv('CLOUDINARY_CLOUD_NAME', '').strip().strip('"')
+CLOUDINARY_API_KEY = os.getenv('CLOUDINARY_API_KEY', '').strip().strip('"')
+CLOUDINARY_API_SECRET = os.getenv('CLOUDINARY_API_SECRET', '').strip().strip('"')
