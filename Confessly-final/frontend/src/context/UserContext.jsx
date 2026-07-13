@@ -38,12 +38,12 @@ export function UserProvider({ children }) {
         try {
             await apiFetch('/api/auth/logout', { method: 'POST' });
         } catch {
-            // Ignore network errors on logout
+            // ignore network errors on logout
         }
         setUser(null);
     }, []);
 
-    // Fetch once on mount
+    // fetch once on mount
     useEffect(() => { refreshUser(); }, [refreshUser]);
 
     return (

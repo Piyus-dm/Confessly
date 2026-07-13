@@ -1,10 +1,4 @@
-/* ================================================================
-   CONFESSLY — PROFILE PAGE (X/Twitter-style flat redesign)
-   Pure black background (#000000), left-aligned hierarchy.
-   No boxy containers — clean continuous flow.
-   ================================================================ */
-
-/* ── PROFILE HEADER ─────────────────────────────────────────── */
+/* profile header */
 .profile-header {
   position:             fixed;
   top: 0; left: 0;
@@ -31,7 +25,7 @@
 
 .header-actions { position: relative; }
 
-/* ── SETTINGS DROPDOWN ──────────────────────────────────────── */
+/* settings dropdown */
 .settings-dropdown {
   display:       none;
   position:      absolute;
@@ -61,7 +55,7 @@
   border-radius:   var(--r-md);
 }
 
-/* Toggle switch (for Show Stats only) */
+/* toggle switch (for Show Stats only) */
 .switch {
   position: relative;
   width:    38px;
@@ -111,29 +105,27 @@ input:checked + .slider::before      { transform: translateX(17px); background-c
 .dropdown-btn.danger { color: #ff4757; }
 .dropdown-btn.danger:hover { background: rgba(255, 71, 87, 0.08); color: #ff4757; }
 
-/* ── PROFILE MAIN ───────────────────────────────────────────── */
+/* profile main */
 .profile-main {
   max-width: var(--max-w);
   margin:    0 auto;
   padding:   0;
 }
 
-/* ── ERROR STATE ────────────────────────────────────────────── */
+/* error state */
 .profile-error {
   text-align:  center;
   padding:     40px 20px;
   color:       var(--text-muted);
 }
 
-/* ════════════════════════════════════════════════════════════════
-   HERO SECTION — X/Twitter-style flat hierarchy
-   ════════════════════════════════════════════════════════════════ */
+/* hero section — x/twitter-style flat hierarchy */
 .pr-hero {
   padding:                  16px 16px 4px;
   background:               transparent;   /* pure black continuous bg */
 }
 
-/* ── TOP ROW: avatar (left) + edit button (right) ──────────── */
+/* top row: avatar */
 .pr-hero-top {
   display:         flex;
   justify-content: space-between;
@@ -168,7 +160,7 @@ input:checked + .slider::before      { transform: translateX(17px); background-c
   background:      #333333;
 }
 
-/* Edit profile button — outlined pill, positioned right */
+/* edit profile button — outlined pill, positioned right */
 .pr-edit-btn {
   display:         inline-flex;
   align-items:     center;
@@ -192,7 +184,7 @@ input:checked + .slider::before      { transform: translateX(17px); background-c
   border-color: var(--border-focus);
 }
 
-/* ── INFO BLOCK: name, handle, bio, joined date ─────────────── */
+/* info block: name, handle, bio, joined date */
 .pr-info {
   margin-bottom: 12px;
 }
@@ -232,7 +224,7 @@ input:checked + .slider::before      { transform: translateX(17px); background-c
 
 .pr-joined svg { flex-shrink: 0; }
 
-/* ── STATS ROW ──────────────────────────────────────────────── */
+/* stats row */
 .pr-stats {
   display:     flex;
   gap:         20px;
@@ -254,15 +246,13 @@ input:checked + .slider::before      { transform: translateX(17px); background-c
   color: var(--text-muted);
 }
 
-/* When stats are hidden — number replaced by em-dash */
+/* when stats are hidden — number replaced by em-dash */
 .pr-stat-hidden {
   color: var(--text-muted) !important;
   font-weight: 400 !important;
 }
 
-/* ════════════════════════════════════════════════════════════════
-   TABS
-   ════════════════════════════════════════════════════════════════ */
+/* tabs */
 .pr-tabs {
   display:         flex;
   border-bottom:   1px solid var(--border);
@@ -304,9 +294,7 @@ input:checked + .slider::before      { transform: translateX(17px); background-c
   background:     var(--text-primary);
 }
 
-/* ════════════════════════════════════════════════════════════════
-   TAB CONTENT
-   ════════════════════════════════════════════════════════════════ */
+/* tab content */
 .pr-content {
   padding: 0;
 }
@@ -325,10 +313,7 @@ input:checked + .slider::before      { transform: translateX(17px); background-c
   font-size:   0.82rem;
 }
 
-/* ════════════════════════════════════════════════════════════════
-   POST CARDS (Confessions tab)
-   Clean atomic cards: subtle border, minimal bg shift
-   ════════════════════════════════════════════════════════════════ */
+/* post cards */
 .pr-post-card {
   background:     transparent;
   padding:        14px 16px;
@@ -407,10 +392,7 @@ input:checked + .slider::before      { transform: translateX(17px); background-c
 
 .pr-post-stat svg { flex-shrink: 0; }
 
-/* ════════════════════════════════════════════════════════════════
-   COMMENT CARDS (Comments tab)
-   Shows the original post context snippet + user's comment below
-   ════════════════════════════════════════════════════════════════ */
+/* comment cards */
 .pr-comment-card {
   padding:        14px 16px;
   border-bottom:  1px solid var(--border);
@@ -465,7 +447,7 @@ input:checked + .slider::before      { transform: translateX(17px); background-c
   color:       var(--text-muted);
 }
 
-/* ── PRIVATE ACCOUNT LOCK ──────────────────────────────────────── */
+/* private account lock */
 .pr-private-block {
   text-align:  center;
   padding:     48px 20px;
@@ -487,7 +469,7 @@ input:checked + .slider::before      { transform: translateX(17px); background-c
   line-height: 1.5;
 }
 
-/* ── COOLDOWN MESSAGES (edit profile modal) ─────────────────── */
+/* cooldown messages */
 .cooldown-hint {
   font-size:  0.72rem;
   color:      var(--text-muted);
@@ -500,7 +482,7 @@ input:checked + .slider::before      { transform: translateX(17px); background-c
   margin-top: 4px;
 }
 
-/* ── MODAL OVERLAY (shared) ──────────────────────────────────── */
+/* modal overlay */
 .modal-overlay {
   display:         none;
   position:        fixed;
@@ -591,10 +573,10 @@ input:checked + .slider::before      { transform: translateX(17px); background-c
   background-color: rgba(255, 71, 87, 0.25) !important;
 }
 
-/* ── LEGACY CLASS COMPAT (keep old selectors working) ───────── */
+/* legacy class compat */
 .profile-skeleton { /* removed - uses SkeletonLoader now */ }
 
-/* Bring in the pulse keyframe just in case it's not loaded */
+/* bring in the pulse keyframe just in case it's not loaded */
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50%      { opacity: 0.45; }

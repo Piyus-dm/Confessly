@@ -1,22 +1,12 @@
-/**
- * SkeletonLoader — reusable shimmer placeholders with pulse animation.
- *
- * Uses the dark #0a0a0a theme with a subtle pulsing animation:
- *   @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
- *
- * Usage:
- *   <SkeletonLoader type="feed" count={4} />
- *   <SkeletonLoader type="post" />
- *   <SkeletonLoader type="comment" count={3} />
- *   <SkeletonLoader type="profile" />
- */
+// loading placeholders, usage: <SkeletonLoader type="feed" count={4} />
+// types: feed, post, comment, profile
 
 import '../styles/global.css';
 
 function FeedCardSkeleton({ withImage }) {
     return (
         <div className="sk-card" style={{ marginBottom: 2 }}>
-            {/* Author row */}
+            {/* avatar + name */}
             <div className="sk-row">
                 <div className="sk-block" style={{ width: 36, height: 36, borderRadius: '50%' }} />
                 <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 7 }}>
@@ -24,12 +14,12 @@ function FeedCardSkeleton({ withImage }) {
                     <div className="sk-block" style={{ width: '18%', height: 10 }} />
                 </div>
             </div>
-            {/* Title */}
+            {/* title */}
             <div className="sk-block" style={{ width: '78%', height: 16, marginBottom: 10 }} />
-            {/* Body */}
+            {/* body */}
             <div className="sk-block" style={{ width: '100%', height: 12, marginBottom: 7 }} />
             <div className="sk-block" style={{ width: withImage ? '55%' : '70%', height: 12 }} />
-            {/* Optional image block */}
+            {/* image */}
             {withImage && <div className="sk-block" style={{ width: '100%', height: 200, marginTop: 14, borderRadius: 12 }} />}
         </div>
     );
@@ -92,7 +82,7 @@ export default function SkeletonLoader({ type = 'feed', count = 3 }) {
         <div>{items.map((_, i) => <CommentSkeleton key={i} />)}</div>
     );
 
-    /* default: feed */
+    // default: feed
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {items.map((_, i) => (

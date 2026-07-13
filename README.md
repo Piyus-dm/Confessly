@@ -1,56 +1,53 @@
 # Confessly
 
-Anonymous confessions app — React (Vite) frontend + Flask/MySQL backend.
+anonymous confessions app. React + Vite on the frontend, Flask + MySQL on the backend.
 
-## Structure
+## stack
 
-```
-Confessly-final/
-  backend/    Flask API (routes/, config.py, init_db.py, requirements.txt)
-  frontend/   React + Vite SPA (src/, vercel.json)
-```
+- React (Vite), react-router
+- Flask, mysql-connector, JWT auth via httpOnly cookies
+- Google/Facebook OAuth, Gmail SMTP for password reset
+- Cloudflare Turnstile for bot checks
 
-## Local development
+## running it locally
 
-**Backend**
+backend:
+
 ```bash
 cd Confessly-final/backend
 python -m venv venv && source venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env   # fill in real values
-python init_db.py      # creates/migrates tables
-python app.py           # http://localhost:5000
+cp .env.example .env   # fill this in
+python init_db.py
+python app.py           # localhost:5000
 ```
 
-**Frontend**
+frontend:
+
 ```bash
 cd Confessly-final/frontend
 npm install
-cp .env.example .env   # fill in your Turnstile site key
-npm run dev              # http://localhost:5173
+cp .env.example .env   # needs your turnstile site key
+npm run dev              # localhost:5173
 ```
 
-## Deployment
+## deploying
 
-- **Frontend (Vercel):** set the project's Root Directory to `Confessly-final/frontend`.
-  `vercel.json` there rewrites `/api/*` to the backend and serves the SPA for
-  everything else. **Update the rewrite destination** in that file to your
-  real deployed backend URL before going live.
-- **Backend (any Python host — Render, Railway, Fly, etc.):** set the Root
-  Directory to `Confessly-final/backend`. It ships a `Procfile`
-  (`gunicorn app:app`) and `requirements.txt`. Needs a reachable MySQL
-  database — run `python init_db.py` once against it to create the schema.
+**frontend → vercel**: point the project root at `Confessly-final/frontend`.
+there's a `vercel.json` in there that rewrites `/api/*` to the backend and
+handles SPA routing. update the rewrite destination to your actual backend
+url before going live.
 
-### Required backend env vars
-See `Confessly-final/backend/.env.example` for the full list: MySQL
-credentials, `JWT_SECRET`/`FLASK_SECRET_KEY` (generate strong random values),
-`BACKEND_URL` / `FRONTEND_URL`, Google/Facebook OAuth credentials, Gmail SMTP
-credentials for password-reset emails, and Cloudflare Turnstile keys.
+**backend → wherever** (render/railway/fly/whatever): point root at
+`Confessly-final/backend`. has a `Procfile` for gunicorn and a
+`requirements.txt`. needs mysql — run `init_db.py` once against it to set up
+the tables.
 
-**Important:** `BACKEND_URL` must exactly match the redirect URI registered
-in the Google/Facebook OAuth app consoles once deployed, or social login
-will fail.
+## env vars
 
-### Required frontend env vars
-See `Confessly-final/frontend/.env.example` — just the public Turnstile
-site key (`VITE_CLOUDFLARE_SITE_KEY`).
+check `.env.example` in each folder for the full list. backend needs mysql
+creds, jwt/session secrets, oauth client ids/secrets, smtp creds, turnstile
+keys. frontend just needs the turnstile site key.
+
+one gotcha: `BACKEND_URL` has to match whatever redirect URI you register in
+the google/facebook oauth consoles, or login with those will just break.

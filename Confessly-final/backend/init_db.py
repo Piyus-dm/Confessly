@@ -1,12 +1,5 @@
-"""
-init_db.py — database migration for confessly
-run once after pulling updates:  python init_db.py
-
-covers everything the old standalone .sql migration files did:
-tables (social_accounts, password_resets, reports, audit_logs,
-blacklist_words, announcements), admin columns on users, privacy
-columns on profiles, and the default category seed.
-"""
+# run this after pulling updates: python init_db.py
+# creates any missing tables/columns and seeds default categories
 import mysql.connector
 from config import MYSQL_CONFIG
 
@@ -95,7 +88,7 @@ DEFAULT_CATEGORIES = [
 
 
 def ensure_column(cursor, table, column, ddl):
-    # add a column only if it's missing (works on mysql and mariadb)
+    # only add it if it's not already there
     cursor.execute(
         """
         SELECT COUNT(*) FROM information_schema.COLUMNS
@@ -105,14 +98,14 @@ def ensure_column(cursor, table, column, ddl):
     )
     if cursor.fetchone()[0] == 0:
         cursor.execute(f'ALTER TABLE {table} ADD COLUMN {ddl}')
-        print(f'[init_db] Added column {table}.{column}')
+        print(f'[init_db] added column {table}.{column}')
 
 
 def seed_categories(cursor):
     cursor.execute('SELECT COUNT(*) FROM categories')
     if cursor.fetchone()[0] == 0:
         cursor.executemany('INSERT INTO categories (id, name) VALUES (%s, %s)', DEFAULT_CATEGORIES)
-        print(f'[init_db] Seeded {len(DEFAULT_CATEGORIES)} categories.')
+        print(f'[init_db] seeded {len(DEFAULT_CATEGORIES)} categories')
 
 
 def migrate():
@@ -128,13 +121,13 @@ def migrate():
         try:
             seed_categories(cursor)
         except mysql.connector.Error as err:
-            print(f'[init_db] Category seed skipped: {err}')
+            print(f'[init_db] category seed skipped: {err}')
         conn.commit()
-        print("[init_db] All tables created successfully.")
+        print("[init_db] done")
     except mysql.connector.Error as err:
-        print(f"[init_db] Database error: {err}")
+        print(f"[init_db] db error: {err}")
     except Exception as e:
-        print(f"[init_db] Error: {e}")
+        print(f"[init_db] error: {e}")
     finally:
         if cursor:
             cursor.close()

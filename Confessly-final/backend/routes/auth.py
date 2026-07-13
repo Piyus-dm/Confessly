@@ -1,4 +1,4 @@
-"""auth routes — register, login, logout, me, password reset"""
+# register/login/logout/me + password reset
 import re
 import secrets
 from datetime import datetime, timezone, timedelta

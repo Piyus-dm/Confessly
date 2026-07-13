@@ -18,13 +18,10 @@ import FollowList from './pages/FollowList.jsx';
 import BlockedAccounts from './pages/BlockedAccounts.jsx';
 import ScrollToTop from './components/ScrollToTop.jsx';
 
-// Lazy-loaded admin panel — split into separate chunk
+// split admin panel into its own chunk
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard.jsx'));
 
-/**
- * ProtectedRoute — shows a centered loading spinner while auth is resolving,
- * redirects to /login if the user is not authenticated.
- */
+// spinner while auth check is loading, kicks to login if not signed in
 function ProtectedRoute({ children }) {
     const { isAuthenticated, isLoading } = useUser();
     if (isLoading) {
@@ -46,10 +43,7 @@ function ProtectedRoute({ children }) {
     return children;
 }
 
-/**
- * AppRouter — shows a blank centered loading spinner during initial
- * /api/me fetch, preventing the login-page flash on hard refresh.
- */
+// avoids a login-page flash while /api/me is still loading on refresh
 function AppRouter() {
     const { isLoading, isAuthenticated } = useUser();
 

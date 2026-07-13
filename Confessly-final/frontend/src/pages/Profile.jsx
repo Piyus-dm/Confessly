@@ -10,9 +10,6 @@ import '../styles/global.css';
 import '../styles/feed.css';
 import '../styles/profile.css';
 
-/**
- * Safe date formatting — handles ISO 8601 or missing dates.
- */
 function formatDate(dateStr) {
     if (!dateStr) return '';
     const date = new Date(dateStr);
@@ -20,9 +17,7 @@ function formatDate(dateStr) {
     return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
 }
 
-/**
- * 30-day cooldown check for username changes.
- */
+// how long you have to wait before changing your username again
 const COOLDOWN_DAYS = 30;
 
 function daysSince(dateStr) {
@@ -54,7 +49,7 @@ export default function Profile() {
     const [editAvatarPreview, setEditAvatarPreview] = useState(null);
     const editAvatarFileRef = useRef(null);
     const [usernameCooldownMsg, setUsernameCooldownMsg] = useState('');
-    // Track when username was last changed (from profile or from state)
+    // last time the username changed, for the cooldown
     const [lastUsernameChange, setLastUsernameChange] = useState(null);
 
     const [pwOpen, setPwOpen] = useState(false);
@@ -203,9 +198,6 @@ export default function Profile() {
         reader.readAsDataURL(file);
     }
 
-    /**
-     * ── 30-day cooldown logic for username changes ──
-     */
     function handleUsernameChange(e) {
         const val = e.target.value;
         setEditUsername(val);
@@ -213,7 +205,7 @@ export default function Profile() {
     }
 
     async function handleSaveProfile() {
-        // Check 30-day cooldown on username change
+        // check the cooldown before letting the username change go through
         const originalUsername = user?.anonymous_handle || '';
         const isChangingUsername = editUsername.trim() !== originalUsername;
 
@@ -237,7 +229,7 @@ export default function Profile() {
             editAvatarFileRef.current = null;
             setEditAvatarPreview(null);
             setUsernameCooldownMsg('');
-            // If username changed, set the cooldown timestamp to now
+            // reset the cooldown clock
             if (isChangingUsername) {
                 setLastUsernameChange(new Date().toISOString());
             }
@@ -296,12 +288,12 @@ export default function Profile() {
         : 0;
     const isCooldownActive = lastUsernameChange && remainingCooldown > 0;
 
-    // Determine whether stats numbers are visible
+    // whether to show real numbers or hide them
     const showNumbers = showStats;
 
     return (
         <div className="app-body">
-            {/* ── HEADER ── */}
+            {/* header */}
             <header className="profile-header">
                 <button className="icon-btn" onClick={() => navigate(-1)} aria-label="Back">
                     <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M19 12H5m7-7l-7 7 7 7" /></svg>
@@ -357,7 +349,7 @@ export default function Profile() {
 
                 {status === 'ready' && user && (
                     <>
-                        {/* ── X/TWITTER-STYLE HERO ── */}
+                        {/* hero */}
                         <section className="pr-hero">
                             <div className="pr-hero-top">
                                 <div className="pr-avatar-wrap">
@@ -397,7 +389,7 @@ export default function Profile() {
                                 </span>
                             </div>
 
-                            {/* ── STATS ROW — following/followers open the lists ── */}
+                            {/* stats row, tap to open followers/following */}
                             <div className="pr-stats">
                                 <button
                                     type="button"
@@ -428,7 +420,7 @@ export default function Profile() {
                             </div>
                         </section>
 
-                        {/* ── TABS ── */}
+                        {/* tabs */}
                         <div className="pr-tabs">
                             <button
                                 className={`pr-tab${activeTab === 'posts' ? ' active' : ''}`}
@@ -444,7 +436,7 @@ export default function Profile() {
                             </button>
                         </div>
 
-                        {/* ── TAB CONTENT ── */}
+                        {/* tab content */}
                         <div className="pr-content">
                             {items.length === 0 && !loadingMore && (
                                 <div className="pr-empty">
@@ -500,7 +492,7 @@ export default function Profile() {
 
             <BottomNav />
 
-            {/* ── EDIT PROFILE MODAL (no Dark Mode toggle) ── */}
+            {/* edit profile modal */}
             {editOpen && (
                 <div className="modal-overlay" style={{ display: 'flex' }} onClick={(e) => { if (e.target === e.currentTarget) setEditOpen(false); setUsernameCooldownMsg(''); }}>
                     <div className="modal-content">
@@ -544,7 +536,7 @@ export default function Profile() {
                 </div>
             )}
 
-            {/* ── CHANGE PASSWORD MODAL ── */}
+            {/* change password modal */}
             {pwOpen && (
                 <div className="modal-overlay" style={{ display: 'flex' }} onClick={(e) => { if (e.target === e.currentTarget) setPwOpen(false); }}>
                     <div className="modal-content">
@@ -569,7 +561,7 @@ export default function Profile() {
                 </div>
             )}
 
-            {/* ── DELETE ACCOUNT MODAL ── */}
+            {/* delete account modal */}
             {delOpen && (
                 <div className="modal-overlay" style={{ display: 'flex' }} onClick={(e) => { if (e.target === e.currentTarget) setDelOpen(false); }}>
                     <div className="modal-content">

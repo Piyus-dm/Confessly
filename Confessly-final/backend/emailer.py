@@ -1,4 +1,4 @@
-"""emailer.py — gmail smtp email sending"""
+# sends email through gmail smtp
 import os
 import smtplib
 from email.mime.text import MIMEText

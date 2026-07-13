@@ -9,7 +9,7 @@ export default function NotificationBell() {
     const panelRef = useRef(null);
     const btnRef = useRef(null);
 
-    // Fetch unread count
+    // fetch unread count
     async function fetchUnread() {
         try {
             const res = await apiFetch('/api/notifications/unread-count');
@@ -26,7 +26,7 @@ export default function NotificationBell() {
         return () => clearInterval(interval);
     }, []);
 
-    // Close on outside click
+    // close on outside click
     useEffect(() => {
         if (!open) return;
         function handleClick(e) {

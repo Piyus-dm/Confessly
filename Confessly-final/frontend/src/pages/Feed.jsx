@@ -31,7 +31,7 @@ export default function Feed() {
     const debounceRef    = useRef(null);
     const sentinelRef    = useRef(null);
 
-    /* ── Fetch latest announcement on mount ── */
+    // grab latest announcement on mount
     useEffect(() => {
         fetch(apiUrl('/api/announcements'), { credentials: 'include' })
             .then(res => res.json())
@@ -43,7 +43,7 @@ export default function Feed() {
             .catch(() => {});
     }, []);
 
-    /* ── Data: cursor-based hybrid feed ── */
+    // cursor-paginated feed
     async function loadFeed(reset = false) {
         if (reset) {
             setLoading(true);
@@ -80,12 +80,12 @@ export default function Feed() {
 
     useEffect(() => { loadFeed(true); }, []);
 
-    /* Revoke compose preview object URL on unmount */
+    // clean up the preview blob url
     useEffect(() => {
         return () => { if (previewUrl) URL.revokeObjectURL(previewUrl); };
     }, [previewUrl]);
 
-    /* ── Infinite scroll with IntersectionObserver ── */
+    // infinite scroll
     useEffect(() => {
         const el = sentinelRef.current;
         if (!el) return;
@@ -102,7 +102,7 @@ export default function Feed() {
         return () => observer.disconnect();
     }, [loading, hasMore, loadingMore, cursor]);
 
-    /* ── Handlers ── */
+    // handlers
     function handleSearchChange(e) {
         const val = e.target.value;
         setQuery(val);
@@ -208,7 +208,7 @@ export default function Feed() {
             </header>
 
             <main className="feed-container">
-                {/* ── Announcement Banner (Module 4) ── */}
+                {/* announcement banner */}
                 {announcement && (
                     <div style={{
                         background: '#0a0a0a',

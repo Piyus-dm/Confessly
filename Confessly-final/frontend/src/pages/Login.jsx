@@ -66,7 +66,7 @@ export default function Login() {
         <div className="auth-view">
             <main className="auth-container">
 
-                {/* Brand */}
+                {/* logo */}
                 <div className="auth-brand">
                     <Logo height={30} />
                 </div>
@@ -143,12 +143,12 @@ export default function Login() {
                     </p>
                 </form>
 
-                {/* Divider */}
+                {/* divider */}
                 <div className="auth-divider">
                     <span>or continue with</span>
                 </div>
 
-                {/* Social buttons */}
+                {/* social buttons */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 20 }}>
                     <a href="/api/auth/login/google"
                         style={{

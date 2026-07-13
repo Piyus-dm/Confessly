@@ -1,4 +1,4 @@
-"""oauth routes — google + facebook social login"""
+# google/facebook oauth login
 import os
 from datetime import datetime, timezone, timedelta
 from urllib.parse import quote

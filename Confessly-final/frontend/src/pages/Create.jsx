@@ -6,11 +6,7 @@ import '../styles/global.css';
 import '../styles/feed.css';
 import '../styles/create.css';
 
-/**
- * 8 Reddit-style standardized categories.
- * Mapping: value = category_id, label = display name.
- * IDs 1-8 map to the database categories table.
- */
+// ids match the categories table in the db
 const CATEGORIES = [
     { id: 1,  name: 'Rant' },
     { id: 2,  name: 'Confession' },

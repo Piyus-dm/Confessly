@@ -115,7 +115,7 @@ export default function NotificationPanel({ onClose, onMarkRead }) {
 
     useEffect(() => {
         load();
-        // Mark as read immediately
+        // mark as read immediately
         apiFetch('/api/notifications/mark-read', { method: 'POST' }).catch(() => {});
         if (onMarkRead) setTimeout(onMarkRead, 100);
     }, []);

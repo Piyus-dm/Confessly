@@ -1,4 +1,4 @@
-"""helpers.py — shared decorators, serializers and query helpers"""
+# shared decorators + query helpers used across routes
 from datetime import datetime
 from functools import wraps
 
@@ -190,8 +190,7 @@ def fetch_profile_by_user_id(user_id):
 
 
 def can_view_profile_content(viewer_profile_id, target_profile_id):
-    # single source of truth for private-profile access:
-    # your own profile, any public profile, or a private one you mutually follow
+    # own profile, public profile, or private + mutual follow
     if viewer_profile_id == target_profile_id:
         return True
     profile = fetch_profile_by_profile_id(target_profile_id)

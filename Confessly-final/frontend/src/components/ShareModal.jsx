@@ -1,25 +1,17 @@
 import { useEffect, useState } from 'react';
 
-/**
- * ShareModal — dark glassmorphism bottom sheet.
- * Props:
- *   isOpen        boolean
- *   onClose       () => void
- *   title         string  (post title for share text)
- *   url           string  (defaults to window.location.href)
- */
 export default function ShareModal({ isOpen, onClose, title = 'Confession', url }) {
     const [copied, setCopied] = useState(false);
     const shareUrl = url || (typeof window !== 'undefined' ? window.location.href : '');
 
-    /* Lock body scroll when open */
+    // lock scroll while open
     useEffect(() => {
         if (isOpen) document.body.style.overflow = 'hidden';
         else        document.body.style.overflow = '';
         return () => { document.body.style.overflow = ''; };
     }, [isOpen]);
 
-    /* Close on Escape */
+    // close on esc
     useEffect(() => {
         function onKey(e) { if (e.key === 'Escape') onClose(); }
         if (isOpen) window.addEventListener('keydown', onKey);
@@ -58,10 +50,10 @@ export default function ShareModal({ isOpen, onClose, title = 'Confession', url 
             onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
         >
             <div className={`sm-sheet${isOpen ? ' sm-sheet-open' : ''}`}>
-                {/* Drag handle */}
+                {/* drag handle */}
                 <div className="sm-handle" />
 
-                {/* Header */}
+                {/* header */}
                 <div className="sm-header">
                     <span className="sm-title">Share</span>
                     <button className="sm-close icon-btn" onClick={onClose} aria-label="Close share modal">
@@ -72,7 +64,7 @@ export default function ShareModal({ isOpen, onClose, title = 'Confession', url 
                     </button>
                 </div>
 
-                {/* URL preview */}
+                {/* url preview */}
                 <div className="sm-url-bar">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -82,9 +74,9 @@ export default function ShareModal({ isOpen, onClose, title = 'Confession', url 
                     <span className="sm-url-text">{shareUrl}</span>
                 </div>
 
-                {/* Grid of share targets */}
+                {/* share targets */}
                 <div className="sm-grid">
-                    {/* WhatsApp */}
+                    {/* whatsapp */}
                     <button className="sm-item" onClick={openWhatsApp}>
                         <div className="sm-icon-box sm-wa">
                             <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
@@ -95,7 +87,7 @@ export default function ShareModal({ isOpen, onClose, title = 'Confession', url 
                         <span>WhatsApp</span>
                     </button>
 
-                    {/* X / Twitter */}
+                    {/* twitter */}
                     <button className="sm-item" onClick={openTwitter}>
                         <div className="sm-icon-box sm-x">
                             <svg width="17" height="17" fill="currentColor" viewBox="0 0 24 24">
@@ -105,7 +97,7 @@ export default function ShareModal({ isOpen, onClose, title = 'Confession', url 
                         <span>X / Twitter</span>
                     </button>
 
-                    {/* Facebook */}
+                    {/* facebook */}
                     <button className="sm-item" onClick={openFacebook}>
                         <div className="sm-icon-box sm-fb">
                             <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
@@ -115,7 +107,7 @@ export default function ShareModal({ isOpen, onClose, title = 'Confession', url 
                         <span>Facebook</span>
                     </button>
 
-                    {/* Copy Link */}
+                    {/* copy link */}
                     <button className="sm-item" onClick={copyLink}>
                         <div className={`sm-icon-box sm-copy${copied ? ' sm-copied' : ''}`}>
                             {copied ? (
@@ -135,7 +127,7 @@ export default function ShareModal({ isOpen, onClose, title = 'Confession', url 
                     </button>
                 </div>
 
-                {/* More Apps (native share) */}
+                {/* native share */}
                 <button className="sm-more-btn" onClick={openNative}>
                     <svg width="15" height="15" fill="none" stroke="currentColor"
                         strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">

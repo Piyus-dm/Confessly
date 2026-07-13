@@ -1,4 +1,4 @@
-"""security.py — in-memory rate limiting + upload content sniffing"""
+# rate limiting + file content checks, all in-memory
 import time
 import threading
 

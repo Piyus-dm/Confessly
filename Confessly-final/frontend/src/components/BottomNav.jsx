@@ -44,7 +44,7 @@ export default function BottomNav() {
                 <span className="nav-label">Trending</span>
             </NavLink>
 
-            {/* Create FAB */}
+            {/* create button */}
             <NavLink
                 to="/create"
                 className={({ isActive }) => `nav-item nav-create${isActive ? ' active' : ''}`}

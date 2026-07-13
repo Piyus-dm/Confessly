@@ -1,9 +1,9 @@
-# ── secrets ──────────────────────────────────────────────────
+# env
 .env
 .env.*
 !.env.example
 
-# ── python ───────────────────────────────────────────────────
+# python
 venv/
 .venv/
 env/
@@ -12,21 +12,20 @@ __pycache__/
 *.pyc
 *.pyo
 
-# ── node ─────────────────────────────────────────────────────
+# node
 node_modules/
 dist/
 build/
 
-# ── user-uploaded content (not source, shouldn't be versioned) ──
+# uploads
 Confessly-final/backend/static/uploads/
 Confessly-final/backend/static/avatars/
 
-# ── os / editor cruft ────────────────────────────────────────
+# os / editor
 .DS_Store
 Thumbs.db
 .vscode/
 .idea/
 *.log
 
-# ── local tooling config (not part of the app) ──────────────
 .claude/

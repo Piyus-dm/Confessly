@@ -1,4 +1,4 @@
-"""profile routes — own profile management + public profiles"""
+# own profile + public profile views
 import os
 import uuid
 

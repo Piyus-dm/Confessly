@@ -1,4 +1,3 @@
-"""db.py — mysql connection pool + boot-time seeding"""
 from mysql.connector import pooling
 
 from config import MYSQL_CONFIG
@@ -42,11 +41,11 @@ def ensure_categories():
                 'INSERT INTO categories (id, name) VALUES (%s, %s)', categories
             )
             conn.commit()
-            print(f'[Boot] Seeded {len(categories)} categories.')
+            print(f'[boot] seeded {len(categories)} categories')
         else:
-            print(f'[Boot] Categories table has {count} rows — skipping seed.')
+            print(f'[boot] categories table already has {count} rows, skipping')
     except Exception as e:
-        print(f'[Boot] Category check skipped: {e}')
+        print(f'[boot] category check skipped: {e}')
     finally:
         if cursor: cursor.close()
         if conn: conn.close()

@@ -1,14 +1,9 @@
-/* ================================================================
-   CONFESSLY — GLOBAL DESIGN SYSTEM
-   Ultra-premium dark glassmorphism — Linear / Vercel aesthetic
-   ================================================================ */
-
-/* ── DESIGN TOKENS ──────────────────────────────────────────── */
+/* design tokens */
 :root {
-  /* Typography */
+  /* typography */
   --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
-  /* Backgrounds */
+  /* backgrounds */
   --bg-base:      #000000;
   --bg-subtle:    #080808;
   --bg-card:      #0d0d0d;
@@ -17,51 +12,51 @@
   --bg-input:     #0f0f0f;
   --bg-glass:     rgba(255, 255, 255, 0.03);
 
-  /* Borders */
+  /* borders */
   --border:       rgba(255, 255, 255, 0.08);
   --border-mid:   rgba(255, 255, 255, 0.12);
   --border-focus: rgba(255, 255, 255, 0.3);
 
-  /* Text */
+  /* text */
   --text-primary:   #ededed;
   --text-secondary: #888888;
   --text-muted:     #555555;
   --text-inverse:   #000000;
 
-  /* Accent — crisp white interactive */
+  /* accent — crisp white interactive */
   --accent:       #ededed;
   --accent-dim:   rgba(237, 237, 237, 0.08);
   --accent-hover: #d4d4d4;
   --accent-light: rgba(255, 255, 255, 0.12);
   --accent-glow:  rgba(255, 255, 255, 0.15);
 
-  /* Semantic */
+  /* semantic */
   --like:         #ff4757;
   --like-bg:      rgba(255, 71, 87, 0.08);
   --comment:      rgba(255, 255, 255, 0.6);
   --share:        rgba(255, 255, 255, 0.6);
 
-  /* Skeleton pulse colors */
+  /* skeleton pulse colors */
   --sk-from:      #0d0d0d;
   --sk-to:        #1a1a1a;
 
-  /* Layout */
+  /* layout */
   --header-h:     56px;
   --nav-h:        64px;
   --max-w:        600px;
 
-  /* Radius */
+  /* radius */
   --r-sm:   6px;
   --r-md:   10px;
   --r-lg:   16px;
   --r-xl:   20px;
   --r-full: 9999px;
 
-  /* Shadows */
+  /* shadows */
   --shadow-card: 0 1px 3px rgba(0,0,0,0.8), 0 0 0 1px var(--border);
   --shadow-modal: 0 32px 64px rgba(0,0,0,0.9), 0 0 0 1px var(--border);
 
-  /* Easing */
+  /* easing */
   --ease:      cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in:   cubic-bezier(0.4, 0, 1, 1);
   --t:         0.18s;
@@ -69,7 +64,7 @@
   --t-slow:    0.35s;
 }
 
-/* ── RESET ───────────────────────────────────────────────────── */
+/* reset */
 *, *::before, *::after {
   margin: 0; padding: 0; box-sizing: border-box;
 }
@@ -95,7 +90,7 @@ button, input, textarea, select {
 }
 a { color: inherit; text-decoration: none; }
 
-/* ── APP SHELL ───────────────────────────────────────────────── */
+/* app shell */
 .app-body {
   background-color: var(--bg-base);
   padding-top:      var(--header-h);
@@ -103,7 +98,7 @@ a { color: inherit; text-decoration: none; }
   min-height:       100vh;
 }
 
-/* ── GLASSMORPHISM SURFACE ───────────────────────────────────── */
+/* glassmorphism surface */
 .glass {
   background:           rgba(255, 255, 255, 0.03);
   backdrop-filter:      blur(20px);
@@ -111,24 +106,20 @@ a { color: inherit; text-decoration: none; }
   border:               1px solid var(--border);
 }
 
-/* ── SKELETON / SHIMMER ───────────────────────────────────────
-   Pure pulse animation: dark #0a0a0a blocks that gently fade in/out.
-   No shimmer gradient — uses a smooth opacity pulse to match
-   the brutalist dark aesthetic.
-   ─────────────────────────────────────────────────────── */
+/* skeleton loaders, just a slow opacity pulse */
 .skeleton {
   background: #161616;
   border-radius: var(--r-sm);
   animation: pulse 1.5s ease-in-out infinite;
 }
 
-/* Pulse keyframes — subtle opacity fade */
+/* pulse keyframes — subtle opacity fade */
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50%      { opacity: 0.45; }
 }
 
-/* Legacy shimmer classes kept for backwards compat */
+/* legacy shimmer classes kept for backwards compat */
 .skeleton-card {
   background:    var(--bg-card);
   border:        1px solid var(--border);
@@ -147,7 +138,7 @@ a { color: inherit; text-decoration: none; }
 .sk-line   { height: 12px; border-radius: var(--r-full); }
 .sk-image  { width: 100%; height: 200px; border-radius: var(--r-lg); margin-top: 14px; }
 
-/* ── SKELETON BLOCK SYSTEM (new — used by SkeletonLoader.jsx) ── */
+/* skeleton block system */
 .sk-card {
   background:    var(--bg-card);
   border:        1px solid var(--border);
@@ -168,14 +159,14 @@ a { color: inherit; text-decoration: none; }
   animation: pulse 1.5s ease-in-out infinite;
 }
 
-/* Legacy compat — ensure old skeleton references still work */
+/* legacy compat — ensure old skeleton references still work */
 .skeleton.skeleton,
 .skeleton-card.skeleton-card,
 .skeleton-row.skeleton-row {
-  /* Keep old selectors working by scoping nothing extra */
+  /* keep old selectors working by scoping nothing extra */
 }
 
-/* ── ANIMATIONS ─────────────────────────────────────────────── */
+/* animations */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0);    }
@@ -202,10 +193,7 @@ a { color: inherit; text-decoration: none; }
 .anim-fadeUp  { animation: fadeUp  var(--t-slow) var(--ease) both; }
 .anim-scaleIn { animation: scaleIn var(--t-slow) var(--ease) both; }
 
-/* ── ANONYMOUS AVATAR — hollow circle + SVG user outline ─────
-   Premium Vercel/Linear aesthetic: no colored circles, no initials.
-   Just a dark hollow ring with a minimalist user silhouette inside.
-   ──────────────────────────────────────────────────────────── */
+/* anon avatar - hollow ring with a user icon, no initials */
 .anon-avatar {
   display:         flex;
   align-items:     center;
@@ -220,7 +208,7 @@ a { color: inherit; text-decoration: none; }
   background-color: rgba(255, 255, 255, 0.03);
 }
 
-/* Size variants */
+/* size variants */
 .anon-avatar-sm { width: 28px; height: 28px; }
 .anon-avatar-sm svg { width: 13px; height: 13px; }
 
@@ -230,17 +218,17 @@ a { color: inherit; text-decoration: none; }
 .anon-avatar-lg { width: 48px; height: 48px; }
 .anon-avatar-lg svg { width: 22px; height: 22px; }
 
-/* Comment-thread micro size */
+/* comment-thread micro size */
 .anon-avatar-xs { width: 26px; height: 26px; }
 .anon-avatar-xs svg { width: 12px; height: 12px; }
 
-/* Hover: barely brighter ring — subtle affordance */
+/* hover: barely brighter ring — subtle affordance */
 .anon-avatar:hover {
   border-color: rgba(255, 255, 255, 0.18);
   background-color: rgba(255, 255, 255, 0.05);
 }
 
-/* Real profile picture variant — overrides the hollow ring */
+/* real profile picture variant — overrides the hollow ring */
 .anon-avatar-img {
   background-color: transparent;
   border-color:     rgba(255, 255, 255, 0.12);
@@ -254,12 +242,12 @@ a { color: inherit; text-decoration: none; }
   display:     block;
   border-radius: inherit;
 }
-/* Fallback SVG shown if image fails to load */
+/* fallback SVG shown if image fails to load */
 .anon-avatar-fallback {
   background-color: rgba(255, 255, 255, 0.03);
 }
 
-/* ── BUTTON BASE ────────────────────────────────────────────── */
+/* button base */
 .btn-primary {
   display:         inline-flex;
   align-items:     center;
@@ -299,7 +287,7 @@ a { color: inherit; text-decoration: none; }
 }
 .btn-ghost:hover { background: var(--bg-hover); border-color: var(--border-mid); color: var(--text-primary); }
 
-/* ── ICON BUTTON ────────────────────────────────────────────── */
+/* icon button */
 .icon-btn {
   display:         flex;
   align-items:     center;
@@ -316,7 +304,7 @@ a { color: inherit; text-decoration: none; }
 .icon-btn:hover  { background: var(--bg-hover); color: var(--text-primary); }
 .icon-btn:active { background: var(--bg-elevated); }
 
-/* ── EMPTY STATE ────────────────────────────────────────────── */
+/* empty state */
 .empty-state {
   text-align:  center;
   padding:     60px 20px;
@@ -333,14 +321,14 @@ a { color: inherit; text-decoration: none; }
   opacity:       0.5;
 }
 
-/* ── DIVIDER ────────────────────────────────────────────────── */
+/* divider */
 .divider {
   height:     1px;
   background: var(--border);
   margin:     8px 0;
 }
 
-/* ── FORM BASE ──────────────────────────────────────────────── */
+/* form base */
 .form-input {
   width:         100%;
   padding:       12px 14px;
@@ -358,7 +346,7 @@ a { color: inherit; text-decoration: none; }
   box-shadow:   0 0 0 3px rgba(255, 255, 255, 0.04);
 }
 
-/* ── PREMIUM INPUT (round, glow on focus, smooth transition) ── */
+/* premium input */
 .premium-input {
   width:         100%;
   padding:       12px 16px;
@@ -377,10 +365,7 @@ a { color: inherit; text-decoration: none; }
   box-shadow:   0 0 0 3px rgba(255, 255, 255, 0.05), 0 0 12px rgba(255, 255, 255, 0.03);
 }
 
-/* ── CHROME AUTOFILL OVERRIDE ─────────────────────────────────
-   Force all input autofill backgrounds to stay pitch-black.
-   Chrome uses !important internally so we match the specificity.
-────────────────────────────────────────────────────────────── */
+/* keep chrome autofill from turning inputs white */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
@@ -393,10 +378,7 @@ select:-webkit-autofill {
   transition: background-color 50000s ease-in-out 0s;
 }
 
-/* ── FOLLOW BUTTON ─────────────────────────────────────────────
-   X/Twitter style: outlined for "Follow", filled for "Following"
-   Optimistic UI: toggle instantly on click
-───────────────────────────────────────────────────────────── */
+/* follow button, twitter style */
 .follow-btn {
   display:         inline-flex;
   align-items:     center;
@@ -412,7 +394,7 @@ select:-webkit-autofill {
   user-select:     none;
   outline:         none;
   min-width:       90px;
-  /* Default: outlined (Follow) */
+  /* default: outlined (Follow) */
   background:      transparent;
   color:           var(--text-primary);
   border:          1px solid var(--border-mid);
@@ -424,7 +406,7 @@ select:-webkit-autofill {
 .follow-btn:active {
   transform: scale(0.95);
 }
-/* Following state — filled */
+/* following state — filled */
 .follow-btn.following {
   background:   rgba(255, 255, 255, 0.08);
   color:        var(--text-secondary);
@@ -440,7 +422,7 @@ select:-webkit-autofill {
   cursor:  not-allowed;
 }
 
-/* ── C-LOGO AVATAR ──────────────────────────────────────────── */
+/* c-logo avatar */
 .c-avatar-logo {
   width:           36px;
   height:          36px;
@@ -456,7 +438,7 @@ select:-webkit-autofill {
   user-select:     none;
 }
 
-/* ── LOGO ────────────────────────────────────────────────────── */
+/* logo */
 /* the lockup is ~3.1:1 — always size by height, never force a square */
 .cf-logo-img,
 .cf-logo-mark {
@@ -507,7 +489,7 @@ select:-webkit-autofill {
   .welcome-logo .cf-logo-img { height: 44px !important; }
 }
 
-/* ── 3-DOT POST MENU ─────────────────────────────────────────── */
+/* 3-dot post menu */
 .pm-wrap { position: relative; display: inline-flex; }
 
 .pm-trigger {
@@ -570,7 +552,7 @@ select:-webkit-autofill {
 .pm-danger        { color: var(--like); }
 .pm-danger:hover  { background: var(--like-bg); color: var(--like); }
 
-/* ── FOLLOW BUTTON ───────────────────────────────────────────── */
+/* follow button */
 .cf-follow-btn {
   display:         inline-flex;
   align-items:     center;
@@ -614,7 +596,7 @@ select:-webkit-autofill {
 
 .cf-follow-sm { padding: 6px 14px; font-size: 0.76rem; }
 
-/* ── PROFILE SHARE BUTTON ────────────────────────────────────── */
+/* profile share button */
 .pr-hero-actions {
   display:     flex;
   align-items: center;
@@ -643,7 +625,7 @@ select:-webkit-autofill {
 .pr-share-btn:hover  { background: var(--bg-hover); }
 .pr-share-btn:active { transform: scale(0.96); }
 
-/* ── CLICKABLE STATS ─────────────────────────────────────────── */
+/* clickable stats */
 .pr-stat-link {
   background:  none;
   border:      none;
@@ -657,7 +639,7 @@ select:-webkit-autofill {
 .pr-stat-link:hover:not(:disabled)  { opacity: 0.7; }
 .pr-stat-link:disabled              { cursor: default; }
 
-/* ── FOLLOWERS / FOLLOWING LIST ──────────────────────────────── */
+/* followers / following list */
 .fl-list { display: flex; flex-direction: column; }
 
 .fl-row {

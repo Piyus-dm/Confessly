@@ -1,16 +1,16 @@
-/* Styling specific to the single post view */
+/* styling specific to the single post view */
 .post-detail-container {
     max-width: 600px; margin: 0 auto; padding: 16px;
     padding-bottom: 90px; /* Space for comment input at bottom */
 }
 
-/* Remove border/shadow from main card since it's the hero element */
+/* remove border/shadow from main card since it's the hero element */
 .hero-card {
     background-color: var(--bg-app); padding: 20px 0;
     border-bottom: 1px solid var(--border-light); margin-bottom: 20px;
 }
 
-/* Comments Section */
+/* comments Section */
 .comments-header {
     font-family: var(--font-heading); font-size: 1.1rem;
     font-weight: 700; margin-bottom: 16px; color: var(--text-main);
@@ -31,7 +31,7 @@
 .comment-time { color: var(--text-muted); }
 .comment-text { font-size: 0.95rem; line-height: 1.5; color: #334155; }
 
-/* Sticky Comment Input */
+/* sticky Comment Input */
 .comment-input-bar {
     position: fixed; bottom: 0; left: 0; width: 100%;
     background-color: var(--bg-app); border-top: 1px solid var(--border-light);

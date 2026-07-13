@@ -32,7 +32,7 @@ export default function PublicProfile() {
     const offsetRef = { current: 0 };
     const hasMoreRef = { current: true };
 
-    // Follow state
+    // follow state
     const [isFollowing, setIsFollowing] = useState(false);
     const [followsYou, setFollowsYou] = useState(false);
     const [followersCount, setFollowersCount] = useState(0);
@@ -74,7 +74,7 @@ export default function PublicProfile() {
                 setIsPrivate(data.is_private);
                 setFollowersCount(data.profile.followers_count || 0);
 
-                // Check follow status (also tells us if they follow us -> "Follow back")
+                // also tells us if they follow us, for the follow-back button
                 const fsRes = await fetch(apiUrl(`/api/users/${profileId}/follow-status`), creds);
                 const fsData = await fsRes.json();
                 if (fsData.status === 'success') {
@@ -212,7 +212,7 @@ export default function PublicProfile() {
                                 </span>
                             </div>
 
-                            {/* ── STATS ROW — hidden entirely for locked private accounts ── */}
+                            {/* stats row, hidden if private and locked */}
                             <div className="pr-stats">
                                 <button
                                     type="button"
@@ -239,7 +239,7 @@ export default function PublicProfile() {
                             </div>
                         </section>
 
-                        {/* ── PRIVATE ACCOUNT LOCK ── */}
+                        {/* private account lock */}
                         {isPrivate && !canViewContent && !isOwnProfile && (
                             <div className="pr-private-block">
                                 <div className="pr-private-icon"><LockIcon size={28} /></div>
@@ -248,7 +248,7 @@ export default function PublicProfile() {
                             </div>
                         )}
 
-                        {/* ── TABS (only if can view content) ── */}
+                        {/* tabs, only if we can view content */}
                         {(canViewContent || isOwnProfile) && (
                             <>
                                 {!isPrivate && (

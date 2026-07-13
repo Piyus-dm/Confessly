@@ -1,4 +1,4 @@
-"""post routes — confessions, comments, trending, feed"""
+# confessions, comments, trending, feed
 import os
 import uuid
 

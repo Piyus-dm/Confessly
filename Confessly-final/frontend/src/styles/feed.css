@@ -1,8 +1,4 @@
-/* ================================================================
-   CONFESSLY — FEED PAGE + BOTTOM NAV + SHARE MODAL CSS
-   ================================================================ */
-
-/* ── APP HEADER ─────────────────────────────────────────────── */
+/* app header */
 .app-header {
   position:             fixed;
   top: 0; left: 0;
@@ -26,7 +22,7 @@
   color:           var(--text-primary);
 }
 
-/* ── FEED CONTAINER ─────────────────────────────────────────── */
+/* feed container */
 .feed-container {
   max-width:        var(--max-w);
   margin:           0 auto;
@@ -37,7 +33,7 @@
   box-sizing:       border-box;
 }
 
-/* ── SEARCH BAR ─────────────────────────────────────────────── */
+/* search bar */
 .feed-search-box {
   display:          flex;
   align-items:      center;
@@ -61,7 +57,7 @@
 }
 .feed-search-box input::placeholder { color: var(--text-muted); }
 
-/* ── QUICK POST / COMPOSE BOX ───────────────────────────────── */
+/* quick post / compose box */
 .quick-post-box {
   background-color: var(--bg-card);
   border:           1px solid var(--border);
@@ -128,7 +124,7 @@
 .quick-submit-btn:hover  { background: #d4d4d4; }
 .quick-submit-btn:active { transform: scale(0.93); }
 
-/* ── COMPOSE IMAGE PREVIEW (X-style) ───────────────────────── */
+/* compose image preview */
 .compose-preview {
   position:      relative;
   border-radius: var(--r-lg);
@@ -163,7 +159,7 @@
 .compose-preview-close:hover  { background: rgba(0,0,0,0.9); }
 .compose-preview-close:active { transform: scale(0.88); }
 
-/* ── FEED SECTION LABEL ──────────────────────────────────────── */
+/* feed section label */
 .feed-section-label {
   font-size:      0.68rem;
   font-weight:    600;
@@ -173,7 +169,7 @@
   padding:        2px 4px;
 }
 
-/* ── CONFESSION CARD ─────────────────────────────────────────── */
+/* confession card */
 .confession-card {
   background:    #0a0a0a;                        /* exact spec */
   border:        1px solid rgba(255, 255, 255, 0.08); /* exact spec */
@@ -192,7 +188,7 @@
 }
 .confession-card:active { background: #0f0f0f; }
 
-/* ── CARD TOP (avatar + meta) ───────────────────────────────── */
+/* card top */
 .card-top {
   display:       flex;
   align-items:   flex-start;
@@ -219,7 +215,7 @@
   white-space: nowrap;
 }
 
-/* ── CATEGORY TAG ────────────────────────────────────────────── */
+/* category tag */
 .cat-tag {
   display:        inline-flex;
   align-items:    center;
@@ -236,7 +232,7 @@
   text-transform: capitalize;
 }
 
-/* ── CARD BODY ───────────────────────────────────────────────── */
+/* card body */
 .card-title {
   font-size:     0.95rem;
   font-weight:   700;
@@ -258,7 +254,7 @@
   word-break:         break-word;
 }
 
-/* ── CARD IMAGE ──────────────────────────────────────────────── */
+/* card image */
 .card-image-box {
   width:          100%;
   border-radius:  var(--r-lg);
@@ -278,7 +274,7 @@
 }
 .confession-card:hover .card-image-box img { transform: scale(1.02); }
 
-/* ── ACTION BAR ──────────────────────────────────────────────── */
+/* action bar */
 .card-actions {
   display:     flex;
   align-items: center;
@@ -304,16 +300,16 @@
 .action-btn svg { flex-shrink: 0; }
 .action-btn:hover { background: var(--bg-hover); color: var(--text-secondary); }
 
-/* Like active */
+/* like active */
 .like-btn.liked { color: var(--like); }
 .like-btn.liked svg { fill: var(--like); stroke: var(--like); }
 .like-btn:hover { color: var(--like) !important; background: var(--like-bg) !important; }
 .like-btn:active svg { animation: heartBeat 0.4s var(--ease); }
 
-/* Comment hover */
+/* comment hover */
 .comment-trigger-btn:hover { color: var(--text-primary) !important; }
 
-/* ── BACK HEADER (PostDetail) ────────────────────────────────── */
+/* back header */
 .back-header {
   position:             fixed;
   top: 0; left: 0;
@@ -351,7 +347,7 @@
   letter-spacing: -0.01em;
 }
 
-/* ── TRENDING HEADER TITLE ────────────────────────────────────── */
+/* trending header title */
 .trending-header-title {
   font-size:      1rem;
   font-weight:    700;
@@ -359,7 +355,7 @@
   letter-spacing: -0.02em;
 }
 
-/* ── BOTTOM NAV ──────────────────────────────────────────────── */
+/* bottom nav */
 .bottom-nav {
   position:             fixed;
   bottom: 0; left: 0;
@@ -426,7 +422,7 @@
 .nav-create:active .nav-fab { transform: scale(0.92); }
 .nav-create.active .nav-fab { background: #d4d4d4; }
 
-/* ── SHARE MODAL ─────────────────────────────────────────────── */
+/* share modal */
 .sm-overlay {
   position:        fixed;
   top: 0; left: 0;
@@ -574,7 +570,7 @@
    Font:  'Inter', sans-serif (enforced on body via global.css + index.html)
    ================================================================ */
 
-/* ── CARD SHELL ─────────────────────────────────────────────── */
+/* card shell */
 .fc-card {
   font-family:   'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   background:    #0a0a0a;
@@ -585,7 +581,7 @@
   display:       block;
   overflow:      hidden;
   box-sizing:    border-box;
-  /* Smooth hover without layout shift */
+  /* smooth hover without layout shift */
   transition:    border-color 0.12s ease, background 0.12s ease;
 }
 .fc-card:hover  {
@@ -594,7 +590,7 @@
 }
 .fc-card:active { background: #080808; }
 
-/* ── CLICKABLE AVATAR / USERNAME ───────────────────────────── */
+/* clickable avatar / username */
 .fc-avatar-clickable {
   cursor: pointer;
   display: inline-flex;
@@ -615,7 +611,7 @@
   text-underline-offset: 2px;
 }
 
-/* ── HEADER ─────────────────────────────────────────────────── */
+/* header */
 /*
   justify-content: space-between splits:
     LEFT  →  avatar + column(username, time)
@@ -633,12 +629,12 @@
 .fc-author {
   display:     flex;
   align-items: center;
-  gap:         12px;               /* spec: 12px gap between avatar and meta */
+  gap:         12px;
   min-width:   0;
   flex:        1;
 }
 
-/* Column: username on top, time below */
+/* column: username on top, time below */
 .fc-author-meta {
   display:        flex;
   flex-direction: column;
@@ -659,7 +655,7 @@
 .fc-time {
   font-size:   13px;               /* spec */
   color:       #888888;            /* spec */
-  margin-top:  2px;                /* spec: exactly underneath username */
+  margin-top:  2px;
   line-height: 1.2;
   white-space: nowrap;
 }
@@ -667,9 +663,9 @@
 /* RIGHT: category tag — flush to right corner */
 /* .cat-tag already defined above; this wrapper aligns it */
 .fc-header .cat-tag {
-  /* Override cat-tag defaults for the header right side */
+  /* override cat-tag defaults for the header right side */
   flex-shrink:   0;
-  border-radius: 99px;                         /* spec: 99px */
+  border-radius: 99px;
   border:        1px solid rgba(255,255,255,0.08); /* spec */
   padding:       4px 12px;                     /* spec */
   font-size:     12px;                         /* spec */
@@ -680,7 +676,7 @@
   text-transform: capitalize;
 }
 
-/* ── TITLE ──────────────────────────────────────────────────── */
+/* title */
 .fc-title {
   font-family:    'Inter', sans-serif;
   font-size:      0.97rem;
@@ -691,7 +687,7 @@
   letter-spacing: -0.015em;
 }
 
-/* ── BODY TEXT ──────────────────────────────────────────────── */
+/* body text */
 .fc-content {
   font-family:        'Inter', sans-serif;
   font-size:          0.85rem;
@@ -707,7 +703,7 @@
   word-break:         break-word;
 }
 
-/* ── IMAGE ──────────────────────────────────────────────────── */
+/* image */
 .fc-image-wrap {
   width:          100%;
   border-radius:  12px;
@@ -726,7 +722,7 @@
 }
 .fc-card:hover .fc-image-wrap img { transform: scale(1.025); }
 
-/* ── FOOTER ─────────────────────────────────────────────────── */
+/* footer */
 /*
   justify-content: space-between splits:
     LEFT  →  like + comment (gap: 20px)
@@ -744,10 +740,10 @@
 .fc-footer-left {
   display:     flex;
   align-items: center;
-  gap:         20px;               /* spec: 20px between like and comment */
+  gap:         20px;
 }
 
-/* ── ACTION BUTTON BASE ─────────────────────────────────────── */
+/* action button base */
 .fc-btn {
   display:       flex;
   align-items:   center;
@@ -772,7 +768,7 @@
 }
 .fc-btn:active { background: rgba(255, 255, 255, 0.08); }
 
-/* Like — active red state */
+/* like — active red state */
 .fc-liked {
   color: #ff4757;
 }
@@ -784,12 +780,12 @@
   background: rgba(255, 71, 87, 0.08) !important;
   color:      #ff4757 !important;
 }
-/* Heart beat on click */
+/* heart beat on click */
 .fc-liked svg {
   animation: heartBeat 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Share — iOS/Twitter arrow-up-from-box */
+/* share — iOS/Twitter arrow-up-from-box */
 .fc-share:hover {
   background: rgba(255, 255, 255, 0.05) !important;
   color:      #aaaaaa !important;

@@ -1,7 +1,3 @@
-"""
-app.py — Confessly backend entrypoint
-flask app setup, blueprint registration, static files, trending cron
-"""
 import os
 import json
 from datetime import datetime, timezone
@@ -60,8 +56,8 @@ app.register_blueprint(admin.bp)
 
 
 def recalculate_trending_scores():
-    # hourly cron: refresh trending_score for posts from the last 14 days
-    print(f'[Cron] Recalculating trending scores at {datetime.now(timezone.utc).isoformat()}...')
+    # runs hourly, recalcs scores for posts from the last 14 days
+    print(f'[cron] recalculating trending scores at {datetime.now(timezone.utc).isoformat()}')
     conn = cursor = None
     try:
         conn = get_db()
@@ -84,9 +80,9 @@ def recalculate_trending_scores():
             cursor.execute('UPDATE posts SET trending_score = %s WHERE id = %s', (score, post['id']))
             updated += 1
         conn.commit()
-        print(f'[Cron] Updated trending_score for {updated} posts.')
+        print(f'[cron] updated {updated} posts')
     except Exception as e:
-        print(f'[Cron] Error: {e}')
+        print(f'[cron] error: {e}')
     finally:
         if cursor: cursor.close()
         if conn: conn.close()
@@ -102,9 +98,8 @@ def serve_avatar(filename):
     return send_from_directory(AVATAR_FOLDER, filename)
 
 
-# started at import time (not just __main__) so the cron also runs under a
-# production WSGI server like gunicorn. assumes a single worker process —
-# with multiple workers each would run its own copy of this job.
+# module-level so it also runs under gunicorn, not just `python app.py`
+# (only works right with one worker, otherwise it'd run once per worker)
 if os.getenv('DISABLE_SCHEDULER', '0') != '1':
     scheduler = BackgroundScheduler()
     scheduler.add_job(

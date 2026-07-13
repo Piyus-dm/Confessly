@@ -1,4 +1,4 @@
-"""admin routes — all behind require_auth + require_admin"""
+# admin-only routes, all wrapped in require_auth + require_admin
 from datetime import date, datetime, timezone, timedelta
 
 from flask import Blueprint, request, jsonify

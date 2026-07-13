@@ -1,4 +1,4 @@
-"""notification routes"""
+# notification list + unread count + mark-read
 from datetime import datetime
 
 from flask import Blueprint, request, jsonify

@@ -1,9 +1,4 @@
-/* ================================================================
-   CONFESSLY — TRENDING PAGE
-   Layout: each item is a flex row → [Rank]  [FeedCard]
-   ================================================================ */
-
-/* ── HEADER TITLE ───────────────────────────────────────────── */
+/* header title */
 .trending-header-title {
   font-size:      1.5rem;          /* 24px — large & bold per spec */
   font-weight:    700;
@@ -11,13 +6,13 @@
   letter-spacing: -0.03em;
 }
 
-/* ── SEARCH WRAP (search box + divider) ─────────────────────── */
+/* search wrap */
 .tr-search-wrap {
   display:        flex;
   flex-direction: column;
 }
 
-/* Pill-shaped search bar — dark, premium */
+/* pill-shaped search bar — dark, premium */
 .tr-search-box {
   display:          flex;
   align-items:      center;
@@ -44,21 +39,21 @@
 }
 .tr-search-box input::placeholder { color: var(--text-muted); }
 
-/* Horizontal divider — strictly BELOW search bar, ABOVE first card */
+/* divider between search bar and the list */
 .tr-divider {
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   padding-bottom: 16px;
   margin-bottom:  16px;
 }
 
-/* ── LIST CONTAINER ─────────────────────────────────────────── */
+/* list container */
 .tr-list {
   display:        flex;
   flex-direction: column;
   gap:            10px;
 }
 
-/* ── EACH ROW: [Rank]  [FeedCard] ───────────────────────────── */
+/* each row: [rank]  [feedcard] */
 .tr-row {
   display:     flex;
   align-items: flex-start;
@@ -66,39 +61,39 @@
   animation:   fadeUp 0.3s var(--ease) both;
 }
 
-/* ── RANK NUMBER ────────────────────────────────────────────── */
+/* rank number */
 .tr-rank {
-  /* Fixed width so all cards left-align perfectly */
+  /* fixed width so ranks line up */
   width:        40px;
   flex-shrink:  0;
   text-align:   right;
 
-  /* Typography */
+  /* typography */
   font-family:  var(--font);
   font-size:    2.25rem;           /* 36px — large & impactful */
   font-weight:  800;
   line-height:  1;
   letter-spacing: -0.04em;
 
-  /* Muted grey baseline — overridden per rank below */
+  /* muted grey baseline — overridden per rank below */
   color:        #3a3a3a;
 
-  /* Vertically nudge to align with the card's avatar row */
+  /* line up with the avatar row */
   padding-top:  18px;
 }
 
-/* Top 3 rank accents — subtle grey variants */
+/* top 3 rank accents — subtle grey variants */
 .tr-row:nth-child(1) .tr-rank { color: #cccccc; }   /* #1 — bright grey */
 .tr-row:nth-child(2) .tr-rank { color: #999999; }   /* #2 — mid grey */
 .tr-row:nth-child(3) .tr-rank { color: #666666; }   /* #3 — dim grey */
 
-/* ── CARD WRAPPER ───────────────────────────────────────────── */
+/* card wrapper */
 .tr-card-wrap {
   flex:      1;                    /* fill remaining width */
   min-width: 0;                    /* prevent flex overflow */
 }
 
-/* ── RESPONSIVE: tighten rank on small screens ──────────────── */
+/* responsive: tighten rank on small screens */
 @media (max-width: 360px) {
   .tr-rank {
     width:     32px;

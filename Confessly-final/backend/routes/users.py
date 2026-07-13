@@ -1,4 +1,4 @@
-"""user routes — blocking, follows, reports"""
+# blocking, follows, reports
 from flask import Blueprint, request, jsonify
 import mysql.connector
 

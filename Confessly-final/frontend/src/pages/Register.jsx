@@ -83,7 +83,7 @@ export default function Register() {
         <div className="auth-view">
             <main className="auth-container">
 
-                {/* Brand */}
+                {/* logo */}
                 <div className="auth-brand">
                     <Logo height={30} />
                 </div>
@@ -180,7 +180,7 @@ export default function Register() {
                     </button>
                 </form>
 
-                {/* Divider */}
+                {/* divider */}
                 <div className="auth-divider">
                     <span>or continue with</span>
                 </div>

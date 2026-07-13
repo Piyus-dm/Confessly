@@ -1,4 +1,4 @@
-// shared line icons for the post menu — replaces the old emojis
+// icon set used by the post menu
 const base = {
     fill: 'none',
     stroke: 'currentColor',
