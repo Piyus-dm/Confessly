@@ -1,5 +1,4 @@
 import os
-import json
 from datetime import datetime, timezone
 
 from flask import Flask
@@ -28,16 +27,6 @@ def set_security_headers(response):
     return response
 
 app.config['MAX_CONTENT_LENGTH'] = MAX_CONTENT_LENGTH
-
-
-# datetimes as iso strings in json responses
-class ISO8601Encoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, datetime):
-            return obj.isoformat()
-        return super().default(obj)
-
-app.json_encoder = ISO8601Encoder
 
 # boot
 init_db_pool()

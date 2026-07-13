@@ -323,9 +323,24 @@ export default function PostDetail() {
                     <article className="fc-card pd-hero-card">
                         <div className="fc-header">
                             <div className="fc-author">
-                                <AnonAvatar size="md" src={post.avatar_url || user?.avatar_url} />
+                                <div
+                                    className="fc-avatar-clickable"
+                                    onClick={() => post.profile_id && navigate(`/user/${post.profile_id}`)}
+                                    role="button"
+                                    tabIndex={0}
+                                    aria-label="View profile"
+                                >
+                                    <AnonAvatar size="md" src={post.avatar_url || user?.avatar_url} />
+                                </div>
                                 <div className="fc-author-meta">
-                                    <span className="fc-username">{displayName}</span>
+                                    <span
+                                        className="fc-username fc-username-clickable"
+                                        onClick={() => post.profile_id && navigate(`/user/${post.profile_id}`)}
+                                        role="button"
+                                        tabIndex={0}
+                                    >
+                                        {displayName}
+                                    </span>
                                     <span className="fc-time">{timeAgo(post.created_at)}</span>
                                 </div>
                             </div>

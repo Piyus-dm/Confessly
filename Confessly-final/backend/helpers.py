@@ -1,5 +1,5 @@
 # shared decorators + query helpers used across routes
-from datetime import datetime
+from datetime import datetime, timezone
 from functools import wraps
 
 from flask import request, jsonify
@@ -10,12 +10,13 @@ from db import get_db
 
 
 def serialize_dates(obj):
-    # recursively turn datetimes into iso strings
     if isinstance(obj, dict):
         return {k: serialize_dates(v) for k, v in obj.items()}
     if isinstance(obj, list):
         return [serialize_dates(item) for item in obj]
     if isinstance(obj, datetime):
+        if obj.tzinfo is None:
+            obj = obj.replace(tzinfo=timezone.utc)
         return obj.isoformat()
     return obj
 

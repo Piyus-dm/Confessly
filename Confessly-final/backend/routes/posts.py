@@ -381,8 +381,8 @@ def get_trending():
                 JOIN categories cat ON p.category_id = cat.id
                 JOIN users u ON u.id = pr.user_id
                 WHERE ''' + BLOCKED_FILTER + '''
-                ORDER BY p.trending_score DESC
-                LIMIT 50
+                ORDER BY p.trending_score DESC, p.created_at DESC
+                LIMIT 10
             ''', (request.profile_id, request.user_id))
             rows = cursor.fetchall()
             return jsonify({'status': 'success', 'data': serialize_dates(rows)}), 200
