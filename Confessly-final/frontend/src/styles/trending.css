@@ -1,0 +1,108 @@
+/* ================================================================
+   CONFESSLY — TRENDING PAGE
+   Layout: each item is a flex row → [Rank]  [FeedCard]
+   ================================================================ */
+
+/* ── HEADER TITLE ───────────────────────────────────────────── */
+.trending-header-title {
+  font-size:      1.5rem;          /* 24px — large & bold per spec */
+  font-weight:    700;
+  color:          #ededed;
+  letter-spacing: -0.03em;
+}
+
+/* ── SEARCH WRAP (search box + divider) ─────────────────────── */
+.tr-search-wrap {
+  display:        flex;
+  flex-direction: column;
+}
+
+/* Pill-shaped search bar — dark, premium */
+.tr-search-box {
+  display:          flex;
+  align-items:      center;
+  gap:              10px;
+  background:       #0a0a0a;
+  border:           1px solid rgba(255, 255, 255, 0.08);
+  border-radius:    99px;               /* pill-shaped */
+  padding:          10px 18px;
+  transition:       border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.tr-search-box:focus-within {
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow:   0 0 0 3px rgba(255, 255, 255, 0.04);
+}
+.tr-search-box svg   { color: var(--text-muted); flex-shrink: 0; }
+.tr-search-box input {
+  flex:        1;
+  border:      none;
+  outline:     none;
+  background:  transparent;
+  font-size:   0.875rem;
+  color:       var(--text-primary);
+  font-family: var(--font);
+}
+.tr-search-box input::placeholder { color: var(--text-muted); }
+
+/* Horizontal divider — strictly BELOW search bar, ABOVE first card */
+.tr-divider {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 16px;
+  margin-bottom:  16px;
+}
+
+/* ── LIST CONTAINER ─────────────────────────────────────────── */
+.tr-list {
+  display:        flex;
+  flex-direction: column;
+  gap:            10px;
+}
+
+/* ── EACH ROW: [Rank]  [FeedCard] ───────────────────────────── */
+.tr-row {
+  display:     flex;
+  align-items: flex-start;
+  gap:         16px;
+  animation:   fadeUp 0.3s var(--ease) both;
+}
+
+/* ── RANK NUMBER ────────────────────────────────────────────── */
+.tr-rank {
+  /* Fixed width so all cards left-align perfectly */
+  width:        40px;
+  flex-shrink:  0;
+  text-align:   right;
+
+  /* Typography */
+  font-family:  var(--font);
+  font-size:    2.25rem;           /* 36px — large & impactful */
+  font-weight:  800;
+  line-height:  1;
+  letter-spacing: -0.04em;
+
+  /* Muted grey baseline — overridden per rank below */
+  color:        #3a3a3a;
+
+  /* Vertically nudge to align with the card's avatar row */
+  padding-top:  18px;
+}
+
+/* Top 3 rank accents — subtle grey variants */
+.tr-row:nth-child(1) .tr-rank { color: #cccccc; }   /* #1 — bright grey */
+.tr-row:nth-child(2) .tr-rank { color: #999999; }   /* #2 — mid grey */
+.tr-row:nth-child(3) .tr-rank { color: #666666; }   /* #3 — dim grey */
+
+/* ── CARD WRAPPER ───────────────────────────────────────────── */
+.tr-card-wrap {
+  flex:      1;                    /* fill remaining width */
+  min-width: 0;                    /* prevent flex overflow */
+}
+
+/* ── RESPONSIVE: tighten rank on small screens ──────────────── */
+@media (max-width: 360px) {
+  .tr-rank {
+    width:     32px;
+    font-size: 1.75rem;
+  }
+  .tr-row { gap: 10px; }
+}

@@ -1,0 +1,253 @@
+/* ================================================================
+   CONFESSLY — PREMIUM MONOCHROME AUTH PAGES (Login / Register / Welcome)
+   Background: #000000 (deep true black)
+   Cards:      #0a0a0a with subtle border (1px solid rgba(255, 255, 255, 0.08))
+   Inputs:     bg #111111, placeholder #555555, text #ededed
+               Focus: box-shadow 0 0 12px rgba(255, 255, 255, 0.05)
+   Buttons:    bg #ffffff (pure white), text #000000, radius 12px
+               :hover { bg #e5e5e5 } :active { transform: scale(0.98) }
+   ================================================================ */
+
+.auth-view {
+  min-height:      100vh;
+  display:         flex;
+  justify-content: center;
+  align-items:     center;
+  padding:         24px;
+  background-color: #000000;
+}
+
+.auth-container {
+  width:       100%;
+  max-width:   400px;
+  display:     flex;
+  flex-direction: column;
+}
+
+/* ── AUTH BRAND MARK ────────────────────────────────────────── */
+.auth-brand {
+  display:       flex;
+  align-items:   center;
+  gap:           10px;
+  margin-bottom: 36px;
+}
+.auth-brand-icon {
+  width:           36px;
+  height:          36px;
+  border-radius:   10px;
+  background:      #ffffff;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  color:           #000000;
+  font-size:       1.1rem;
+  font-weight:     800;
+  flex-shrink:     0;
+}
+.auth-brand-name {
+  font-size:      1rem;
+  font-weight:    700;
+  color:          #ededed;
+  letter-spacing: -0.02em;
+}
+
+/* ── AUTH HEADER ────────────────────────────────────────────── */
+.auth-header { margin-bottom: 28px; }
+.auth-title {
+  font-size:      1.8rem;
+  font-weight:    800;
+  letter-spacing: -0.04em;
+  color:          #ededed;
+  margin-bottom:  6px;
+  line-height:    1.1;
+}
+.auth-subtitle {
+  font-size:  0.88rem;
+  color:      #555555;
+  line-height: 1.5;
+}
+
+/* ── AUTH FORM ──────────────────────────────────────────────── */
+.auth-form {
+  display:        flex;
+  flex-direction: column;
+  gap:            14px;
+  margin-bottom:  24px;
+}
+
+.form-group {
+  display:        flex;
+  flex-direction: column;
+  gap:            6px;
+}
+.form-group label {
+  font-size:      0.72rem;
+  font-weight:    600;
+  color:          #555555;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.form-group input {
+  width:         100%;
+  padding:       11px 14px;
+  font-size:     0.9rem;
+  background:    #111111;
+  border:        1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  outline:       none;
+  color:         #ededed;
+  font-family:   'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  transition:    border-color 0.18s ease, box-shadow 0.18s ease;
+}
+.form-group input::placeholder { color: #555555; }
+.form-group input:focus {
+  border-color: rgba(255, 255, 255, 0.30);
+  box-shadow:   0 0 12px rgba(255, 255, 255, 0.05);
+}
+
+/* ── TURNSTILE WRAPPER ─────────────────────────────────────── */
+.turnstile-wrap {
+  display:         flex;
+  justify-content: center;
+  min-height:      65px;
+  margin:          4px 0;
+}
+.turnstile-wrap iframe {
+  border-radius: 8px;
+  overflow:      hidden;
+}
+
+/* ── AUTH ERROR ──────────────────────────────────────────────── */
+.auth-error {
+  display:       flex;
+  align-items:   center;
+  gap:           8px;
+  font-size:     13px;
+  color:         #ff4757;
+  padding:       10px 14px;
+  background:    rgba(255, 71, 87, 0.08);
+  border:        1px solid rgba(255, 71, 87, 0.20);
+  border-radius: 12px;
+  line-height:   1.4;
+}
+.auth-error svg { flex-shrink: 0; }
+
+/* ── PRIMARY BUTTON (dark grey/black, white text) ────── */
+.btn-primary {
+  display:         inline-flex;
+  align-items:     center;
+  justify-content: center;
+  gap:             8px;
+  width:           100%;
+  padding:         13px 20px;
+  background:      #1a1a1a;
+  color:           #ffffff;
+  border:          none;
+  font-size:       0.9rem;
+  font-weight:     600;
+  letter-spacing:  -0.01em;
+  border-radius:   12px;
+  cursor:          pointer;
+  transition:      background 0.18s ease, transform 0.10s ease, opacity 0.18s ease;
+  user-select:     none;
+  font-family:     'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+.btn-primary:hover  { background: #2a2a2a; }
+.btn-primary:active { transform: scale(0.98); }
+.btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+/* ── SWITCH AUTH LINK ───────────────────────────────────────── */
+.switch-auth-text {
+  font-size:  0.84rem;
+  color:      #555555;
+  text-align: center;
+}
+.switch-auth-text a {
+  color:          #ededed;
+  font-weight:    600;
+  text-decoration: none;
+  border-bottom:  1px solid rgba(255, 255, 255, 0.12);
+  padding-bottom: 1px;
+  transition:     border-color 0.10s ease;
+}
+.switch-auth-text a:hover { border-color: #ededed; }
+
+/* ── WELCOME PAGE ───────────────────────────────────────────── */
+.welcome-view {
+  min-height:      100vh;
+  display:         flex;
+  justify-content: center;
+  align-items:     center;
+  padding:         24px;
+  background-color: #000000;
+}
+
+.welcome-container {
+  width:          100%;
+  max-width:      400px;
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  text-align:     center;
+}
+
+.logo-box {
+  width:           60px;
+  height:          60px;
+  border:          1px solid rgba(255, 255, 255, 0.08);
+  border-radius:   16px;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  margin-bottom:   28px;
+  background:      #0a0a0a;
+}
+.logo-box span {
+  font-size:   0.72rem;
+  font-weight: 700;
+  color:       #ededed;
+  letter-spacing: 0.05em;
+}
+
+.brand-title {
+  font-size:      2.4rem;
+  font-weight:    800;
+  letter-spacing: -0.05em;
+  color:          #ededed;
+  margin-bottom:  10px;
+  line-height:    1;
+}
+
+.brand-tagline {
+  font-size:     0.9rem;
+  color:         #555555;
+  margin-bottom: 40px;
+  line-height:   1.5;
+}
+
+.welcome-actions {
+  display:        flex;
+  flex-direction: column;
+  gap:            10px;
+  width:          100%;
+}
+
+/* ── AUTH DIVIDER (or continue with) ───────────────────────── */
+.auth-divider {
+  display:        flex;
+  align-items:    center;
+  gap:            12px;
+  margin:         20px 0 16px;
+  color:          #444;
+  font-size:      0.72rem;
+  font-weight:    600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex:   1;
+  height:  1px;
+  background: #1a1a1a;
+}

@@ -1,0 +1,123 @@
+"""
+app.py — Confessly backend entrypoint
+flask app setup, blueprint registration, static files, trending cron
+"""
+import os
+import json
+from datetime import datetime, timezone
+
+from flask import Flask, send_from_directory
+from flask_cors import CORS
+from apscheduler.schedulers.background import BackgroundScheduler
+
+from config import UPLOAD_FOLDER, AVATAR_FOLDER, MAX_CONTENT_LENGTH, FLASK_SECRET_KEY, FRONTEND_URL
+from db import init_db_pool, get_db, ensure_categories
+from scoring import calculate_trending_score
+from routes import auth, oauth, posts, users, profiles, notifications, admin
+
+app = Flask(__name__)
+app.secret_key = FLASK_SECRET_KEY
+
+# only the frontend may make credentialed cross-origin calls
+ALLOWED_ORIGINS = list({FRONTEND_URL, 'http://localhost:5173', 'http://127.0.0.1:5173'})
+CORS(app, supports_credentials=True, resources={r"/api/*": {"origins": ALLOWED_ORIGINS, "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"], "allow_headers": ["Content-Type", "Authorization"]}})
+
+
+@app.after_request
+def set_security_headers(response):
+    response.headers.setdefault('X-Content-Type-Options', 'nosniff')
+    response.headers.setdefault('X-Frame-Options', 'DENY')
+    response.headers.setdefault('Referrer-Policy', 'strict-origin-when-cross-origin')
+    return response
+
+app.config['MAX_CONTENT_LENGTH'] = MAX_CONTENT_LENGTH
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+os.makedirs(AVATAR_FOLDER, exist_ok=True)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+
+# datetimes as iso strings in json responses
+class ISO8601Encoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, datetime):
+            return obj.isoformat()
+        return super().default(obj)
+
+app.json_encoder = ISO8601Encoder
+
+# boot
+init_db_pool()
+ensure_categories()
+
+# routes live in routes/ as blueprints
+app.register_blueprint(auth.bp)
+app.register_blueprint(oauth.bp)
+app.register_blueprint(posts.bp)
+app.register_blueprint(users.bp)
+app.register_blueprint(profiles.bp)
+app.register_blueprint(notifications.bp)
+app.register_blueprint(admin.bp)
+
+
+def recalculate_trending_scores():
+    # hourly cron: refresh trending_score for posts from the last 14 days
+    print(f'[Cron] Recalculating trending scores at {datetime.now(timezone.utc).isoformat()}...')
+    conn = cursor = None
+    try:
+        conn = get_db()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute('''
+            SELECT p.id, p.created_at,
+                   (SELECT COUNT(*) FROM reactions r WHERE r.item_id = p.id AND r.item_type = 'post' AND r.reaction_type = 'like') as likes_count,
+                   (SELECT COUNT(*) FROM comments c WHERE c.post_id = p.id) as comments_count
+            FROM posts p
+            WHERE p.created_at >= NOW() - INTERVAL 14 DAY
+        ''')
+        posts_rows = cursor.fetchall()
+        updated = 0
+        for post in posts_rows:
+            score = calculate_trending_score(
+                likes_count=post['likes_count'],
+                comments_count=post['comments_count'],
+                created_at_str=str(post['created_at']) if post['created_at'] else None,
+            )
+            cursor.execute('UPDATE posts SET trending_score = %s WHERE id = %s', (score, post['id']))
+            updated += 1
+        conn.commit()
+        print(f'[Cron] Updated trending_score for {updated} posts.')
+    except Exception as e:
+        print(f'[Cron] Error: {e}')
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
+
+
+@app.route('/static/uploads/<filename>')
+def serve_upload(filename):
+    return send_from_directory(UPLOAD_FOLDER, filename)
+
+
+@app.route('/static/avatars/<filename>')
+def serve_avatar(filename):
+    return send_from_directory(AVATAR_FOLDER, filename)
+
+
+# started at import time (not just __main__) so the cron also runs under a
+# production WSGI server like gunicorn. assumes a single worker process —
+# with multiple workers each would run its own copy of this job.
+if os.getenv('DISABLE_SCHEDULER', '0') != '1':
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(
+        func=recalculate_trending_scores,
+        trigger='cron',
+        hour='*',
+        minute='0',
+        id='trending_score_hourly',
+        replace_existing=True,
+    )
+    scheduler.start()
+
+if __name__ == '__main__':
+    # never ship the werkzeug debugger — enable locally with FLASK_DEBUG=1
+    debug_mode = os.getenv('FLASK_DEBUG', '0') == '1'
+    app.run(debug=debug_mode, use_reloader=False, port=5000)

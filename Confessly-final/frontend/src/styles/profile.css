@@ -1,0 +1,601 @@
+/* ================================================================
+   CONFESSLY — PROFILE PAGE (X/Twitter-style flat redesign)
+   Pure black background (#000000), left-aligned hierarchy.
+   No boxy containers — clean continuous flow.
+   ================================================================ */
+
+/* ── PROFILE HEADER ─────────────────────────────────────────── */
+.profile-header {
+  position:             fixed;
+  top: 0; left: 0;
+  width:                100%;
+  height:               var(--header-h);
+  background-color:     rgba(0, 0, 0, 0.85);
+  backdrop-filter:      blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom:        1px solid var(--border);
+  display:              flex;
+  align-items:          center;
+  padding:              0 16px;
+  gap:                  12px;
+  z-index:              200;
+}
+
+.profile-title {
+  flex:           1;
+  font-size:      1rem;
+  font-weight:    700;
+  color:          var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.header-actions { position: relative; }
+
+/* ── SETTINGS DROPDOWN ──────────────────────────────────────── */
+.settings-dropdown {
+  display:       none;
+  position:      absolute;
+  top:           calc(100% + 8px);
+  right:         0;
+  background:    rgba(13, 13, 13, 0.98);
+  backdrop-filter: blur(20px);
+  border:        1px solid var(--border-mid);
+  border-radius: var(--r-lg);
+  box-shadow:    var(--shadow-modal);
+  padding:       6px;
+  min-width:     220px;
+  z-index:       300;
+  animation:     scaleIn 0.18s var(--ease);
+  transform-origin: top right;
+}
+.settings-dropdown.show { display: block; }
+
+.setting-item {
+  display:         flex;
+  justify-content: space-between;
+  align-items:     center;
+  padding:         10px 12px;
+  font-size:       0.82rem;
+  color:           var(--text-secondary);
+  font-weight:     500;
+  border-radius:   var(--r-md);
+}
+
+/* Toggle switch (for Show Stats only) */
+.switch {
+  position: relative;
+  width:    38px;
+  height:   21px;
+  display:  inline-block;
+}
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider {
+  position:          absolute;
+  cursor:            pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color:  var(--bg-elevated);
+  border:            1px solid var(--border-mid);
+  border-radius:     21px;
+  transition:        background var(--t) ease, border-color var(--t) ease;
+}
+.slider::before {
+  content:          '';
+  position:         absolute;
+  width:            15px;
+  height:           15px;
+  left:             2px;
+  bottom:           2px;
+  background-color: var(--text-muted);
+  border-radius:    50%;
+  transition:       transform var(--t) ease, background var(--t) ease;
+}
+input:checked + .slider              { background-color: var(--text-primary); border-color: var(--text-primary); }
+input:checked + .slider::before      { transform: translateX(17px); background-color: #000; }
+
+.dropdown-btn {
+  display:       block;
+  width:         100%;
+  padding:       10px 12px;
+  background:    none;
+  border:        none;
+  text-align:    left;
+  font-size:     0.82rem;
+  font-weight:   500;
+  color:         var(--text-secondary);
+  cursor:        pointer;
+  border-radius: var(--r-md);
+  transition:    background var(--t-fast) ease, color var(--t-fast) ease;
+  font-family:   var(--font);
+}
+.dropdown-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+.dropdown-btn.danger { color: #ff4757; }
+.dropdown-btn.danger:hover { background: rgba(255, 71, 87, 0.08); color: #ff4757; }
+
+/* ── PROFILE MAIN ───────────────────────────────────────────── */
+.profile-main {
+  max-width: var(--max-w);
+  margin:    0 auto;
+  padding:   0;
+}
+
+/* ── ERROR STATE ────────────────────────────────────────────── */
+.profile-error {
+  text-align:  center;
+  padding:     40px 20px;
+  color:       var(--text-muted);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   HERO SECTION — X/Twitter-style flat hierarchy
+   ════════════════════════════════════════════════════════════════ */
+.pr-hero {
+  padding:                  16px 16px 4px;
+  background:               transparent;   /* pure black continuous bg */
+}
+
+/* ── TOP ROW: avatar (left) + edit button (right) ──────────── */
+.pr-hero-top {
+  display:         flex;
+  justify-content: space-between;
+  align-items:     flex-start;
+  margin-bottom:   10px;
+}
+
+.pr-avatar-wrap {
+  width:           72px;
+  height:          72px;
+  border-radius:   50%;
+  overflow:        hidden;
+  border:          2px solid var(--border);
+  background:      var(--bg-card);
+  flex-shrink:     0;
+}
+
+.pr-avatar {
+  width:        100%;
+  height:       100%;
+  object-fit:   cover;
+  display:      block;
+}
+
+.pr-avatar-fallback {
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  font-size:       1.6rem;
+  font-weight:     800;
+  color:           #fff;
+  background:      #333333;
+}
+
+/* Edit profile button — outlined pill, positioned right */
+.pr-edit-btn {
+  display:         inline-flex;
+  align-items:     center;
+  justify-content: center;
+  padding:         6px 16px;
+  border-radius:   9999px;
+  background:      transparent;
+  border:          1px solid var(--border-mid);
+  color:           var(--text-primary);
+  font-family:     var(--font);
+  font-size:       0.82rem;
+  font-weight:     700;
+  cursor:          pointer;
+  transition:      background 0.12s ease, border-color 0.12s ease;
+  min-height:      32px;
+  flex-shrink:     0;
+  margin-top:      4px;
+}
+.pr-edit-btn:hover {
+  background:   var(--bg-hover);
+  border-color: var(--border-focus);
+}
+
+/* ── INFO BLOCK: name, handle, bio, joined date ─────────────── */
+.pr-info {
+  margin-bottom: 12px;
+}
+
+.pr-name {
+  font-size:      1.15rem;
+  font-weight:    800;
+  color:          var(--text-primary);
+  letter-spacing: -0.02em;
+  line-height:    1.2;
+  margin-bottom:  1px;
+}
+
+.pr-handle {
+  display:       block;
+  font-size:     0.85rem;
+  font-weight:   400;
+  color:         var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.pr-bio {
+  font-size:      0.88rem;
+  line-height:    1.5;
+  color:          var(--text-primary);
+  margin-bottom:  8px;
+  word-wrap:      break-word;
+}
+
+.pr-joined {
+  display:     inline-flex;
+  align-items: center;
+  gap:         4px;
+  font-size:   0.82rem;
+  color:       var(--text-muted);
+}
+
+.pr-joined svg { flex-shrink: 0; }
+
+/* ── STATS ROW ──────────────────────────────────────────────── */
+.pr-stats {
+  display:     flex;
+  gap:         20px;
+  padding:     10px 0;
+}
+
+.pr-stat {
+  display:     flex;
+  gap:         4px;
+  font-size:   0.82rem;
+}
+
+.pr-stat strong {
+  font-weight:   700;
+  color:         var(--text-primary);
+}
+
+.pr-stat span {
+  color: var(--text-muted);
+}
+
+/* When stats are hidden — number replaced by em-dash */
+.pr-stat-hidden {
+  color: var(--text-muted) !important;
+  font-weight: 400 !important;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   TABS
+   ════════════════════════════════════════════════════════════════ */
+.pr-tabs {
+  display:         flex;
+  border-bottom:   1px solid var(--border);
+  margin:          0 0 4px;
+  position:        sticky;
+  top:             var(--header-h);
+  background:      rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(20px);
+  z-index:         20;
+}
+
+.pr-tab {
+  flex:           1;
+  padding:        14px 0;
+  background:     transparent;
+  border:         none;
+  font-family:    var(--font);
+  font-size:      0.85rem;
+  font-weight:    600;
+  color:          var(--text-muted);
+  cursor:         pointer;
+  position:       relative;
+  transition:     color 0.12s ease;
+}
+
+.pr-tab.active {
+  color: var(--text-primary);
+}
+
+.pr-tab.active::after {
+  content:        '';
+  position:       absolute;
+  bottom:         0;
+  left:           50%;
+  transform:      translateX(-50%);
+  width:          56px;
+  height:         3px;
+  border-radius:  3px 3px 0 0;
+  background:     var(--text-primary);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   TAB CONTENT
+   ════════════════════════════════════════════════════════════════ */
+.pr-content {
+  padding: 0;
+}
+
+.pr-empty {
+  text-align:  center;
+  padding:     48px 20px;
+  color:       var(--text-muted);
+  font-size:   0.88rem;
+}
+
+.pr-loading {
+  text-align:  center;
+  padding:     16px;
+  color:       var(--text-muted);
+  font-size:   0.82rem;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   POST CARDS (Confessions tab)
+   Clean atomic cards: subtle border, minimal bg shift
+   ════════════════════════════════════════════════════════════════ */
+.pr-post-card {
+  background:     transparent;
+  padding:        14px 16px;
+  border-bottom:  1px solid var(--border);
+  cursor:         pointer;
+  transition:     background 0.1s ease;
+}
+.pr-post-card:hover {
+  background: var(--bg-hover);
+}
+
+.pr-post-top {
+  display:       flex;
+  justify-content: space-between;
+  align-items:   center;
+  margin-bottom: 4px;
+}
+
+.pr-post-cat {
+  display:        inline-flex;
+  align-items:    center;
+  padding:        2px 8px;
+  border-radius:  4px;
+  font-size:      0.68rem;
+  font-weight:    600;
+  color:          var(--text-secondary);
+  background:     rgba(255, 255, 255, 0.05);
+  border:         1px solid var(--border);
+  letter-spacing: 0.02em;
+  text-transform: capitalize;
+}
+
+.pr-post-time {
+  font-size:   0.72rem;
+  color:       var(--text-muted);
+  flex-shrink: 0;
+}
+
+.pr-post-title {
+  font-family:    'Inter', sans-serif;
+  font-size:      0.95rem;
+  font-weight:    700;
+  color:          var(--text-primary);
+  line-height:    1.35;
+  margin-bottom:  4px;
+  letter-spacing: -0.01em;
+}
+
+.pr-post-text {
+  font-family:  'Inter', sans-serif;
+  font-size:    0.85rem;
+  line-height:  1.5;
+  color:        var(--text-secondary);
+  margin-bottom: 8px;
+  display:      -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow:     hidden;
+  word-break:   break-word;
+}
+
+.pr-post-meta {
+  display:     flex;
+  gap:         20px;
+  align-items: center;
+}
+
+.pr-post-stat {
+  display:     inline-flex;
+  align-items: center;
+  gap:         5px;
+  font-size:   0.78rem;
+  color:       var(--text-muted);
+  font-weight: 500;
+}
+
+.pr-post-stat svg { flex-shrink: 0; }
+
+/* ════════════════════════════════════════════════════════════════
+   COMMENT CARDS (Comments tab)
+   Shows the original post context snippet + user's comment below
+   ════════════════════════════════════════════════════════════════ */
+.pr-comment-card {
+  padding:        14px 16px;
+  border-bottom:  1px solid var(--border);
+  transition:     background 0.1s ease;
+}
+.pr-comment-card:hover {
+  background: var(--bg-hover);
+}
+
+.pr-comment-context {
+  display:        flex;
+  align-items:    baseline;
+  gap:            6px;
+  margin-bottom:  6px;
+  padding:        6px 10px;
+  background:     rgba(255, 255, 255, 0.03);
+  border-radius:  8px;
+  border-left:    2px solid var(--border-mid);
+}
+
+.pr-comment-ctx-label {
+  font-size:   0.7rem;
+  font-weight: 500;
+  color:       var(--text-muted);
+  white-space: nowrap;
+}
+
+.pr-comment-ctx-link {
+  font-size:     0.78rem;
+  font-weight:   600;
+  color:         var(--text-secondary);
+  text-decoration: none;
+  overflow:      hidden;
+  text-overflow: ellipsis;
+  white-space:   nowrap;
+}
+.pr-comment-ctx-link:hover {
+  color: var(--text-primary);
+}
+
+.pr-comment-text {
+  font-family:  'Inter', sans-serif;
+  font-size:    0.88rem;
+  line-height:  1.55;
+  color:        var(--text-primary);
+  margin-bottom: 6px;
+  word-break:   break-word;
+}
+
+.pr-comment-time {
+  font-size:   0.72rem;
+  color:       var(--text-muted);
+}
+
+/* ── PRIVATE ACCOUNT LOCK ──────────────────────────────────────── */
+.pr-private-block {
+  text-align:  center;
+  padding:     48px 20px;
+  color:       var(--text-muted);
+}
+.pr-private-icon {
+  font-size: 2rem;
+  margin-bottom: 12px;
+}
+.pr-private-block h3 {
+  font-size:      1rem;
+  font-weight:    700;
+  color:          var(--text-primary);
+  margin-bottom:  6px;
+}
+.pr-private-block p {
+  font-size:   0.85rem;
+  color:       var(--text-muted);
+  line-height: 1.5;
+}
+
+/* ── COOLDOWN MESSAGES (edit profile modal) ─────────────────── */
+.cooldown-hint {
+  font-size:  0.72rem;
+  color:      var(--text-muted);
+  margin-top: 4px;
+}
+
+.cooldown-error {
+  font-size:  0.72rem;
+  color:      #ff4757;
+  margin-top: 4px;
+}
+
+/* ── MODAL OVERLAY (shared) ──────────────────────────────────── */
+.modal-overlay {
+  display:         none;
+  position:        fixed;
+  top: 0; left: 0;
+  width:           100%; height: 100%;
+  background:      rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  align-items:     center;
+  justify-content: center;
+  z-index:         1000;
+}
+.modal-overlay[style*="flex"] { display: flex; }
+
+.modal-content {
+  background:     var(--bg-card);
+  border:         1px solid var(--border-mid);
+  border-radius:  var(--r-xl);
+  padding:        22px;
+  width:          90%;
+  max-width:      400px;
+  max-height:     85vh;
+  overflow-y:     auto;
+  box-shadow:     var(--shadow-modal);
+  animation:      scaleIn 0.22s var(--ease);
+}
+
+.modal-header {
+  display:         flex;
+  justify-content: space-between;
+  align-items:     center;
+  margin-bottom:   18px;
+}
+.modal-header h3 {
+  font-size:      0.95rem;
+  font-weight:    700;
+  color:          var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.avatar-upload {
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  margin-bottom:  18px;
+  gap:            8px;
+}
+.avatar-upload img {
+  width:         72px;
+  height:        72px;
+  border-radius: var(--r-full);
+  object-fit:    cover;
+  border:        1px solid var(--border);
+}
+.avatar-upload .avatar-fallback.large {
+  width:     72px;
+  height:    72px;
+  font-size: 1.5rem;
+}
+.upload-btn {
+  background:   none;
+  border:       none;
+  color:        var(--text-secondary);
+  font-weight:  600;
+  cursor:       pointer;
+  font-size:    0.78rem;
+  transition:   color var(--t-fast) ease;
+  font-family:  var(--font);
+}
+.upload-btn:hover { color: var(--text-primary); }
+
+.form-group { margin-bottom: 14px; }
+.form-group label {
+  display:        block;
+  font-size:      0.72rem;
+  font-weight:    600;
+  color:          var(--text-muted);
+  margin-bottom:  6px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.danger-btn {
+  background-color: rgba(255, 71, 87, 0.15) !important;
+  color:            #ff4757 !important;
+  border-color:     rgba(255, 71, 87, 0.3) !important;
+}
+.danger-btn:hover {
+  background-color: rgba(255, 71, 87, 0.25) !important;
+}
+
+/* ── LEGACY CLASS COMPAT (keep old selectors working) ───────── */
+.profile-skeleton { /* removed - uses SkeletonLoader now */ }
+
+/* Bring in the pulse keyframe just in case it's not loaded */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.45; }
+}

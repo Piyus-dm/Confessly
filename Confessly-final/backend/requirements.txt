@@ -1,0 +1,10 @@
+flask
+flask-cors
+werkzeug
+apscheduler
+bcrypt
+PyJWT
+mysql-connector-python
+requests
+python-dotenv
+gunicorn

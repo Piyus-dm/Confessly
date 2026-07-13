@@ -1,0 +1,722 @@
+/* ================================================================
+   CONFESSLY — GLOBAL DESIGN SYSTEM
+   Ultra-premium dark glassmorphism — Linear / Vercel aesthetic
+   ================================================================ */
+
+/* ── DESIGN TOKENS ──────────────────────────────────────────── */
+:root {
+  /* Typography */
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Backgrounds */
+  --bg-base:      #000000;
+  --bg-subtle:    #080808;
+  --bg-card:      #0d0d0d;
+  --bg-elevated:  #111111;
+  --bg-hover:     #161616;
+  --bg-input:     #0f0f0f;
+  --bg-glass:     rgba(255, 255, 255, 0.03);
+
+  /* Borders */
+  --border:       rgba(255, 255, 255, 0.08);
+  --border-mid:   rgba(255, 255, 255, 0.12);
+  --border-focus: rgba(255, 255, 255, 0.3);
+
+  /* Text */
+  --text-primary:   #ededed;
+  --text-secondary: #888888;
+  --text-muted:     #555555;
+  --text-inverse:   #000000;
+
+  /* Accent — crisp white interactive */
+  --accent:       #ededed;
+  --accent-dim:   rgba(237, 237, 237, 0.08);
+  --accent-hover: #d4d4d4;
+  --accent-light: rgba(255, 255, 255, 0.12);
+  --accent-glow:  rgba(255, 255, 255, 0.15);
+
+  /* Semantic */
+  --like:         #ff4757;
+  --like-bg:      rgba(255, 71, 87, 0.08);
+  --comment:      rgba(255, 255, 255, 0.6);
+  --share:        rgba(255, 255, 255, 0.6);
+
+  /* Skeleton pulse colors */
+  --sk-from:      #0d0d0d;
+  --sk-to:        #1a1a1a;
+
+  /* Layout */
+  --header-h:     56px;
+  --nav-h:        64px;
+  --max-w:        600px;
+
+  /* Radius */
+  --r-sm:   6px;
+  --r-md:   10px;
+  --r-lg:   16px;
+  --r-xl:   20px;
+  --r-full: 9999px;
+
+  /* Shadows */
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.8), 0 0 0 1px var(--border);
+  --shadow-modal: 0 32px 64px rgba(0,0,0,0.9), 0 0 0 1px var(--border);
+
+  /* Easing */
+  --ease:      cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in:   cubic-bezier(0.4, 0, 1, 1);
+  --t:         0.18s;
+  --t-fast:    0.1s;
+  --t-slow:    0.35s;
+}
+
+/* ── RESET ───────────────────────────────────────────────────── */
+*, *::before, *::after {
+  margin: 0; padding: 0; box-sizing: border-box;
+}
+html { overflow-x: hidden; scroll-behavior: smooth; }
+body {
+  font-family:             var(--font);
+  font-size:               15px;
+  line-height:             1.5;
+  background-color:        var(--bg-base);
+  color:                   var(--text-primary);
+  -webkit-font-smoothing:  antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x:              hidden;
+  min-height:              100vh;
+
+  background-attachment: fixed;
+}
+img, video { max-width: 100%; display: block; }
+button, input, textarea, select {
+  font-family: var(--font);
+  font-size:   inherit;
+  color:       inherit;
+}
+a { color: inherit; text-decoration: none; }
+
+/* ── APP SHELL ───────────────────────────────────────────────── */
+.app-body {
+  background-color: var(--bg-base);
+  padding-top:      var(--header-h);
+  padding-bottom:   var(--nav-h);
+  min-height:       100vh;
+}
+
+/* ── GLASSMORPHISM SURFACE ───────────────────────────────────── */
+.glass {
+  background:           rgba(255, 255, 255, 0.03);
+  backdrop-filter:      blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border:               1px solid var(--border);
+}
+
+/* ── SKELETON / SHIMMER ───────────────────────────────────────
+   Pure pulse animation: dark #0a0a0a blocks that gently fade in/out.
+   No shimmer gradient — uses a smooth opacity pulse to match
+   the brutalist dark aesthetic.
+   ─────────────────────────────────────────────────────── */
+.skeleton {
+  background: #161616;
+  border-radius: var(--r-sm);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Pulse keyframes — subtle opacity fade */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.45; }
+}
+
+/* Legacy shimmer classes kept for backwards compat */
+.skeleton-card {
+  background:    var(--bg-card);
+  border:        1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding:       20px;
+}
+
+.skeleton-row {
+  display:       flex;
+  align-items:   center;
+  gap:           12px;
+  margin-bottom: 16px;
+}
+
+.sk-avatar { width: 38px; height: 38px; border-radius: var(--r-full); flex-shrink: 0; }
+.sk-line   { height: 12px; border-radius: var(--r-full); }
+.sk-image  { width: 100%; height: 200px; border-radius: var(--r-lg); margin-top: 14px; }
+
+/* ── SKELETON BLOCK SYSTEM (new — used by SkeletonLoader.jsx) ── */
+.sk-card {
+  background:    var(--bg-card);
+  border:        1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding:       20px;
+}
+
+.sk-row {
+  display:       flex;
+  align-items:   center;
+  gap:           12px;
+  margin-bottom: 16px;
+}
+
+.sk-block {
+  background: #161616;
+  border-radius: var(--r-sm);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Legacy compat — ensure old skeleton references still work */
+.skeleton.skeleton,
+.skeleton-card.skeleton-card,
+.skeleton-row.skeleton-row {
+  /* Keep old selectors working by scoping nothing extra */
+}
+
+/* ── ANIMATIONS ─────────────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.96) translateY(8px); }
+  to   { opacity: 1; transform: scale(1) translateY(0);      }
+}
+/* @keyframes pulse defined above in SKELETON section — keep only one copy */
+@keyframes heartBeat {
+  0%, 100% { transform: scale(1); }
+  30%       { transform: scale(1.25); }
+  60%       { transform: scale(0.92); }
+}
+
+.anim-fadeUp  { animation: fadeUp  var(--t-slow) var(--ease) both; }
+.anim-scaleIn { animation: scaleIn var(--t-slow) var(--ease) both; }
+
+/* ── ANONYMOUS AVATAR — hollow circle + SVG user outline ─────
+   Premium Vercel/Linear aesthetic: no colored circles, no initials.
+   Just a dark hollow ring with a minimalist user silhouette inside.
+   ──────────────────────────────────────────────────────────── */
+.anon-avatar {
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  border-radius:   var(--r-full);
+  background:      transparent;
+  border:          1px solid rgba(255, 255, 255, 0.10);
+  color:           #888888;
+  flex-shrink:     0;
+  user-select:     none;
+  /* subtle inner fill so it reads against pure black cards */
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+/* Size variants */
+.anon-avatar-sm { width: 28px; height: 28px; }
+.anon-avatar-sm svg { width: 13px; height: 13px; }
+
+.anon-avatar-md { width: 36px; height: 36px; }
+.anon-avatar-md svg { width: 16px; height: 16px; }
+
+.anon-avatar-lg { width: 48px; height: 48px; }
+.anon-avatar-lg svg { width: 22px; height: 22px; }
+
+/* Comment-thread micro size */
+.anon-avatar-xs { width: 26px; height: 26px; }
+.anon-avatar-xs svg { width: 12px; height: 12px; }
+
+/* Hover: barely brighter ring — subtle affordance */
+.anon-avatar:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Real profile picture variant — overrides the hollow ring */
+.anon-avatar-img {
+  background-color: transparent;
+  border-color:     rgba(255, 255, 255, 0.12);
+  overflow:         hidden;
+  padding:          0;
+}
+.anon-avatar-img img {
+  width:       100%;
+  height:      100%;
+  object-fit:  cover;
+  display:     block;
+  border-radius: inherit;
+}
+/* Fallback SVG shown if image fails to load */
+.anon-avatar-fallback {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+/* ── BUTTON BASE ────────────────────────────────────────────── */
+.btn-primary {
+  display:         inline-flex;
+  align-items:     center;
+  justify-content: center;
+  gap:             8px;
+  width:           100%;
+  padding:         13px 20px;
+  background:      var(--accent);
+  color:           #ffffff;
+  border:          none;
+  font-size:       0.9rem;
+  font-weight:     600;
+  letter-spacing:  -0.01em;
+  border-radius:   var(--r-md);
+  cursor:          pointer;
+  transition:      background var(--t) ease, transform var(--t-fast) ease, opacity var(--t) ease;
+  user-select:     none;
+}
+.btn-primary:hover  { background: var(--accent-hover); }
+.btn-primary:active { transform: scale(0.97); }
+.btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn-ghost {
+  display:         inline-flex;
+  align-items:     center;
+  justify-content: center;
+  gap:             8px;
+  padding:         10px 16px;
+  background:      transparent;
+  color:           var(--text-secondary);
+  border:          1px solid var(--border);
+  font-size:       0.85rem;
+  font-weight:     500;
+  border-radius:   var(--r-md);
+  cursor:          pointer;
+  transition:      background var(--t) ease, border-color var(--t) ease, color var(--t) ease;
+}
+.btn-ghost:hover { background: var(--bg-hover); border-color: var(--border-mid); color: var(--text-primary); }
+
+/* ── ICON BUTTON ────────────────────────────────────────────── */
+.icon-btn {
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  width:           36px;
+  height:          36px;
+  border-radius:   var(--r-full);
+  background:      transparent;
+  border:          none;
+  color:           var(--text-secondary);
+  cursor:          pointer;
+  transition:      background var(--t-fast) ease, color var(--t-fast) ease;
+}
+.icon-btn:hover  { background: var(--bg-hover); color: var(--text-primary); }
+.icon-btn:active { background: var(--bg-elevated); }
+
+/* ── EMPTY STATE ────────────────────────────────────────────── */
+.empty-state {
+  text-align:  center;
+  padding:     60px 20px;
+  color:       var(--text-muted);
+  font-size:   0.88rem;
+  font-weight: 500;
+  animation:   fadeUp var(--t-slow) var(--ease) both;
+}
+.empty-state-icon {
+  width:         40px;
+  height:        40px;
+  color:         var(--text-muted);
+  margin:        0 auto 16px;
+  opacity:       0.5;
+}
+
+/* ── DIVIDER ────────────────────────────────────────────────── */
+.divider {
+  height:     1px;
+  background: var(--border);
+  margin:     8px 0;
+}
+
+/* ── FORM BASE ──────────────────────────────────────────────── */
+.form-input {
+  width:         100%;
+  padding:       12px 14px;
+  background:    var(--bg-input);
+  border:        1px solid var(--border);
+  border-radius: var(--r-md);
+  outline:       none;
+  font-size:     0.9rem;
+  color:         var(--text-primary);
+  transition:    border-color var(--t) ease, box-shadow var(--t) ease;
+}
+.form-input::placeholder { color: var(--text-muted); }
+.form-input:focus {
+  border-color: var(--border-focus);
+  box-shadow:   0 0 0 3px rgba(255, 255, 255, 0.04);
+}
+
+/* ── PREMIUM INPUT (round, glow on focus, smooth transition) ── */
+.premium-input {
+  width:         100%;
+  padding:       12px 16px;
+  background:    var(--bg-input, #111111);
+  border:        1px solid var(--border);
+  border-radius: 12px;
+  outline:       none;
+  font-family:   var(--font);
+  font-size:     0.9rem;
+  color:         var(--text-primary);
+  transition:    border-color 0.18s ease, box-shadow 0.18s ease;
+}
+.premium-input::placeholder { color: var(--text-muted); }
+.premium-input:focus {
+  border-color: rgba(255, 255, 255, 0.30);
+  box-shadow:   0 0 0 3px rgba(255, 255, 255, 0.05), 0 0 12px rgba(255, 255, 255, 0.03);
+}
+
+/* ── CHROME AUTOFILL OVERRIDE ─────────────────────────────────
+   Force all input autofill backgrounds to stay pitch-black.
+   Chrome uses !important internally so we match the specificity.
+────────────────────────────────────────────────────────────── */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #111111 inset !important;
+  -webkit-text-fill-color: #ededed !important;
+  caret-color: #ededed;
+  transition: background-color 50000s ease-in-out 0s;
+}
+
+/* ── FOLLOW BUTTON ─────────────────────────────────────────────
+   X/Twitter style: outlined for "Follow", filled for "Following"
+   Optimistic UI: toggle instantly on click
+───────────────────────────────────────────────────────────── */
+.follow-btn {
+  display:         inline-flex;
+  align-items:     center;
+  justify-content: center;
+  gap:             6px;
+  padding:         7px 18px;
+  border-radius:   9999px;
+  font-family:     var(--font);
+  font-size:       0.82rem;
+  font-weight:     700;
+  cursor:          pointer;
+  transition:      background 0.12s ease, color 0.12s ease, border-color 0.12s ease, transform 0.08s ease;
+  user-select:     none;
+  outline:         none;
+  min-width:       90px;
+  /* Default: outlined (Follow) */
+  background:      transparent;
+  color:           var(--text-primary);
+  border:          1px solid var(--border-mid);
+}
+.follow-btn:hover {
+  background:   var(--bg-hover);
+  border-color: var(--border-focus);
+}
+.follow-btn:active {
+  transform: scale(0.95);
+}
+/* Following state — filled */
+.follow-btn.following {
+  background:   rgba(255, 255, 255, 0.08);
+  color:        var(--text-secondary);
+  border-color: var(--border);
+}
+.follow-btn.following:hover {
+  background: rgba(255, 71, 87, 0.10);
+  color:      #ff4757;
+  border-color: rgba(255, 71, 87, 0.25);
+}
+.follow-btn:disabled {
+  opacity: 0.6;
+  cursor:  not-allowed;
+}
+
+/* ── C-LOGO AVATAR ──────────────────────────────────────────── */
+.c-avatar-logo {
+  width:           36px;
+  height:          36px;
+  border-radius:   var(--r-full);
+  background:      var(--text-primary);
+  color:           var(--text-inverse);
+  font-weight:     800;
+  font-size:       1rem;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  flex-shrink:     0;
+  user-select:     none;
+}
+
+/* ── LOGO ────────────────────────────────────────────────────── */
+/* the lockup is ~3.1:1 — always size by height, never force a square */
+.cf-logo-img,
+.cf-logo-mark {
+  display:           block;
+  object-fit:        contain;
+  flex-shrink:       0;
+  user-select:       none;
+  -webkit-user-drag: none;
+  transition:        transform var(--t-fast, 0.12s) ease;
+}
+.cf-logo-img { width: auto; max-width: 100%; }
+
+.header-logo-btn {
+  display:     inline-flex;
+  align-items: center;
+  background:  none;
+  border:      none;
+  padding:     0;
+  margin:      0;
+  cursor:      pointer;
+  color:       inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+.header-logo-btn:active .cf-logo-img { transform: scale(0.94); }
+
+/* welcome / landing hero lockup */
+.welcome-logo {
+  display:         flex;
+  justify-content: center;
+  align-items:     center;
+  margin-bottom:   18px;
+}
+
+/* accessible-only text (the logo image carries the visible wordmark) */
+.sr-only {
+  position:    absolute;
+  width:       1px;
+  height:      1px;
+  padding:     0;
+  margin:      -1px;
+  overflow:    hidden;
+  clip:        rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border:      0;
+}
+
+@media (max-width: 480px) {
+  .welcome-logo .cf-logo-img { height: 44px !important; }
+}
+
+/* ── 3-DOT POST MENU ─────────────────────────────────────────── */
+.pm-wrap { position: relative; display: inline-flex; }
+
+.pm-trigger {
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  width:           30px;
+  height:          30px;
+  padding:         0;
+  border:          none;
+  border-radius:   50%;
+  background:      transparent;
+  color:           var(--text-muted);
+  cursor:          pointer;
+  transition:      background var(--t-fast, 0.12s) ease, color var(--t-fast, 0.12s) ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.pm-trigger:hover  { background: var(--bg-hover); color: var(--text-primary); }
+.pm-trigger:active { transform: scale(0.92); }
+
+.pm-menu {
+  position:      absolute;
+  top:           calc(100% + 6px);
+  right:         0;
+  min-width:     176px;
+  padding:       6px;
+  border-radius: 12px;
+  background:    var(--bg-elevated);
+  border:        1px solid var(--border-mid);
+  box-shadow:    0 12px 32px rgba(0, 0, 0, 0.65);
+  z-index:       1000;
+  animation:     pmIn 0.12s ease;
+}
+@keyframes pmIn {
+  from { opacity: 0; transform: translateY(-4px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.pm-item {
+  display:       flex;
+  align-items:   center;
+  gap:           10px;
+  width:         100%;
+  padding:       9px 12px;
+  border:        none;
+  border-radius: 8px;
+  background:    transparent;
+  color:         var(--text-secondary);
+  font-family:   var(--font);
+  font-size:     0.82rem;
+  font-weight:   500;
+  text-align:    left;
+  cursor:        pointer;
+  transition:    background var(--t-fast, 0.12s) ease, color var(--t-fast, 0.12s) ease;
+}
+.pm-item:hover { background: var(--bg-hover); color: var(--text-primary); }
+.pm-item svg   { flex-shrink: 0; }
+
+/* subtle danger red, matching the app's semantic colour */
+.pm-danger        { color: var(--like); }
+.pm-danger:hover  { background: var(--like-bg); color: var(--like); }
+
+/* ── FOLLOW BUTTON ───────────────────────────────────────────── */
+.cf-follow-btn {
+  display:         inline-flex;
+  align-items:     center;
+  justify-content: center;
+  padding:         8px 18px;
+  border-radius:   var(--r-full, 9999px);
+  font-family:     var(--font);
+  font-size:       0.82rem;
+  font-weight:     650;
+  cursor:          pointer;
+  white-space:     nowrap;
+  transition:      background var(--t-fast, 0.12s) ease,
+                   color var(--t-fast, 0.12s) ease,
+                   border-color var(--t-fast, 0.12s) ease,
+                   transform var(--t-fast, 0.12s) ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.cf-follow-btn:active   { transform: scale(0.96); }
+.cf-follow-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+/* not following -> solid white CTA */
+.cf-follow-btn.is-not-following {
+  background: var(--accent);
+  color:      var(--text-inverse);
+  border:     1px solid var(--accent);
+}
+.cf-follow-btn.is-not-following:hover { background: var(--accent-hover); }
+
+/* following -> quiet outlined state */
+.cf-follow-btn.is-following {
+  background: transparent;
+  color:      var(--text-primary);
+  border:     1px solid var(--border-mid);
+}
+/* hovering a followed user warns that clicking unfollows */
+.cf-follow-btn.is-unfollow-hover {
+  background:   var(--like-bg);
+  border-color: rgba(255, 71, 87, 0.4);
+  color:        var(--like);
+}
+
+.cf-follow-sm { padding: 6px 14px; font-size: 0.76rem; }
+
+/* ── PROFILE SHARE BUTTON ────────────────────────────────────── */
+.pr-hero-actions {
+  display:     flex;
+  align-items: center;
+  gap:         8px;
+  flex-wrap:   wrap;
+  justify-content: flex-end;
+}
+.pr-share-btn {
+  display:         inline-flex;
+  align-items:     center;
+  justify-content: center;
+  gap:             6px;
+  padding:         8px 14px;
+  border-radius:   var(--r-full, 9999px);
+  background:      transparent;
+  border:          1px solid var(--border-mid);
+  color:           var(--text-primary);
+  font-family:     var(--font);
+  font-size:       0.8rem;
+  font-weight:     600;
+  cursor:          pointer;
+  white-space:     nowrap;
+  transition:      background var(--t-fast, 0.12s) ease, transform var(--t-fast, 0.12s) ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.pr-share-btn:hover  { background: var(--bg-hover); }
+.pr-share-btn:active { transform: scale(0.96); }
+
+/* ── CLICKABLE STATS ─────────────────────────────────────────── */
+.pr-stat-link {
+  background:  none;
+  border:      none;
+  padding:     0;
+  font-family: var(--font);
+  cursor:      pointer;
+  text-align:  center;
+  transition:  opacity var(--t-fast, 0.12s) ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.pr-stat-link:hover:not(:disabled)  { opacity: 0.7; }
+.pr-stat-link:disabled              { cursor: default; }
+
+/* ── FOLLOWERS / FOLLOWING LIST ──────────────────────────────── */
+.fl-list { display: flex; flex-direction: column; }
+
+.fl-row {
+  display:       flex;
+  align-items:   center;
+  gap:           12px;
+  padding:       12px 4px;
+  border-bottom: 1px solid var(--border);
+  cursor:        pointer;
+  transition:    background var(--t-fast, 0.12s) ease;
+}
+.fl-row:hover { background: var(--bg-subtle); }
+
+.fl-meta {
+  display:        flex;
+  flex-direction: column;
+  gap:            2px;
+  flex:           1;
+  min-width:      0;
+}
+.fl-handle {
+  color:       var(--text-primary);
+  font-size:   0.88rem;
+  font-weight: 600;
+  overflow:    hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fl-bio {
+  color:         var(--text-secondary);
+  font-size:     0.76rem;
+  overflow:      hidden;
+  text-overflow: ellipsis;
+  white-space:   nowrap;
+}
+.fl-badge {
+  align-self:     flex-start;
+  margin-top:     3px;
+  padding:        1px 7px;
+  border-radius:  4px;
+  background:     var(--bg-elevated);
+  border:         1px solid var(--border);
+  color:          var(--text-muted);
+  font-size:      0.62rem;
+  font-weight:    600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.fl-empty {
+  padding:    64px 20px;
+  text-align: center;
+  color:      var(--text-muted);
+  font-size:  0.88rem;
+}
+
+@media (max-width: 480px) {
+  .fl-bio { display: none; }
+  .fl-row { gap: 10px; padding: 11px 2px; }
+  .pr-hero-actions { gap: 6px; }
+  .pr-share-btn    { padding: 7px 12px; font-size: 0.76rem; }
+  .cf-follow-btn   { padding: 7px 15px; font-size: 0.78rem; }
+}

@@ -1,0 +1,418 @@
+/* ================================================================
+   CONFESSLY — POST DETAIL EXTRA STYLES
+   Hero card reuses fc-* layout from feed.css.
+   All avatars: hollow circle + SVG (no coloured backgrounds).
+   Comment input: dark premium theme.
+   ================================================================ */
+
+/* ── BACK HEADER ────────────────────────────────────────────── */
+.back-header {
+  position:             fixed;
+  top: 0; left: 0;
+  width:                100%;
+  height:               var(--header-h);
+  background-color:     rgba(0, 0, 0, 0.85);
+  backdrop-filter:      blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom:        1px solid rgba(255, 255, 255, 0.08);
+  display:              flex;
+  align-items:          center;
+  gap:                  12px;
+  padding:              0 16px;
+  z-index:              200;
+}
+
+.back-btn {
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  width:           34px;
+  height:          34px;
+  border-radius:   50%;
+  background:      rgba(255, 255, 255, 0.05);
+  border:          1px solid rgba(255, 255, 255, 0.08);
+  color:           #ededed;
+  cursor:          pointer;
+  flex-shrink:     0;
+  transition:      background 0.1s ease;
+}
+.back-btn:hover  { background: rgba(255, 255, 255, 0.09); }
+.back-btn:active { background: rgba(255, 255, 255, 0.12); }
+
+.back-header h3 {
+  font-family:    'Inter', sans-serif;
+  font-size:      0.9rem;
+  font-weight:    600;
+  color:          #ededed;
+  letter-spacing: -0.01em;
+}
+
+/* ── HERO CARD OVERRIDES ────────────────────────────────────────
+   The hero post reuses .fc-card from feed.css.
+   These overrides make the detail view behave slightly different:
+   - No line-clamp on body text (show the full confession)
+   - Cursor default (not clickable — you're already on the detail page)
+   - Slightly heavier title
+────────────────────────────────────────────────────────────── */
+.pd-hero-card {
+  cursor: default !important;
+  /* Disable the image hover scale — static on detail view */
+}
+.pd-hero-card:hover {
+  background:    #0a0a0a !important;  /* no hover lift */
+  border-color:  rgba(255, 255, 255, 0.08) !important;
+}
+.pd-hero-card:active {
+  background: #0a0a0a !important;
+}
+
+/* Full title — slightly larger than feed */
+.pd-title {
+  font-family:    'Inter', sans-serif;
+  font-size:      1.1rem;
+  font-weight:    700;
+  line-height:    1.35;
+  color:          #ededed;
+  margin-bottom:  12px;
+  letter-spacing: -0.02em;
+}
+
+/* Full-length body — NO line-clamp in detail view */
+.pd-body {
+  font-family:   'Inter', sans-serif;
+  font-size:     0.9rem;
+  line-height:   1.7;
+  color:         #888888;
+  margin-bottom: 16px;
+  white-space:   pre-wrap;
+  overflow-wrap: break-word;
+  word-break:    break-word;
+  /* Explicitly override fc-content's 3-line clamp */
+  display:            block;
+  -webkit-line-clamp: unset;
+  overflow:           visible;
+}
+
+/* Hero image — full height, contain so tall images aren't cropped */
+.pd-image-wrap {
+  width:          100%;
+  border-radius:  12px;
+  overflow:       hidden;
+  background:     #111;
+  margin-bottom:  16px;
+  border:         1px solid rgba(255, 255, 255, 0.08);
+}
+.pd-image-wrap img {
+  width:      100%;
+  height:     auto;
+  max-height: 500px;
+  object-fit: contain;
+  display:    block;
+}
+
+/* Engagement counters on the footer left — read-only, no button */
+.pd-stat {
+  display:     flex;
+  align-items: center;
+  gap:         5px;
+  font-family: 'Inter', sans-serif;
+  font-size:   13px;
+  font-weight: 500;
+  color:       #555555;
+  user-select: none;
+}
+.pd-stat svg { flex-shrink: 0; }
+
+/* Right side of footer: save + share grouped */
+.pd-footer-right {
+  display:     flex;
+  align-items: center;
+  gap:         4px;
+}
+
+.pd-save-btn:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color:      #aaaaaa !important;
+}
+
+/* ── COMMENT SECTION ────────────────────────────────────────── */
+.comment-section {
+  animation: fadeUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both;
+}
+
+.comments-heading {
+  font-family:    'Inter', sans-serif;
+  font-size:      0.88rem;
+  font-weight:    600;
+  color:          #ededed;
+  margin-bottom:  16px;
+  display:        flex;
+  align-items:    center;
+  gap:            8px;
+  letter-spacing: -0.01em;
+}
+
+.count-badge {
+  background:    rgba(255, 255, 255, 0.05);
+  border:        1px solid rgba(255, 255, 255, 0.08);
+  color:         #555555;
+  font-family:   'Inter', sans-serif;
+  font-size:     0.68rem;
+  font-weight:   600;
+  padding:       2px 8px;
+  border-radius: 9999px;
+}
+
+/* ── REPLY INDICATOR ────────────────────────────────────────── */
+.reply-indicator {
+  display:       none;
+  align-items:   center;
+  gap:           8px;
+  background:    rgba(255, 255, 255, 0.04);
+  border:        1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 10px;
+  padding:       8px 12px;
+  margin-bottom: 12px;
+  font-family:   'Inter', sans-serif;
+  font-size:     0.78rem;
+  color:         #888888;
+  animation:     slideUp 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reply-indicator.active { display: flex; }
+.reply-to-name { font-weight: 600; color: #ededed; }
+.reply-cancel {
+  margin-left: auto;
+  display:     flex;
+  align-items: center;
+  background:  none;
+  border:      none;
+  color:       #555555;
+  cursor:      pointer;
+  padding:     2px 4px;
+  border-radius: 4px;
+  transition:  color 0.1s ease;
+}
+.reply-cancel:hover { color: #ededed; }
+
+/* ── COMMENT INPUT BAR ──────────────────────────────────────────
+   - Hollow circle avatar (no gradient, no colour)
+   - Input: background #111111, border rgba(255,255,255,0.08)
+   - Post button: white background, black text — clean and sleek
+────────────────────────────────────────────────────────────── */
+.comment-input-area {
+  display:              flex;
+  gap:                  10px;
+  align-items:          center;
+  position:             sticky;
+  bottom:               var(--nav-h);
+  /* Dark glass so content scrolls behind it cleanly */
+  background-color:     rgba(0, 0, 0, 0.92);
+  backdrop-filter:      blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding:              12px 0;
+  z-index:              20;
+  border-top:           1px solid rgba(255, 255, 255, 0.06);
+  margin-top:           16px;
+}
+
+/*
+  The avatar in the input bar uses the AnonAvatar component
+  (.anon-avatar.anon-avatar-sm) defined in global.css.
+  No override needed — it's already hollow + correct size.
+*/
+
+.comment-input {
+  flex:          1;
+  padding:       10px 16px;
+  /* Spec: background #111, border rgba(255,255,255,0.08) */
+  background:    #111111;
+  border:        1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;         /* pill */
+  outline:       none;
+  font-family:   'Inter', sans-serif;
+  font-size:     0.875rem;
+  color:         #ededed;
+  transition:    border-color 0.15s ease, box-shadow 0.15s ease;
+  min-width:     0;
+}
+.comment-input::placeholder { color: #444444; }
+.comment-input:focus {
+  border-color: rgba(255, 255, 255, 0.28);
+  box-shadow:   0 0 0 3px rgba(255, 255, 255, 0.04);
+}
+/* Disabled state when nothing typed */
+.comment-input:disabled { opacity: 0.5; }
+
+/* Post / Reply button — white bg, black text (spec: sleek) */
+.comment-submit {
+  flex-shrink:    0;
+  background:     #ededed;
+  color:          #000000;
+  border:         none;
+  padding:        10px 18px;
+  border-radius:  9999px;
+  font-family:    'Inter', sans-serif;
+  font-size:      0.82rem;
+  font-weight:    700;
+  letter-spacing: -0.01em;
+  cursor:         pointer;
+  white-space:    nowrap;
+  transition:     background 0.12s ease, transform 0.1s ease, opacity 0.12s ease;
+}
+.comment-submit:hover   { background: #d4d4d4; }
+.comment-submit:active  { transform: scale(0.93); }
+.comment-submit:disabled {
+  opacity: 0.35;
+  cursor:  not-allowed;
+}
+
+/* ── COMMENT NODE ───────────────────────────────────────────── */
+.comment-node {
+  display:   flex;
+  gap:       10px;
+  position:  relative;
+}
+.comment-node + .comment-node { margin-top: 14px; }
+
+/* .anon-avatar-xs sizing comes from global.css — no override needed */
+
+.c-body  { flex: 1; min-width: 0; }
+
+/* Bubble — dark surface, thin border */
+.c-bubble {
+  display:       inline-block;
+  max-width:     100%;
+  background:    #111111;
+  border:        1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 0 12px 12px 12px;
+  padding:       9px 13px;
+}
+
+.c-username {
+  font-family:    'Inter', sans-serif;
+  font-weight:    600;
+  font-size:      0.76rem;
+  color:          #ededed;
+  margin-bottom:  3px;
+  letter-spacing: -0.01em;
+  display:        flex;
+  align-items:    center;
+  gap:            6px;
+}
+
+/* ── OP BADGE (Original Poster indicator) ──────────────────────
+   Small, stylised [OP] label next to the post author's username.
+   Blue-grey tint, subtle border, compact pill.
+─────────────────────────────────────────────────────────────── */
+.op-badge {
+  display:        inline-flex;
+  align-items:    center;
+  justify-content: center;
+  padding:        1px 6px;
+  font-family:    'Inter', sans-serif;
+  font-size:      0.6rem;
+  font-weight:    700;
+  letter-spacing: 0.03em;
+  border-radius:  4px;
+  background:     rgba(59, 130, 246, 0.15);
+  color:          #a9a7ba;
+  border:         1px solid   #555555;
+  line-height:    1;
+  user-select:    none;
+}
+
+.c-text {
+  font-family:   'Inter', sans-serif;
+  font-size:     0.85rem;
+  line-height:   1.55;
+  color:         #888888;
+  overflow-wrap: break-word;
+  word-break:    break-word;
+  white-space:   pre-wrap;
+}
+
+/* Meta row: time · up · down · reply */
+.c-meta {
+  display:     flex;
+  align-items: center;
+  gap:         12px;
+  padding:     5px 4px 0;
+  font-family: 'Inter', sans-serif;
+  font-size:   0.7rem;
+  color:       #444444;
+}
+
+.c-time { color: #444444; }
+
+.c-react-btn,
+.c-reply-btn {
+  background:  none;
+  border:      none;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size:   0.7rem;
+  cursor:      pointer;
+  padding:     0;
+  display:     flex;
+  align-items: center;
+  gap:         3px;
+  color:       #444444;
+  transition:  color 0.1s ease;
+  user-select: none;
+}
+.c-react-btn:hover { color: #888888; }
+.c-like:hover      { color: #ff4757; }
+.c-dislike:hover   { color: #f97316; }
+.c-reply-btn:hover { color: #ededed; }
+
+.c-score { color: #555555; }
+
+/* ── THREADED REPLIES — indented with vertical line ─────────── */
+.reply-group {
+  margin-left: 38px;
+  position:    relative;
+}
+/* Vertical thread line */
+.reply-group::before {
+  content:      '';
+  position:     absolute;
+  left:         -18px;
+  top:          4px;
+  bottom:       16px;
+  width:        1px;
+  background:   rgba(255, 255, 255, 0.08);
+  border-radius: 1px;
+}
+/* Horizontal branch to each reply */
+.reply-group > .comment-node {
+  position:   relative;
+  margin-top: 12px;
+}
+.reply-group > .comment-node::before {
+  content:    '';
+  position:   absolute;
+  left:       -18px;
+  top:        13px;
+  width:      14px;
+  height:     1px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* ── EMPTY COMMENTS ─────────────────────────────────────────── */
+.no-comments-msg {
+  text-align:  center;
+  font-family: 'Inter', sans-serif;
+  font-size:   0.84rem;
+  color:       #444444;
+  padding:     32px 0 16px;
+}
+
+/* ── KEYFRAMES (local copies so this file is self-contained) ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
