@@ -115,20 +115,25 @@ export default function Login() {
                         </div>
                     )}
 
-                    {/* cloudflare bot check */}
-                    <div style={{ display: 'flex', justifyContent: 'center', margin: '4px 0 2px' }}>
-                        <Turnstile
-                            ref={turnstileRef}
-                            siteKey={TURNSTILE_SITE_KEY}
-                            options={{ theme: 'dark', size: 'flexible' }}
-                            onSuccess={setCaptcha}
-                            onExpire={() => setCaptcha('')}
-                            onError={() => {
-                                setCaptcha('');
-                                setError('Bot verification could not load. Please refresh and try again.');
-                            }}
-                        />
-                    </div>
+                    {TURNSTILE_SITE_KEY ? (
+                        <div style={{ display: 'flex', justifyContent: 'center', margin: '4px 0 2px' }}>
+                            <Turnstile
+                                ref={turnstileRef}
+                                siteKey={TURNSTILE_SITE_KEY}
+                                options={{ theme: 'dark', size: 'flexible' }}
+                                onSuccess={setCaptcha}
+                                onExpire={() => setCaptcha('')}
+                                onError={() => {
+                                    setCaptcha('');
+                                    setError('Bot verification could not load. Please refresh and try again.');
+                                }}
+                            />
+                        </div>
+                    ) : (
+                        <p style={{ textAlign: 'center', color: '#e33', fontSize: '0.78rem' }}>
+                            bot check is misconfigured, missing site key
+                        </p>
+                    )}
 
                     <button
                         type="submit"
