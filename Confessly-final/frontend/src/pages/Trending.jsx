@@ -4,7 +4,6 @@ import BottomNav from '../components/BottomNav.jsx';
 import SkeletonLoader from '../components/SkeletonLoader.jsx';
 import ShareModal from '../components/ShareModal.jsx';
 import FeedCard from '../components/FeedCard.jsx';
-import { useUser } from '../context/UserContext.jsx';
 import { apiUrl, apiFetch } from '../api.js';
 import '../styles/global.css';
 import '../styles/feed.css';
@@ -12,7 +11,6 @@ import '../styles/trending.css';
 
 export default function Trending() {
     const navigate  = useNavigate();
-    const { user }  = useUser();
     const [status,    setStatus]    = useState('loading');
     const [items,     setItems]     = useState([]);
     const [search,    setSearch]    = useState('');
@@ -117,7 +115,6 @@ export default function Trending() {
                                     <div className="tr-card-wrap">
                                         <FeedCard
                                             post={post}
-                                            avatarUrl={user?.avatar_url ?? null}
                                             onLike={() => {}}
                                             onShare={(p) => setSharePost({ id: p.id, title: p.title })}
                                             onComment={(id) => navigate(`/post/${id}#comments`)}

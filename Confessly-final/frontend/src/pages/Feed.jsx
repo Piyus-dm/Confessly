@@ -7,14 +7,12 @@ import FeedCard from '../components/FeedCard.jsx';
 import NotificationBell from '../components/NotificationBell.jsx';
 import ReportModal from '../components/ReportModal.jsx';
 import Logo, { LogoMark } from '../components/Logo.jsx';
-import { useUser } from '../context/UserContext.jsx';
 import { apiFetch, apiUrl } from '../api.js';
 import '../styles/global.css';
 import '../styles/feed.css';
 
 export default function Feed() {
     const navigate = useNavigate();
-    const { user }  = useUser();
 
     const [loading,    setLoading]   = useState(true);
     const [posts,      setPosts]     = useState([]);
@@ -411,7 +409,6 @@ export default function Feed() {
                         <FeedCard
                             key={post.id}
                             post={post}
-                            avatarUrl={user?.avatar_url ?? null}
                             onLike={toggleLike}
                             onShare={(p) => setSharePost({ id: p.id, title: p.title })}
                             onComment={(id) => navigate(`/post/${id}#comments`)}

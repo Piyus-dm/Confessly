@@ -51,7 +51,6 @@ export function CategoryTag({ name }) {
 
 export default function FeedCard({
     post,
-    avatarUrl   = null,   // kept for backward compat
     onLike,
     onShare,
     onComment,
@@ -63,7 +62,7 @@ export default function FeedCard({
 }) {
     const isLiked = post.liked_by_user > 0;
     const displayName = post.anonymous_handle || 'Anonymous';
-    const postAuthorAvatar = post.avatar_url || avatarUrl;
+    const postAuthorAvatar = post.avatar_url || null;
     const postProfileId = post.profile_id;
 
     function handleProfileClick(e) {

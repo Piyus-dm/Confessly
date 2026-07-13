@@ -330,7 +330,7 @@ export default function PostDetail() {
                                     tabIndex={0}
                                     aria-label="View profile"
                                 >
-                                    <AnonAvatar size="md" src={post.avatar_url || user?.avatar_url} />
+                                    <AnonAvatar size="md" src={post.avatar_url || null} />
                                 </div>
                                 <div className="fc-author-meta">
                                     <span

@@ -400,26 +400,28 @@ def get_trending():
 @bp.route('/api/feed', methods=['GET'])
 @require_auth
 def get_hybrid_feed():
-    # ~70% followed posts topped up with global posts, cursor-paginated
+    # single strict seek-paginated query, keyed on (created_at, id) so every
+    # post gets visited exactly once no matter how the timestamps land
     try:
         profile_id = request.profile_id
+        user_id = request.user_id
         limit = request.args.get('limit', 10, type=int)
-        cursor_ts = request.args.get('cursor', None)
+        cursor_param = request.args.get('cursor', None)
 
         conn = cursor = None
         try:
             conn = get_db()
             cursor = conn.cursor(dictionary=True)
 
-            time_clause = ''
-            time_param = None
-            if cursor_ts:
-                time_clause = 'AND p.created_at < %s'
-                time_param = cursor_ts
+            seek_clause = ''
+            seek_params = []
+            if cursor_param:
+                ts_part, _, id_part = cursor_param.rpartition('|')
+                if ts_part and id_part.isdigit():
+                    seek_clause = 'AND (p.created_at < %s OR (p.created_at = %s AND p.id < %s))'
+                    seek_params = [ts_part, ts_part, int(id_part)]
 
-            followed_limit = max(1, int(limit * 0.7))
-
-            POST_SELECT = '''
+            cursor.execute(f'''
                 SELECT p.id, p.title, p.content, p.created_at, p.image_url,
                        pr.anonymous_handle, pr.avatar_url, cat.name as category_name,
                        pr.id as profile_id, pr.user_id,
@@ -431,58 +433,20 @@ def get_hybrid_feed():
                 JOIN profiles pr ON p.profile_id = pr.id
                 JOIN categories cat ON p.category_id = cat.id
                 JOIN users u ON u.id = pr.user_id
-            '''
-
-            user_id = request.user_id
-
-            # followed posts first
-            # params: liked_by_user, follower_id, shadowban, blocked, [cursor], limit
-            followed_params = [profile_id, profile_id, profile_id, user_id]
-            if time_param:
-                followed_params.append(time_param)
-            followed_params.append(followed_limit)
-
-            cursor.execute(f'''
-                {POST_SELECT}
-                WHERE p.profile_id IN (
-                    SELECT following_id FROM follows WHERE follower_id = %s
-                )
-                AND (u.is_shadowbanned = 0 OR p.profile_id = %s)
+                WHERE (u.is_shadowbanned = 0 OR p.profile_id = %s)
                 AND {BLOCKED_FILTER}
-                {time_clause}
-                ORDER BY p.created_at DESC
+                {seek_clause}
+                ORDER BY p.created_at DESC, p.id DESC
                 LIMIT %s
-            ''', followed_params)
-            followed_posts = cursor.fetchall()
+            ''', [profile_id, profile_id, user_id] + seek_params + [limit])
+            posts = cursor.fetchall()
 
-            followed_ids = {p['id'] for p in followed_posts}
-            gap = limit - len(followed_posts)
+            next_cursor = None
+            if len(posts) == limit:
+                last = posts[-1]
+                next_cursor = f"{last['created_at']}|{last['id']}"
 
-            # top up with global posts
-            global_posts = []
-            if gap > 0:
-                ph = ','.join(['%s'] * len(followed_ids)) if followed_ids else '0'
-                global_params = [profile_id] + list(followed_ids) + [profile_id] + [user_id]
-                if time_param:
-                    global_params.append(time_param)
-                global_params.append(gap)
-
-                cursor.execute(f'''
-                    {POST_SELECT}
-                    WHERE p.id NOT IN ({ph})
-                    AND (u.is_shadowbanned = 0 OR p.profile_id = %s)
-                    AND {BLOCKED_FILTER}
-                    {time_clause}
-                    ORDER BY p.created_at DESC
-                    LIMIT %s
-                ''', global_params)
-                global_posts = cursor.fetchall()
-
-            combined = list(followed_posts) + list(global_posts)
-            combined.sort(key=lambda p: p['created_at'], reverse=True)
-            next_cursor = str(combined[-1]['created_at']) if len(combined) >= limit else None
-
-            return jsonify({'status': 'success', 'data': serialize_dates(combined), 'nextCursor': next_cursor}), 200
+            return jsonify({'status': 'success', 'data': serialize_dates(posts), 'nextCursor': next_cursor}), 200
         except mysql.connector.Error as err:
             print(f'[db-error] {request.path}: {err}')
             return jsonify({'status': 'error', 'message': 'A database error occurred'}), 500
