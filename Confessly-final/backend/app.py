@@ -1,7 +1,7 @@
 import os
 from datetime import datetime, timezone
 
-from flask import Flask
+from flask import Flask, jsonify
 from flask_cors import CORS
 from apscheduler.schedulers.background import BackgroundScheduler
 
@@ -40,6 +40,11 @@ app.register_blueprint(users.bp)
 app.register_blueprint(profiles.bp)
 app.register_blueprint(notifications.bp)
 app.register_blueprint(admin.bp)
+
+
+@app.route('/api/health', methods=['GET'])
+def health_check():
+    return jsonify({'status': 'healthy'}), 200
 
 
 def recalculate_trending_scores():
