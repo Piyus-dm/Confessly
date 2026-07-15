@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Turnstile } from '@marsidev/react-turnstile';
 import Logo from '../components/Logo.jsx';
+import PasswordInput from '../components/PasswordInput.jsx';
 import { apiFetch } from '../api.js';
 import { useUser } from '../context/UserContext.jsx';
 import '../styles/global.css';
@@ -91,11 +92,9 @@ export default function Login() {
                     </div>
                     <div className="form-group">
                         <label htmlFor="login-password">Password</label>
-                        <input
+                        <PasswordInput
                             id="login-password"
-                            type="password"
                             placeholder="Your password"
-                            autoComplete="off"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required

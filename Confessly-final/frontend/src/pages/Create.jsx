@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BottomNav from '../components/BottomNav.jsx';
+import UploadOverlay from '../components/UploadOverlay.jsx';
 import { apiUrl } from '../api.js';
 import '../styles/global.css';
 import '../styles/feed.css';
@@ -118,6 +119,8 @@ export default function Create() {
 
     return (
         <div className="app-body">
+            <UploadOverlay visible={submitting} />
+
             <header className="app-header">
                 <button className="icon-btn" onClick={() => navigate(-1)} aria-label="Back">
                     <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2"

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import BottomNav from '../components/BottomNav.jsx';
 import SkeletonLoader from '../components/SkeletonLoader.jsx';
+import UploadOverlay from '../components/UploadOverlay.jsx';
 import { AnonAvatar, timeAgo } from '../components/FeedCard.jsx';
 import { LinkIcon, CheckIcon } from '../components/icons.jsx';
 import { apiUrl } from '../api.js';
@@ -44,6 +45,7 @@ export default function Profile() {
     const [isPrivate, setIsPrivate] = useState(false);
 
     const [editOpen, setEditOpen] = useState(false);
+    const [savingProfile, setSavingProfile] = useState(false);
     const [editUsername, setEditUsername] = useState('');
     const [editBio, setEditBio] = useState('');
     const [editAvatarPreview, setEditAvatarPreview] = useState(null);
@@ -222,20 +224,25 @@ export default function Profile() {
         formData.append('username', editUsername.trim());
         formData.append('bio', editBio);
         if (editAvatarFileRef.current) formData.append('avatar', editAvatarFileRef.current);
-        const res = await fetch(apiUrl('/api/user/profile'), { method: 'PUT', credentials: 'include', body: formData });
-        const data = await res.json();
-        if (data.status === 'success') {
-            setEditOpen(false);
-            editAvatarFileRef.current = null;
-            setEditAvatarPreview(null);
-            setUsernameCooldownMsg('');
-            // reset the cooldown clock
-            if (isChangingUsername) {
-                setLastUsernameChange(new Date().toISOString());
+        setSavingProfile(true);
+        try {
+            const res = await fetch(apiUrl('/api/user/profile'), { method: 'PUT', credentials: 'include', body: formData });
+            const data = await res.json();
+            if (data.status === 'success') {
+                setEditOpen(false);
+                editAvatarFileRef.current = null;
+                setEditAvatarPreview(null);
+                setUsernameCooldownMsg('');
+                // reset the cooldown clock
+                if (isChangingUsername) {
+                    setLastUsernameChange(new Date().toISOString());
+                }
+                fetchProfile();
+            } else {
+                alert('Error: ' + data.message);
             }
-            fetchProfile();
-        } else {
-            alert('Error: ' + data.message);
+        } finally {
+            setSavingProfile(false);
         }
     }
 
@@ -293,6 +300,8 @@ export default function Profile() {
 
     return (
         <div className="app-body">
+            <UploadOverlay visible={savingProfile} />
+
             {/* header */}
             <header className="profile-header">
                 <button className="icon-btn" onClick={() => navigate(-1)} aria-label="Back">
@@ -531,7 +540,9 @@ export default function Profile() {
                             <textarea id="editBio" className="premium-input" placeholder="Tell us about yourself..." rows={3}
                                 value={editBio} onChange={(e) => setEditBio(e.target.value)} />
                         </div>
-                        <button className="btn-primary" onClick={handleSaveProfile}>Save Changes</button>
+                        <button className="btn-primary" onClick={handleSaveProfile} disabled={savingProfile}>
+                            {savingProfile ? 'Saving…' : 'Save Changes'}
+                        </button>
                     </div>
                 </div>
             )}

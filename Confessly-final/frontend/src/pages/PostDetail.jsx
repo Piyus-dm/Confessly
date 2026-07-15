@@ -4,6 +4,7 @@ import ShareModal from '../components/ShareModal.jsx';
 import ReportModal from '../components/ReportModal.jsx';
 import SkeletonLoader from '../components/SkeletonLoader.jsx';
 import PostMenu from '../components/PostMenu.jsx';
+import RichText from '../components/RichText.jsx';
 import { useUser } from '../context/UserContext.jsx';
 import { apiUrl, apiFetch } from '../api.js';
 import '../styles/global.css';
@@ -69,10 +70,11 @@ function buildCommentTree(comments) {
     return roots;
 }
 
-function CommentNode({ node, onReply, onReact }) {
+function CommentNode({ node, onReply, onReact, onDelete, viewerProfileId, postOwnerProfileId }) {
     const score     = node.net_score || 0;
     const upStyle   = node.user_reaction === 'like'    ? { color: 'var(--like)' } : {};
     const downStyle = node.user_reaction === 'dislike' ? { color: '#f97316' }     : {};
+    const canDelete = node.profile_id === viewerProfileId || postOwnerProfileId === viewerProfileId;
 
     return (
         <div className="comment-node">
@@ -123,6 +125,14 @@ function CommentNode({ node, onReply, onReact }) {
                     >
                         Reply
                     </button>
+                    {canDelete && (
+                        <button
+                            className="c-reply-btn"
+                            onClick={() => onDelete(node.id)}
+                        >
+                            Delete
+                        </button>
+                    )}
                 </div>
                 {node.children?.length > 0 && (
                     <div className="reply-group">
@@ -132,6 +142,9 @@ function CommentNode({ node, onReply, onReact }) {
                                 node={child}
                                 onReply={onReply}
                                 onReact={onReact}
+                                onDelete={onDelete}
+                                viewerProfileId={viewerProfileId}
+                                postOwnerProfileId={postOwnerProfileId}
                             />
                         ))}
                     </div>
@@ -240,6 +253,18 @@ export default function PostDetail() {
         commentInputRef.current?.focus();
     }
 
+    async function handleDeleteComment(commentId) {
+        if (!window.confirm('Delete this comment? This cannot be undone.')) return;
+        try {
+            const res = await apiFetch(`/api/comments/${commentId}`, { method: 'DELETE' });
+            const data = await res.json();
+            if (res.ok) loadComments();
+            else alert(data.message || 'Failed to delete comment');
+        } catch {
+            alert('Could not connect to the server.');
+        }
+    }
+
     async function handleDeletePost(id) {
         if (!window.confirm('Delete this post? This cannot be undone.')) return;
         try {
@@ -289,7 +314,7 @@ export default function PostDetail() {
     return (
         <div className="app-body">
             <header className="back-header">
-                <button className="back-btn" onClick={() => navigate('/feed')} aria-label="Back">
+                <button className="back-btn" onClick={() => navigate(-1)} aria-label="Back">
                     <svg width="16" height="16" fill="none" stroke="currentColor"
                         strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
                         <path d="M19 12H5M12 5l-7 7 7 7" />
@@ -356,7 +381,7 @@ export default function PostDetail() {
                         </div>
 
                         <h2 className="pd-title">{post.title}</h2>
-                        <p className="pd-body">{post.content}</p>
+                        <p className="pd-body"><RichText text={post.content} /></p>
 
                         {post.image_url && (
                             <div className="pd-image-wrap">
@@ -478,7 +503,15 @@ export default function PostDetail() {
                             <p className="no-comments-msg">No comments yet. Start the conversation.</p>
                         )}
                         {tree.map(root => (
-                            <CommentNode key={root.id} node={root} onReply={handleReply} onReact={handleReact} />
+                            <CommentNode
+                                key={root.id}
+                                node={root}
+                                onReply={handleReply}
+                                onReact={handleReact}
+                                onDelete={handleDeleteComment}
+                                viewerProfileId={user?.profile_id}
+                                postOwnerProfileId={post?.profile_id}
+                            />
                         ))}
                     </div>
                 </div>

@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Turnstile } from '@marsidev/react-turnstile';
 import Logo from '../components/Logo.jsx';
+import PasswordInput from '../components/PasswordInput.jsx';
 import { apiFetch } from '../api.js';
 import { useUser } from '../context/UserContext.jsx';
 import '../styles/global.css';
@@ -120,11 +121,9 @@ export default function Register() {
                     </div>
                     <div className="form-group">
                         <label htmlFor="reg-password">Password</label>
-                        <input
+                        <PasswordInput
                             id="reg-password"
-                            type="password"
                             placeholder="Create a password (min. 6 characters)"
-                            autoComplete="off"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
@@ -132,11 +131,9 @@ export default function Register() {
                     </div>
                     <div className="form-group">
                         <label htmlFor="reg-confirm">Confirm Password</label>
-                        <input
+                        <PasswordInput
                             id="reg-confirm"
-                            type="password"
                             placeholder="Confirm your password"
-                            autoComplete="off"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             required

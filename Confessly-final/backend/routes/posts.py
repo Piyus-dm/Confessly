@@ -313,6 +313,61 @@ def handle_comments(post_id):
         return jsonify({'status': 'error', 'message': 'An internal error occurred'}), 500
 
 
+@bp.route('/api/comments/<int:comment_id>', methods=['DELETE'])
+@require_auth
+def delete_comment(comment_id):
+    try:
+        conn = cursor = None
+        try:
+            conn = get_db()
+            cursor = conn.cursor(dictionary=True)
+
+            cursor.execute('SELECT profile_id, post_id FROM comments WHERE id = %s', (comment_id,))
+            comment = cursor.fetchone()
+            if not comment:
+                return jsonify({'status': 'error', 'message': 'Comment not found'}), 404
+
+            cursor.execute('SELECT profile_id FROM posts WHERE id = %s', (comment['post_id'],))
+            post = cursor.fetchone()
+            post_owner_profile_id = post['profile_id'] if post else None
+
+            allowed = (
+                comment['profile_id'] == request.profile_id or
+                post_owner_profile_id == request.profile_id
+            )
+            if not allowed:
+                cursor.execute('SELECT role FROM users WHERE id = %s', (request.user_id,))
+                requester = cursor.fetchone()
+                allowed = bool(requester and requester['role'] == 'admin')
+
+            if not allowed:
+                return jsonify({'status': 'error', 'message': 'You cannot delete this comment'}), 403
+
+            ids_to_delete = [comment_id]
+            frontier = [comment_id]
+            while frontier:
+                placeholders = ','.join(['%s'] * len(frontier))
+                cursor.execute(f'SELECT id FROM comments WHERE parent_id IN ({placeholders})', frontier)
+                children = [row['id'] for row in cursor.fetchall()]
+                ids_to_delete.extend(children)
+                frontier = children
+
+            placeholders = ','.join(['%s'] * len(ids_to_delete))
+            cursor.execute(f'DELETE FROM comments WHERE id IN ({placeholders})', ids_to_delete)
+            conn.commit()
+
+            return jsonify({'status': 'success', 'message': 'Comment deleted'}), 200
+        except mysql.connector.Error as err:
+            print(f'[db-error] {request.path}: {err}')
+            return jsonify({'status': 'error', 'message': 'A database error occurred'}), 500
+        finally:
+            if cursor: cursor.close()
+            if conn: conn.close()
+    except Exception as e:
+        print(f'[error] {request.path}: {e}')
+        return jsonify({'status': 'error', 'message': 'An internal error occurred'}), 500
+
+
 @bp.route('/api/comments/<int:comment_id>/react', methods=['POST'])
 @require_auth
 def react_to_comment(comment_id):

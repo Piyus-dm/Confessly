@@ -1,5 +1,6 @@
 // shared post card used by feed, trending and other list views
 import PostMenu from './PostMenu.jsx';
+import RichText from './RichText.jsx';
 import '../styles/global.css';
 import '../styles/feed.css';
 
@@ -103,7 +104,7 @@ export default function FeedCard({
             </div>
 
             <h2 className="fc-title">{post.title}</h2>
-            <p  className="fc-content">{post.content}</p>
+            <p  className="fc-content"><RichText text={post.content} /></p>
 
             {post.image_url && (
                 <div className="fc-image-wrap">
