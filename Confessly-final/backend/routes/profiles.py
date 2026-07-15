@@ -226,16 +226,20 @@ def change_password():
         data = request.get_json()
         old = data.get('old_password')
         new = data.get('new_password')
-        if not old or not new:
-            return jsonify({'status': 'error', 'message': 'Old and new password required'}), 400
+        if not new:
+            return jsonify({'status': 'error', 'message': 'New password required'}), 400
         conn = cursor = None
         try:
             conn = get_db()
             cursor = conn.cursor(dictionary=True)
             cursor.execute('SELECT password_hash FROM users WHERE id = %s', (request.user_id,))
             user = cursor.fetchone()
-            if not user or not check_password(old, user['password_hash']):
-                return jsonify({'status': 'error', 'message': 'Current password is incorrect'}), 401
+            if not user:
+                return jsonify({'status': 'error', 'message': 'User not found'}), 404
+            has_password = bool(user['password_hash'])
+            if has_password:
+                if not old or not check_password(old, user['password_hash']):
+                    return jsonify({'status': 'error', 'message': 'Current password is incorrect'}), 401
             cursor.execute('UPDATE users SET password_hash = %s WHERE id = %s',
                            (hash_password(new), request.user_id))
             conn.commit()

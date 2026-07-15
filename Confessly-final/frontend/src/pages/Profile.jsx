@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import BottomNav from '../components/BottomNav.jsx';
 import SkeletonLoader from '../components/SkeletonLoader.jsx';
 import UploadOverlay from '../components/UploadOverlay.jsx';
+import PasswordInput from '../components/PasswordInput.jsx';
 import { AnonAvatar, timeAgo } from '../components/FeedCard.jsx';
 import { LinkIcon, CheckIcon } from '../components/icons.jsx';
 import { apiUrl } from '../api.js';
@@ -247,7 +248,8 @@ export default function Profile() {
     }
 
     async function handleUpdatePassword() {
-        if (!oldPw || !newPw || !confirmPw) { alert('All fields required'); return; }
+        if (user?.has_password && !oldPw) { alert('Current password is required'); return; }
+        if (!newPw || !confirmPw) { alert('All fields required'); return; }
         if (newPw !== confirmPw) { alert('Passwords do not match'); return; }
         const res = await fetch(apiUrl('/api/user/password'), {
             method: 'PUT',
@@ -552,22 +554,26 @@ export default function Profile() {
                 <div className="modal-overlay" style={{ display: 'flex' }} onClick={(e) => { if (e.target === e.currentTarget) setPwOpen(false); }}>
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h3>Change Password</h3>
+                            <h3>{user?.has_password ? 'Change Password' : 'Set a Password'}</h3>
                             <button className="icon-btn close-modal" onClick={() => setPwOpen(false)}>&times;</button>
                         </div>
-                        <div className="form-group">
-                            <label>Current Password</label>
-                            <input type="password" className="premium-input" value={oldPw} onChange={(e) => setOldPw(e.target.value)} />
-                        </div>
+                        {user?.has_password && (
+                            <div className="form-group">
+                                <label>Current Password</label>
+                                <PasswordInput value={oldPw} onChange={(e) => setOldPw(e.target.value)} />
+                            </div>
+                        )}
                         <div className="form-group">
                             <label>New Password</label>
-                            <input type="password" className="premium-input" value={newPw} onChange={(e) => setNewPw(e.target.value)} />
+                            <PasswordInput value={newPw} onChange={(e) => setNewPw(e.target.value)} />
                         </div>
                         <div className="form-group">
                             <label>Confirm New Password</label>
-                            <input type="password" className="premium-input" value={confirmPw} onChange={(e) => setConfirmPw(e.target.value)} />
+                            <PasswordInput value={confirmPw} onChange={(e) => setConfirmPw(e.target.value)} />
                         </div>
-                        <button className="btn-primary" onClick={handleUpdatePassword}>Update Password</button>
+                        <button className="btn-primary" onClick={handleUpdatePassword}>
+                            {user?.has_password ? 'Update Password' : 'Set Password'}
+                        </button>
                     </div>
                 </div>
             )}

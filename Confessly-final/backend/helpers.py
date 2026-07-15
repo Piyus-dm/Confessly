@@ -130,6 +130,7 @@ def insert_notification(cursor, profile_id, sender_profile_id, type_, reference_
 PROFILE_SELECT = '''
     SELECT
         u.id as user_id, u.email, u.created_at, u.role,
+        (u.password_hash IS NOT NULL AND u.password_hash != '') as has_password,
         p.id as profile_id, p.anonymous_handle, p.bio, p.avatar_url,
         p.followers_count, p.following_count, p.show_profile_stats,
         p.theme_preference, p.is_private, p.username_updated_at,
