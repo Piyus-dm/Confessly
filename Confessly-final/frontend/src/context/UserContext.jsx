@@ -8,32 +8,11 @@ const UserContext = createContext({
     isLoading:       true,
     refreshUser:     () => {},
     logout:          () => {},
-    theme:           'dark',
-    setTheme:        () => {},
 });
-
-function applyTheme(theme) {
-    if (theme === 'light') {
-        document.documentElement.setAttribute('data-theme', 'light');
-    } else {
-        document.documentElement.removeAttribute('data-theme');
-    }
-    localStorage.setItem('confessly-theme', theme === 'light' ? 'light' : 'dark');
-}
 
 export function UserProvider({ children }) {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [theme, setThemeState] = useState(() => (localStorage.getItem('confessly-theme') === 'light' ? 'light' : 'dark'));
-
-    const setTheme = useCallback((next) => {
-        setThemeState(next);
-        applyTheme(next);
-        apiFetch('/api/user/settings', {
-            method: 'PUT',
-            body: JSON.stringify({ theme_preference: next }),
-        }).catch(() => {});
-    }, []);
 
     const refreshUser = useCallback(async () => {
         setLoading(true);
@@ -42,9 +21,6 @@ export function UserProvider({ children }) {
             const data = await res.json();
             if (res.ok && data.status === 'success') {
                 setUser(data.profile);
-                const nextTheme = data.profile.theme_preference === 'light' ? 'light' : 'dark';
-                setThemeState(nextTheme);
-                applyTheme(nextTheme);
                 return true;
             } else {
                 setUser(null);
@@ -57,8 +33,6 @@ export function UserProvider({ children }) {
             setLoading(false);
         }
     }, []);
-
-    useEffect(() => { applyTheme(theme); }, []);
 
     const logout = useCallback(async () => {
         try {
@@ -79,8 +53,6 @@ export function UserProvider({ children }) {
             isLoading:       loading,
             refreshUser,
             logout,
-            theme,
-            setTheme,
         }}>
             {children}
         </UserContext.Provider>

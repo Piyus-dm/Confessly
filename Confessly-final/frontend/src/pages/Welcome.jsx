@@ -5,8 +5,8 @@ import '../styles/login.css';
 
 const PILLARS = [
     {
-        title: 'Completely Anonymous',
-        text: "No names, no profiles that give you away, no traces. Say what you've been carrying without worrying who's watching.",
+        title: 'Truly Anonymous',
+        text: 'There is no real name attached to anything you write here. No profile that traces back to you, no history that follows you around. Just your words, exactly as you feel them.',
         icon: (
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" />
@@ -17,8 +17,8 @@ const PILLARS = [
         ),
     },
     {
-        title: 'Real Human Connection',
-        text: 'Underneath the anonymity is something honest. Connect through the unfiltered truth, not the highlight reel.',
+        title: 'People Who Actually Understand',
+        text: 'Behind every post is someone who has felt something close to what you are feeling right now. That is where the connection comes from, not from likes or followers.',
         icon: (
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
@@ -26,8 +26,8 @@ const PILLARS = [
         ),
     },
     {
-        title: 'A Space to Vent',
-        text: "Some days are just heavy. Let it out here, where no one needs your name to understand what you're going through.",
+        title: 'Somewhere To Let It Out',
+        text: 'Some days are simply too heavy to carry alone. Come here, say what you need to say, and let some of that weight go.',
         icon: (
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
@@ -35,8 +35,8 @@ const PILLARS = [
         ),
     },
     {
-        title: 'Untold Stories, Finally Told',
-        text: "The things you've never said out loud have a home here — read, felt, and understood by people who get it.",
+        title: 'Stories That Deserve To Be Heard',
+        text: 'The thing you have never told anyone finally has a place to exist, and people who will actually read it and understand.',
         icon: (
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
@@ -50,6 +50,7 @@ export default function Welcome() {
     return (
         <div className="welcome-view">
             <main className="welcome-hero">
+                <div className="welcome-glow" aria-hidden="true" />
                 <div className="welcome-logo">
                     <Logo height={54} />
                 </div>
@@ -68,13 +69,13 @@ export default function Welcome() {
 
             <section className="wi-section">
                 <div className="wi-inner">
-                    <span className="wi-kicker">What is Confessly?</span>
-                    <h2 className="wi-headline">A sanctuary for shared secrets.</h2>
+                    <span className="wi-kicker">What Is Confessly</span>
+                    <h2 className="wi-headline">A place to finally say it.</h2>
                     <p className="wi-lede">
-                        Confessly is a safe, anonymous space for human connection — for venting, for
-                        confessing, for sharing the stories you've never told anyone. No usernames tied
-                        to your real life, no followers who know your face, no fear of judgment. Just you
-                        and the truth, out in the open.
+                        Everyone is carrying something they have never said out loud. A secret that
+                        keeps replaying at night. A confession that never found the right person.
+                        A story that felt too heavy to tell anyone who actually knows you. Confessly
+                        was built so none of that has to stay locked away anymore.
                     </p>
 
                     <div className="wi-grid">
@@ -88,7 +89,10 @@ export default function Welcome() {
                     </div>
 
                     <div className="wi-cta">
-                        <p className="wi-cta-text">Ready to say what you've been holding in?</p>
+                        <p className="wi-cta-text">
+                            You are not alone in whatever you are carrying. Come tell your story, or come
+                            read someone else's and realize you never were.
+                        </p>
                         <div className="welcome-actions wi-cta-actions">
                             <Link to="/register" className="btn-primary">
                                 Create Account

@@ -31,7 +31,7 @@ function daysSince(dateStr) {
 
 export default function Profile() {
     const navigate = useNavigate();
-    const { logout, theme, setTheme } = useUser();
+    const { logout } = useUser();
 
     const [status, setStatus] = useState('loading');
     const [user, setUser] = useState(null);
@@ -330,17 +330,6 @@ export default function Profile() {
                                 <span className="slider round"></span>
                             </label>
                         </div>
-                        <div className="setting-item">
-                            <span>Light Mode</span>
-                            <label className="switch">
-                                <input
-                                    type="checkbox"
-                                    checked={theme === 'light'}
-                                    onChange={(e) => setTheme(e.target.checked ? 'light' : 'dark')}
-                                />
-                                <span className="slider round"></span>
-                            </label>
-                        </div>
                         <button className="dropdown-btn" onClick={() => { setPwOpen(true); setSettingsOpen(false); }}>Change Password</button>
                         <button className="dropdown-btn" onClick={() => navigate('/blocked-accounts')}>Blocked Accounts</button>
                         <button className="dropdown-btn danger" onClick={() => { setDelStage('plead'); setDelOpen(true); setSettingsOpen(false); }}>Delete Account</button>
@@ -353,7 +342,7 @@ export default function Profile() {
                                     <rect x="2" y="4" width="20" height="16" rx="2"/>
                                     <path d="M22 4l-10 8L2 4"/>
                                 </svg>
-                                <span>khatripiyus95@gmail.com</span>
+                                <a href="mailto:khatripiyus95@gmail.com" style={{ color: 'inherit', textDecoration: 'none' }}>khatripiyus95@gmail.com</a>
                             </div>
                         </div>
                     </div>
@@ -477,6 +466,11 @@ export default function Profile() {
                                     </div>
                                     <h3 className="pr-post-title">{post.title}</h3>
                                     <p className="pr-post-text">{post.content}</p>
+                                    {post.image_url && (
+                                        <div className="pr-post-image-wrap">
+                                            <img src={post.image_url} alt="" loading="lazy" />
+                                        </div>
+                                    )}
                                     <div className="pr-post-meta">
                                         <span className="pr-post-stat">
                                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

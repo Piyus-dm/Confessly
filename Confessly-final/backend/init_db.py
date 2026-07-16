@@ -79,7 +79,6 @@ COLUMNS = [
     ('profiles', 'username_updated_at', 'username_updated_at DATETIME DEFAULT NULL'),
     ('reports',  'description',         'description TEXT DEFAULT NULL'),
     ('announcements', 'is_active',      'is_active TINYINT(1) NOT NULL DEFAULT 1'),
-    ('profiles', 'theme_preference',    "theme_preference VARCHAR(10) NOT NULL DEFAULT 'dark'"),
 ]
 
 DEFAULT_CATEGORIES = [

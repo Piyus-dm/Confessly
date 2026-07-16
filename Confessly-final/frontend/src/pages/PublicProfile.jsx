@@ -277,6 +277,11 @@ export default function PublicProfile() {
                                             </div>
                                             <h3 className="pr-post-title">{post.title}</h3>
                                             <p className="pr-post-text">{post.content}</p>
+                                            {post.image_url && (
+                                                <div className="pr-post-image-wrap">
+                                                    <img src={post.image_url} alt="" loading="lazy" />
+                                                </div>
+                                            )}
                                             <div className="pr-post-meta">
                                                 <span className="pr-post-stat">
                                                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
