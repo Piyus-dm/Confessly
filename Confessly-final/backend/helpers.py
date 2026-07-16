@@ -133,7 +133,8 @@ PROFILE_SELECT = '''
         (u.password_hash IS NOT NULL AND u.password_hash != '') as has_password,
         p.id as profile_id, p.anonymous_handle, p.bio, p.avatar_url,
         p.followers_count, p.following_count, p.show_profile_stats,
-        p.theme_preference, p.is_private, p.username_updated_at,
+        (CASE WHEN p.theme_preference = 'light' THEN 'light' ELSE 'dark' END) as theme_preference,
+        p.is_private, p.username_updated_at,
         (SELECT COUNT(*) FROM posts WHERE profile_id = p.id) as posts_count,
         (SELECT COUNT(*) FROM comments WHERE profile_id = p.id) as comments_count,
         (SELECT COUNT(*) FROM reactions WHERE profile_id = p.id) as reactions_count

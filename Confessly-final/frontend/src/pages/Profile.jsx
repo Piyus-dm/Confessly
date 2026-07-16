@@ -605,7 +605,7 @@ export default function Profile() {
                         <p className="plead-text">
                             Confessly is a community built on shared secrets and human connection.
                             Please don't break that chain. Your confessions are a part of us.
-                            Please be with us.
+                            Please be with us!
                         </p>
                         <button className="btn-primary plead-stay-btn" onClick={() => setDelOpen(false)}>
                             Stay with Us

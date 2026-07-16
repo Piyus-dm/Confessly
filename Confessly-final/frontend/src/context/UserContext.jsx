@@ -13,14 +13,18 @@ const UserContext = createContext({
 });
 
 function applyTheme(theme) {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('confessly-theme', theme);
+    if (theme === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+    } else {
+        document.documentElement.removeAttribute('data-theme');
+    }
+    localStorage.setItem('confessly-theme', theme === 'light' ? 'light' : 'dark');
 }
 
 export function UserProvider({ children }) {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [theme, setThemeState] = useState(() => localStorage.getItem('confessly-theme') || 'dark');
+    const [theme, setThemeState] = useState(() => (localStorage.getItem('confessly-theme') === 'light' ? 'light' : 'dark'));
 
     const setTheme = useCallback((next) => {
         setThemeState(next);
@@ -38,10 +42,9 @@ export function UserProvider({ children }) {
             const data = await res.json();
             if (res.ok && data.status === 'success') {
                 setUser(data.profile);
-                if (data.profile.theme_preference) {
-                    setThemeState(data.profile.theme_preference);
-                    applyTheme(data.profile.theme_preference);
-                }
+                const nextTheme = data.profile.theme_preference === 'light' ? 'light' : 'dark';
+                setThemeState(nextTheme);
+                applyTheme(nextTheme);
                 return true;
             } else {
                 setUser(null);

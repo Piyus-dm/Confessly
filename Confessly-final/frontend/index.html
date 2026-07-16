@@ -22,9 +22,8 @@
   </style>
   <script>
     (function () {
-      var saved = localStorage.getItem('confessly-theme');
-      if (saved === 'light' || saved === 'dark') {
-        document.documentElement.setAttribute('data-theme', saved);
+      if (localStorage.getItem('confessly-theme') === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
       }
     })();
   </script>
