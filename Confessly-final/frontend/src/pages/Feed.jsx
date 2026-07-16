@@ -33,6 +33,71 @@ export default function Feed() {
     const sentinelRef    = useRef(null);
     const searchBoxRef   = useRef(null);
 
+    const viewObserverRef = useRef(null);
+    const viewNodesRef     = useRef(new Map());
+    const viewTimersRef    = useRef(new Map());
+    const viewCountedRef   = useRef(new Set());
+    const viewPendingRef   = useRef(new Set());
+
+    if (!viewObserverRef.current) {
+        viewObserverRef.current = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                const postId = entry.target.dataset.postId;
+                if (!postId) return;
+                if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+                    if (viewCountedRef.current.has(postId) || viewTimersRef.current.has(postId)) return;
+                    const timer = setTimeout(() => {
+                        viewCountedRef.current.add(postId);
+                        viewPendingRef.current.add(postId);
+                        viewTimersRef.current.delete(postId);
+                    }, 1000);
+                    viewTimersRef.current.set(postId, timer);
+                } else {
+                    const timer = viewTimersRef.current.get(postId);
+                    if (timer) {
+                        clearTimeout(timer);
+                        viewTimersRef.current.delete(postId);
+                    }
+                }
+            });
+        }, { threshold: 0.5 });
+    }
+
+    function registerPostNode(node, postId) {
+        const observer = viewObserverRef.current;
+        if (!observer) return;
+        const nodes = viewNodesRef.current;
+        const prev = nodes.get(postId);
+        if (prev && prev !== node) observer.unobserve(prev);
+        if (node) {
+            node.dataset.postId = String(postId);
+            observer.observe(node);
+            nodes.set(postId, node);
+        } else {
+            nodes.delete(postId);
+        }
+    }
+
+    useEffect(() => {
+        const flush = setInterval(() => {
+            if (viewPendingRef.current.size === 0) return;
+            const ids = Array.from(viewPendingRef.current).map(Number);
+            viewPendingRef.current.clear();
+            fetch(apiUrl('/api/posts/views'), {
+                method: 'POST',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ post_ids: ids }),
+            }).catch(() => {});
+        }, 3500);
+
+        return () => {
+            clearInterval(flush);
+            viewObserverRef.current?.disconnect();
+            viewTimersRef.current.forEach((timer) => clearTimeout(timer));
+        };
+    }, []);
+
     // close the user results dropdown on an outside click
     useEffect(() => {
         function handleOutsideClick(e) {
@@ -225,6 +290,7 @@ export default function Feed() {
                 ...p,
                 liked_by_user: liked ? 0 : 1,
                 likes_count:   liked ? Math.max(0, p.likes_count - 1) : p.likes_count + 1,
+                engagement_count: liked ? p.engagement_count : (p.engagement_count ?? 0) + 1,
             };
         }));
         try {
@@ -405,19 +471,20 @@ export default function Feed() {
                         </div>
                     )}
 
-                    {!loading && posts.map((post, idx) => (
-                        <FeedCard
-                            key={post.id}
-                            post={post}
-                            onLike={toggleLike}
-                            onShare={(p) => setSharePost({ id: p.id, title: p.title })}
-                            onComment={(id) => navigate(`/post/${id}#comments`)}
-                            onCardClick={() => navigate(`/post/${post.id}`)}
-                            onProfileClick={(profileId) => navigate(`/user/${profileId}`)}
-                            onReportPost={(id, title) => setReportMeta({ id, title })}
-                            onBlockUser={handleBlockUser}
-                            onDeletePost={handleDeletePost}
-                        />
+                    {!loading && posts.map((post) => (
+                        <div key={post.id} ref={(node) => registerPostNode(node, post.id)}>
+                            <FeedCard
+                                post={post}
+                                onLike={toggleLike}
+                                onShare={(p) => setSharePost({ id: p.id, title: p.title })}
+                                onComment={(id) => navigate(`/post/${id}#comments`)}
+                                onCardClick={() => navigate(`/post/${post.id}`)}
+                                onProfileClick={(profileId) => navigate(`/user/${profileId}`)}
+                                onReportPost={(id, title) => setReportMeta({ id, title })}
+                                onBlockUser={handleBlockUser}
+                                onDeletePost={handleDeletePost}
+                            />
+                        </div>
                     ))}
 
                     <div ref={sentinelRef} style={{ height: 1 }} />

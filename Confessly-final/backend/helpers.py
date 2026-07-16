@@ -149,7 +149,9 @@ POST_SELECT_COMMON = '''
            pr.id as profile_id, pr.user_id,
            (SELECT COUNT(*) FROM reactions r WHERE r.item_id = p.id AND r.item_type = 'post' AND r.reaction_type = 'like') as likes_count,
            (SELECT COUNT(*) FROM comments c WHERE c.post_id = p.id) as comments_count,
-           (SELECT COUNT(*) FROM reactions r WHERE r.item_id = p.id AND r.item_type = 'post' AND r.reaction_type = 'like' AND r.profile_id = %s) as liked_by_user
+           (SELECT COUNT(*) FROM reactions r WHERE r.item_id = p.id AND r.item_type = 'post' AND r.reaction_type = 'like' AND r.profile_id = %s) as liked_by_user,
+           COALESCE(p.view_count, 0) as view_count,
+           COALESCE(p.engagement_count, 0) as engagement_count
     FROM posts p
     JOIN profiles pr ON p.profile_id = pr.id
     JOIN categories cat ON p.category_id = cat.id

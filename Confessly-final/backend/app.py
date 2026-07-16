@@ -8,6 +8,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from config import MAX_CONTENT_LENGTH, FLASK_SECRET_KEY, FRONTEND_URL
 from db import init_db_pool, get_db, ensure_categories
 from scoring import calculate_trending_score
+from redis_client import pop_pending_view_counts
 from routes import auth, oauth, posts, users, profiles, notifications, admin
 
 app = Flask(__name__)
@@ -80,6 +81,26 @@ def recalculate_trending_scores():
         if conn: conn.close()
 
 
+def sync_view_counts():
+    # runs every 5 minutes, drains redis's pending view counters into mysql
+    conn = cursor = None
+    try:
+        counts = pop_pending_view_counts()
+        if not counts:
+            return
+        conn = get_db()
+        cursor = conn.cursor()
+        for post_id, count in counts.items():
+            cursor.execute('UPDATE posts SET view_count = view_count + %s WHERE id = %s', (count, post_id))
+        conn.commit()
+        print(f'[cron] synced views for {len(counts)} posts')
+    except Exception as e:
+        print(f'[cron] view sync error: {e}')
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
+
+
 # module-level so it also runs under gunicorn, not just `python app.py`
 # (only works right with one worker, otherwise it'd run once per worker)
 if os.getenv('DISABLE_SCHEDULER', '0') != '1':
@@ -90,6 +111,13 @@ if os.getenv('DISABLE_SCHEDULER', '0') != '1':
         hour='*',
         minute='0',
         id='trending_score_hourly',
+        replace_existing=True,
+    )
+    scheduler.add_job(
+        func=sync_view_counts,
+        trigger='interval',
+        minutes=5,
+        id='view_count_sync',
         replace_existing=True,
     )
     scheduler.start()

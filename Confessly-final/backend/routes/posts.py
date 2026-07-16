@@ -1,6 +1,7 @@
 # confessions, comments, trending, feed
 from flask import Blueprint, request, jsonify
 import mysql.connector
+import redis
 
 from db import get_db
 from helpers import (
@@ -10,6 +11,7 @@ from helpers import (
 )
 from security import looks_like_image
 from cloudinary_client import upload_image, delete_image
+from redis_client import queue_post_views
 
 bp = Blueprint('posts', __name__)
 
@@ -219,6 +221,8 @@ def react_to_confession(post_id):
                 if post_owner and post_owner['profile_id'] != request.profile_id:
                     insert_notification(cursor, post_owner['profile_id'], request.profile_id, 'like', post_id)
 
+                cursor.execute('UPDATE posts SET engagement_count = engagement_count + 1 WHERE id = %s', (post_id,))
+
             conn.commit()
 
             cursor.execute(
@@ -280,6 +284,8 @@ def handle_comments(post_id):
                     (post_id, request.profile_id, content, parent_id)
                 )
                 new_id = cursor.lastrowid
+
+                cursor.execute('UPDATE posts SET engagement_count = engagement_count + 1 WHERE id = %s', (post_id,))
 
                 # notify the right person: replied-to commenter or post owner
                 if parent_id:
@@ -430,7 +436,9 @@ def get_trending():
                        (SELECT COUNT(*) FROM reactions r WHERE r.item_id = p.id AND r.item_type = 'post' AND r.reaction_type = 'like') as likes_count,
                        (SELECT COUNT(*) FROM comments c WHERE c.post_id = p.id) as comments_count,
                        (SELECT COUNT(*) FROM reactions r WHERE r.item_id = p.id AND r.item_type = 'post' AND r.reaction_type = 'like' AND r.profile_id = %s) as liked_by_user,
-                       COALESCE(p.trending_score, 0.0) AS trending_score
+                       COALESCE(p.trending_score, 0.0) AS trending_score,
+                       COALESCE(p.view_count, 0) as view_count,
+                       COALESCE(p.engagement_count, 0) as engagement_count
                 FROM posts p
                 JOIN profiles pr ON p.profile_id = pr.id
                 JOIN categories cat ON p.category_id = cat.id
@@ -483,7 +491,9 @@ def get_hybrid_feed():
                        (SELECT COUNT(*) FROM reactions r WHERE r.item_id = p.id AND r.item_type = 'post' AND r.reaction_type = 'like') as likes_count,
                        (SELECT COUNT(*) FROM comments c WHERE c.post_id = p.id) as comments_count,
                        (SELECT COUNT(*) FROM reactions r WHERE r.item_id = p.id AND r.item_type = 'post' AND r.reaction_type = 'like' AND r.profile_id = %s) as liked_by_user,
-                       COALESCE(p.trending_score, 0.0) AS trending_score
+                       COALESCE(p.trending_score, 0.0) AS trending_score,
+                       COALESCE(p.view_count, 0) as view_count,
+                       COALESCE(p.engagement_count, 0) as engagement_count
                 FROM posts p
                 JOIN profiles pr ON p.profile_id = pr.id
                 JOIN categories cat ON p.category_id = cat.id
@@ -508,6 +518,31 @@ def get_hybrid_feed():
         finally:
             if cursor: cursor.close()
             if conn: conn.close()
+    except Exception as e:
+        print(f'[error] {request.path}: {e}')
+        return jsonify({'status': 'error', 'message': 'An internal error occurred'}), 500
+
+
+@bp.route('/api/posts/views', methods=['POST'])
+@require_auth
+def register_post_views():
+    try:
+        data = request.get_json() or {}
+        post_ids = data.get('post_ids')
+        if not isinstance(post_ids, list) or not post_ids:
+            return jsonify({'status': 'error', 'message': 'post_ids is required'}), 400
+
+        try:
+            clean_ids = list({int(pid) for pid in post_ids})[:50]
+        except (ValueError, TypeError):
+            return jsonify({'status': 'error', 'message': 'post_ids must be integers'}), 400
+
+        try:
+            queue_post_views(clean_ids)
+        except redis.RedisError as e:
+            print(f'[redis-error] {request.path}: {e}')
+
+        return jsonify({'status': 'success'}), 200
     except Exception as e:
         print(f'[error] {request.path}: {e}')
         return jsonify({'status': 'error', 'message': 'An internal error occurred'}), 500

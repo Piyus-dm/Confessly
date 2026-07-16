@@ -54,3 +54,5 @@ MAX_CONTENT_LENGTH = 5 * 1024 * 1024  # 5mb
 CLOUDINARY_CLOUD_NAME = os.getenv('CLOUDINARY_CLOUD_NAME', '').strip().strip('"')
 CLOUDINARY_API_KEY = os.getenv('CLOUDINARY_API_KEY', '').strip().strip('"')
 CLOUDINARY_API_SECRET = os.getenv('CLOUDINARY_API_SECRET', '').strip().strip('"')
+
+REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379/0').strip().strip('"')

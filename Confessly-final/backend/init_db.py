@@ -79,6 +79,8 @@ COLUMNS = [
     ('profiles', 'username_updated_at', 'username_updated_at DATETIME DEFAULT NULL'),
     ('reports',  'description',         'description TEXT DEFAULT NULL'),
     ('announcements', 'is_active',      'is_active TINYINT(1) NOT NULL DEFAULT 1'),
+    ('posts',    'view_count',          'view_count INT NOT NULL DEFAULT 0'),
+    ('posts',    'engagement_count',    'engagement_count INT NOT NULL DEFAULT 0'),
 ]
 
 DEFAULT_CATEGORIES = [

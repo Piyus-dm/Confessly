@@ -5,6 +5,7 @@ import ReportModal from '../components/ReportModal.jsx';
 import SkeletonLoader from '../components/SkeletonLoader.jsx';
 import PostMenu from '../components/PostMenu.jsx';
 import RichText from '../components/RichText.jsx';
+import { formatMetric } from '../components/FeedCard.jsx';
 import { useUser } from '../context/UserContext.jsx';
 import { apiUrl, apiFetch } from '../api.js';
 import '../styles/global.css';
@@ -223,6 +224,7 @@ export default function PostDetail() {
             ...p,
             liked_by_user: wasLiked ? 0 : 1,
             likes_count:   wasLiked ? Math.max(0, (p.likes_count ?? 0) - 1) : (p.likes_count ?? 0) + 1,
+            engagement_count: wasLiked ? p.engagement_count : (p.engagement_count ?? 0) + 1,
         }));
         try {
             const res  = await fetch(apiUrl(`/api/confessions/${postId}/react`), { method: 'POST', credentials: 'include' });
@@ -414,6 +416,20 @@ export default function PostDetail() {
                         <div className="fc-footer">
                             <div className="fc-footer-left">
                                 <button
+                                    className="fc-btn fc-comment"
+                                    onClick={() => {
+                                        document.getElementById('comments')?.scrollIntoView({ behavior: 'smooth' });
+                                    }}
+                                    aria-label={`${comments.length} comments`}
+                                >
+                                    <svg width="17" height="17" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" strokeWidth="2"
+                                        strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                                    </svg>
+                                    <span>{formatMetric(comments.length)}</span>
+                                </button>
+                                <button
                                     className={`fc-btn fc-like${isLiked ? ' fc-liked' : ''}`}
                                     onClick={handleLike}
                                     aria-label={isLiked ? 'Unlike' : 'Like'}
@@ -425,21 +441,7 @@ export default function PostDetail() {
                                         strokeLinecap="round" strokeLinejoin="round">
                                         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                                     </svg>
-                                    <span>{post.likes_count ?? 0}</span>
-                                </button>
-                                <button
-                                    className="fc-btn"
-                                    onClick={() => {
-                                        document.getElementById('comments')?.scrollIntoView({ behavior: 'smooth' });
-                                    }}
-                                    aria-label={`${comments.length} comments`}
-                                >
-                                    <svg width="17" height="17" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" strokeWidth="2"
-                                        strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                                    </svg>
-                                    <span>{comments.length}</span>
+                                    <span>{formatMetric(post.likes_count)}</span>
                                 </button>
                             </div>
                             <div className="pd-footer-right">
@@ -471,6 +473,15 @@ export default function PostDetail() {
                                         <line x1="12" y1="2" x2="12" y2="15" />
                                     </svg>
                                 </button>
+                                <span className="fc-btn fc-views" aria-label={`${post.view_count ?? 0} views`}>
+                                    <svg width="16" height="16" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" strokeWidth="2"
+                                        strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                        <circle cx="12" cy="12" r="3" />
+                                    </svg>
+                                    <span>{formatMetric(post.view_count)}</span>
+                                </span>
                             </div>
                         </div>
                     </article>

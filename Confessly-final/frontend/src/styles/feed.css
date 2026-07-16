@@ -826,8 +826,15 @@
   padding-top:     14px;
 }
 
-/* LEFT: like + comment grouped together */
+/* LEFT: comment + like grouped together */
 .fc-footer-left {
+  display:     flex;
+  align-items: center;
+  gap:         20px;
+}
+
+/* RIGHT: share + views grouped together */
+.fc-footer-right {
   display:     flex;
   align-items: center;
   gap:         20px;
@@ -875,10 +882,25 @@
   animation: heartBeat 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* comment — hover goes pure white, x style */
+.fc-comment:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color:      #ffffff !important;
+}
+
 /* share — iOS/Twitter arrow-up-from-box */
 .fc-share:hover {
-  background: rgba(255, 255, 255, 0.05) !important;
-  color:      #aaaaaa !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  color:      #ffffff !important;
+}
+
+/* views — static metric, not interactive */
+.fc-views {
+  cursor: default;
+}
+.fc-views:hover {
+  background: none;
+  color:      var(--text-muted);
 }
 
 /* header actions on the right of a post card (category + 3-dot menu) */
