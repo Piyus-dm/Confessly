@@ -31,7 +31,7 @@ function daysSince(dateStr) {
 
 export default function Profile() {
     const navigate = useNavigate();
-    const { logout } = useUser();
+    const { logout, theme, setTheme } = useUser();
 
     const [status, setStatus] = useState('loading');
     const [user, setUser] = useState(null);
@@ -61,6 +61,7 @@ export default function Profile() {
     const [confirmPw, setConfirmPw] = useState('');
 
     const [delOpen, setDelOpen] = useState(false);
+    const [delStage, setDelStage] = useState('plead');
     const [delPw, setDelPw] = useState('');
     const [delConfirm, setDelConfirm] = useState('');
 
@@ -329,9 +330,20 @@ export default function Profile() {
                                 <span className="slider round"></span>
                             </label>
                         </div>
+                        <div className="setting-item">
+                            <span>Light Mode</span>
+                            <label className="switch">
+                                <input
+                                    type="checkbox"
+                                    checked={theme === 'light'}
+                                    onChange={(e) => setTheme(e.target.checked ? 'light' : 'dark')}
+                                />
+                                <span className="slider round"></span>
+                            </label>
+                        </div>
                         <button className="dropdown-btn" onClick={() => { setPwOpen(true); setSettingsOpen(false); }}>Change Password</button>
                         <button className="dropdown-btn" onClick={() => navigate('/blocked-accounts')}>Blocked Accounts</button>
-                        <button className="dropdown-btn danger" onClick={() => { setDelOpen(true); setSettingsOpen(false); }}>Delete Account</button>
+                        <button className="dropdown-btn danger" onClick={() => { setDelStage('plead'); setDelOpen(true); setSettingsOpen(false); }}>Delete Account</button>
                         <button className="dropdown-btn" onClick={handleLogout}>Logout</button>
                         <div className="divider" style={{ margin: '6px 0' }} />
                         <div style={{ padding: '8px 12px' }}>
@@ -579,7 +591,33 @@ export default function Profile() {
             )}
 
             {/* delete account modal */}
-            {delOpen && (
+            {delOpen && delStage === 'plead' && (
+                <div className="modal-overlay" style={{ display: 'flex' }} onClick={(e) => { if (e.target === e.currentTarget) setDelOpen(false); }}>
+                    <div className="modal-content plead-modal">
+                        <button className="icon-btn close-modal plead-close" onClick={() => setDelOpen(false)}>&times;</button>
+                        <div className="plead-icon">
+                            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M12 21s-7.5-4.6-10-9.3C.3 8.4 2 4.5 5.7 4c2-.3 3.7.7 4.9 2.2C11.8 4.7 13.5 3.7 15.5 4c3.7.5 5.4 4.4 3.7 7.7C16.7 16.4 12 21 12 21Z" />
+                                <path d="M9.5 13.5s1 1 2.5 1 2.5-1 2.5-1" />
+                            </svg>
+                        </div>
+                        <h3 className="plead-title">We value you, {displayName}.</h3>
+                        <p className="plead-text">
+                            Confessly is a community built on shared secrets and human connection.
+                            Please don't break that chain. Your confessions are a part of us.
+                            Please be with us.
+                        </p>
+                        <button className="btn-primary plead-stay-btn" onClick={() => setDelOpen(false)}>
+                            Stay with Us
+                        </button>
+                        <button className="plead-delete-link" onClick={() => setDelStage('confirm')}>
+                            I still want to delete my account
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {delOpen && delStage === 'confirm' && (
                 <div className="modal-overlay" style={{ display: 'flex' }} onClick={(e) => { if (e.target === e.currentTarget) setDelOpen(false); }}>
                     <div className="modal-content">
                         <div className="modal-header">
@@ -591,13 +629,14 @@ export default function Profile() {
                         </p>
                         <div className="form-group">
                             <label>Current Password</label>
-                            <input type="password" className="premium-input" value={delPw} onChange={(e) => setDelPw(e.target.value)} />
+                            <PasswordInput value={delPw} onChange={(e) => setDelPw(e.target.value)} />
                         </div>
                         <div className="form-group">
                             <label>Type DELETE</label>
                             <input type="text" className="premium-input" placeholder="DELETE" value={delConfirm} onChange={(e) => setDelConfirm(e.target.value)} />
                         </div>
                         <button className="btn-primary danger-btn" onClick={handleDeleteAccount}>Delete My Account</button>
+                        <button className="plead-delete-link" onClick={() => setDelStage('plead')}>Actually, I'll stay</button>
                     </div>
                 </div>
             )}

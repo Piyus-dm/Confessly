@@ -576,6 +576,65 @@ input:checked + .slider::before      { transform: translateX(17px); background-c
 /* legacy class compat */
 .profile-skeleton { /* removed - uses SkeletonLoader now */ }
 
+.plead-modal {
+  max-width:     420px;
+  text-align:    center;
+  padding:       36px 28px 28px;
+  position:      relative;
+  background:    linear-gradient(180deg, var(--bg-elevated) 0%, var(--bg-card) 100%);
+}
+
+.plead-close {
+  position: absolute;
+  top:      14px;
+  right:    14px;
+}
+
+.plead-icon {
+  width:            72px;
+  height:           72px;
+  margin:           0 auto 18px;
+  display:          flex;
+  align-items:      center;
+  justify-content:  center;
+  border-radius:    var(--r-full);
+  background:       rgba(99, 102, 241, 0.1);
+  color:            #8b8bf5;
+}
+
+.plead-title {
+  font-size:      1.15rem;
+  font-weight:    700;
+  color:          var(--text-primary);
+  letter-spacing: -0.01em;
+  margin-bottom:  12px;
+}
+
+.plead-text {
+  font-size:     0.88rem;
+  line-height:   1.6;
+  color:         var(--text-secondary);
+  margin-bottom: 26px;
+}
+
+.plead-stay-btn {
+  width:         100%;
+  font-size:     0.92rem;
+  padding:       13px;
+  margin-bottom: 14px;
+}
+
+.plead-delete-link {
+  background:     none;
+  border:         none;
+  color:          var(--text-muted);
+  font-size:      0.76rem;
+  cursor:         pointer;
+  text-decoration: underline;
+  font-family:    var(--font);
+}
+.plead-delete-link:hover { color: var(--text-secondary); }
+
 /* bring in the pulse keyframe just in case it's not loaded */
 @keyframes pulse {
   0%, 100% { opacity: 1; }
