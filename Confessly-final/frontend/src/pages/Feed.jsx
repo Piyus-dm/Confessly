@@ -263,8 +263,8 @@ export default function Feed() {
                 {/* announcement banner */}
                 {announcement && (
                     <div style={{
-                        background: '#0a0a0a',
-                        border: '1px solid #1a1a1a',
+                        background: 'var(--bg-card)',
+                        border: '1px solid var(--border-mid)',
                         borderRadius: 10,
                         padding: '12px 16px',
                         marginBottom: 16,
@@ -279,12 +279,12 @@ export default function Feed() {
                             </svg>
                         </div>
                         <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ color: '#ededed', fontSize: '0.82rem', fontWeight: 600, marginBottom: 2 }}>{announcement.title}</div>
-                            <div style={{ color: '#888', fontSize: '0.76rem', lineHeight: 1.45 }}>{announcement.message}</div>
+                            <div style={{ color: 'var(--text-primary)', fontSize: '0.82rem', fontWeight: 600, marginBottom: 2 }}>{announcement.title}</div>
+                            <div style={{ color: 'var(--text-secondary)', fontSize: '0.76rem', lineHeight: 1.45 }}>{announcement.message}</div>
                         </div>
                         <button onClick={() => setAnnouncement(null)}
                             style={{
-                                background: 'none', border: 'none', color: '#555', cursor: 'pointer',
+                                background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer',
                                 padding: 4, fontSize: '0.9rem', lineHeight: 1, flexShrink: 0,
                             }}
                             aria-label="Dismiss announcement">

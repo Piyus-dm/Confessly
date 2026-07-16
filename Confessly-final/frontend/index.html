@@ -18,7 +18,16 @@
        even before the CSS bundle hydrates */
     * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
     html, body { margin: 0; padding: 0; background: #000; color: #ededed; }
+    html[data-theme="light"], html[data-theme="light"] body { background: #ffffff; color: #111111; }
   </style>
+  <script>
+    (function () {
+      var saved = localStorage.getItem('confessly-theme');
+      if (saved === 'light' || saved === 'dark') {
+        document.documentElement.setAttribute('data-theme', saved);
+      }
+    })();
+  </script>
 </head>
 <body>
   <div id="root"></div>

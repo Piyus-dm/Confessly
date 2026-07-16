@@ -24,7 +24,7 @@
   border-radius:   50%;
   background:      rgba(255, 255, 255, 0.05);
   border:          1px solid rgba(255, 255, 255, 0.08);
-  color:           #ededed;
+  color:           var(--text-primary);
   cursor:          pointer;
   flex-shrink:     0;
   transition:      background 0.1s ease;
@@ -36,7 +36,7 @@
   font-family:    'Inter', sans-serif;
   font-size:      0.9rem;
   font-weight:    600;
-  color:          #ededed;
+  color:          var(--text-primary);
   letter-spacing: -0.01em;
 }
 
@@ -59,7 +59,7 @@
   font-size:      1.1rem;
   font-weight:    700;
   line-height:    1.35;
-  color:          #ededed;
+  color:          var(--text-primary);
   margin-bottom:  12px;
   letter-spacing: -0.02em;
 }
@@ -69,7 +69,7 @@
   font-family:   'Inter', sans-serif;
   font-size:     0.9rem;
   line-height:   1.7;
-  color:         #888888;
+  color:         var(--text-secondary);
   margin-bottom: 16px;
   white-space:   pre-wrap;
   overflow-wrap: break-word;
@@ -85,7 +85,7 @@
   width:          100%;
   border-radius:  12px;
   overflow:       hidden;
-  background:     #111;
+  background:     var(--bg-elevated);
   margin-bottom:  16px;
   border:         1px solid rgba(255, 255, 255, 0.08);
 }
@@ -105,7 +105,7 @@
   font-family: 'Inter', sans-serif;
   font-size:   13px;
   font-weight: 500;
-  color:       #555555;
+  color:       var(--text-muted);
   user-select: none;
 }
 .pd-stat svg { flex-shrink: 0; }
@@ -131,7 +131,7 @@
   font-family:    'Inter', sans-serif;
   font-size:      0.88rem;
   font-weight:    600;
-  color:          #ededed;
+  color:          var(--text-primary);
   margin-bottom:  16px;
   display:        flex;
   align-items:    center;
@@ -142,7 +142,7 @@
 .count-badge {
   background:    rgba(255, 255, 255, 0.05);
   border:        1px solid rgba(255, 255, 255, 0.08);
-  color:         #555555;
+  color:         var(--text-muted);
   font-family:   'Inter', sans-serif;
   font-size:     0.68rem;
   font-weight:   600;
@@ -162,24 +162,24 @@
   margin-bottom: 12px;
   font-family:   'Inter', sans-serif;
   font-size:     0.78rem;
-  color:         #888888;
+  color:         var(--text-secondary);
   animation:     slideUp 0.18s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .reply-indicator.active { display: flex; }
-.reply-to-name { font-weight: 600; color: #ededed; }
+.reply-to-name { font-weight: 600; color: var(--text-primary); }
 .reply-cancel {
   margin-left: auto;
   display:     flex;
   align-items: center;
   background:  none;
   border:      none;
-  color:       #555555;
+  color:       var(--text-muted);
   cursor:      pointer;
   padding:     2px 4px;
   border-radius: 4px;
   transition:  color 0.1s ease;
 }
-.reply-cancel:hover { color: #ededed; }
+.reply-cancel:hover { color: var(--text-primary); }
 
 /* comment input bar */
 .comment-input-area {
@@ -208,13 +208,13 @@
   flex:          1;
   padding:       10px 16px;
 
-  background:    #111111;
+  background:    var(--bg-elevated);
   border:        1px solid rgba(255, 255, 255, 0.08);
   border-radius: 9999px;         /* pill */
   outline:       none;
   font-family:   'Inter', sans-serif;
   font-size:     0.875rem;
-  color:         #ededed;
+  color:         var(--text-primary);
   transition:    border-color 0.15s ease, box-shadow 0.15s ease;
   min-width:     0;
 }
@@ -229,8 +229,8 @@
 /* reply button */
 .comment-submit {
   flex-shrink:    0;
-  background:     #ededed;
-  color:          #000000;
+  background:     var(--text-primary);
+  color:          var(--bg-base);
   border:         none;
   padding:        10px 18px;
   border-radius:  9999px;
@@ -242,7 +242,7 @@
   white-space:    nowrap;
   transition:     background 0.12s ease, transform 0.1s ease, opacity 0.12s ease;
 }
-.comment-submit:hover   { background: #d4d4d4; }
+.comment-submit:hover   { background: var(--accent-hover); }
 .comment-submit:active  { transform: scale(0.93); }
 .comment-submit:disabled {
   opacity: 0.35;
@@ -260,12 +260,22 @@
 /* .anon-avatar-xs sizing comes from global.css — no override needed */
 .c-body  { flex: 1; min-width: 0; }
 
+.c-avatar-link {
+  cursor:        pointer;
+  border-radius: 50%;
+  transition:    opacity var(--t) ease, transform var(--t) ease;
+}
+.c-avatar-link:hover {
+  opacity:   0.8;
+  transform: scale(1.05);
+}
+
 /* bubble — dark surface, thin border */
 .c-bubble {
   display:       inline-block;
   max-width:     100%;
-  background:    #111111;
-  border:        1px solid rgba(255, 255, 255, 0.07);
+  background:    var(--bg-elevated);
+  border:        1px solid var(--border);
   border-radius: 0 12px 12px 12px;
   padding:       9px 13px;
 }
@@ -274,12 +284,20 @@
   font-family:    'Inter', sans-serif;
   font-weight:    600;
   font-size:      0.76rem;
-  color:          #ededed;
+  color:          var(--text-primary);
   margin-bottom:  3px;
   letter-spacing: -0.01em;
   display:        flex;
   align-items:    center;
   gap:            6px;
+}
+
+.c-username-link {
+  cursor: pointer;
+}
+.c-username-link:hover {
+  text-decoration: underline;
+  color:           var(--accent-hover);
 }
 
 /* op badge next to the post author's name */
@@ -295,7 +313,7 @@
   border-radius:  4px;
   background:     rgba(59, 130, 246, 0.15);
   color:          #a9a7ba;
-  border:         1px solid   #555555;
+  border:         1px solid   var(--text-muted);
   line-height:    1;
   user-select:    none;
 }
@@ -304,7 +322,7 @@
   font-family:   'Inter', sans-serif;
   font-size:     0.85rem;
   line-height:   1.55;
-  color:         #888888;
+  color:         var(--text-secondary);
   overflow-wrap: break-word;
   word-break:    break-word;
   white-space:   pre-wrap;
@@ -339,12 +357,12 @@
   transition:  color 0.1s ease;
   user-select: none;
 }
-.c-react-btn:hover { color: #888888; }
+.c-react-btn:hover { color: var(--text-secondary); }
 .c-like:hover      { color: #ff4757; }
 .c-dislike:hover   { color: #f97316; }
-.c-reply-btn:hover { color: #ededed; }
+.c-reply-btn:hover { color: var(--text-primary); }
 
-.c-score { color: #555555; }
+.c-score { color: var(--text-muted); }
 
 /* threaded replies — indented with vertical line */
 .reply-group {

@@ -8,11 +8,28 @@ const UserContext = createContext({
     isLoading:       true,
     refreshUser:     () => {},
     logout:          () => {},
+    theme:           'dark',
+    setTheme:        () => {},
 });
+
+function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('confessly-theme', theme);
+}
 
 export function UserProvider({ children }) {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [theme, setThemeState] = useState(() => localStorage.getItem('confessly-theme') || 'dark');
+
+    const setTheme = useCallback((next) => {
+        setThemeState(next);
+        applyTheme(next);
+        apiFetch('/api/user/settings', {
+            method: 'PUT',
+            body: JSON.stringify({ theme_preference: next }),
+        }).catch(() => {});
+    }, []);
 
     const refreshUser = useCallback(async () => {
         setLoading(true);
@@ -21,6 +38,10 @@ export function UserProvider({ children }) {
             const data = await res.json();
             if (res.ok && data.status === 'success') {
                 setUser(data.profile);
+                if (data.profile.theme_preference) {
+                    setThemeState(data.profile.theme_preference);
+                    applyTheme(data.profile.theme_preference);
+                }
                 return true;
             } else {
                 setUser(null);
@@ -33,6 +54,8 @@ export function UserProvider({ children }) {
             setLoading(false);
         }
     }, []);
+
+    useEffect(() => { applyTheme(theme); }, []);
 
     const logout = useCallback(async () => {
         try {
@@ -53,6 +76,8 @@ export function UserProvider({ children }) {
             isLoading:       loading,
             refreshUser,
             logout,
+            theme,
+            setTheme,
         }}>
             {children}
         </UserContext.Provider>

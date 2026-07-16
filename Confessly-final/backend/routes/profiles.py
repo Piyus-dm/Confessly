@@ -198,6 +198,8 @@ def update_user_settings():
             conn = get_db()
             cursor = conn.cursor()
             if data.get('theme_preference') is not None:
+                if data['theme_preference'] not in ('light', 'dark'):
+                    return jsonify({'status': 'error', 'message': 'theme_preference must be light or dark'}), 400
                 cursor.execute('UPDATE profiles SET theme_preference = %s WHERE user_id = %s',
                                (data['theme_preference'], request.user_id))
             if data.get('show_profile_stats') is not None:

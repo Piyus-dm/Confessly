@@ -89,8 +89,8 @@
   top:               calc(100% + 6px);
   left:              0;
   right:             0;
-  background-color:  #0a0a0a;
-  border:            1px solid #1a1a1a;
+  background-color:  var(--bg-card);
+  border:            1px solid var(--border-mid);
   border-radius:     10px;
   overflow:          hidden;
   z-index:           50;
@@ -110,7 +110,7 @@
   background-color: rgba(255,255,255,0.04);
 }
 .user-search-row + .user-search-row {
-  border-top: 1px solid #1a1a1a;
+  border-top: 1px solid var(--border-mid);
 }
 
 .user-search-avatar {
@@ -124,7 +124,7 @@
   display:          flex;
   align-items:      center;
   justify-content:  center;
-  background-color: #151515;
+  background-color: var(--bg-hover);
   color:            var(--text-muted);
 }
 
@@ -211,7 +211,7 @@
   letter-spacing: -0.01em;
   transition:    background var(--t) ease, transform var(--t-fast) ease;
 }
-.quick-submit-btn:hover  { background: #d4d4d4; }
+.quick-submit-btn:hover  { background: var(--accent-hover); }
 .quick-submit-btn:active { transform: scale(0.93); }
 
 /* compose image preview */
@@ -274,9 +274,9 @@
 }
 .confession-card:hover  {
   border-color: rgba(255, 255, 255, 0.14);
-  background:   #111111;
+  background:   var(--bg-elevated);
 }
-.confession-card:active { background: #0f0f0f; }
+.confession-card:active { background: var(--bg-input); }
 
 /* card top */
 .card-top {
@@ -316,7 +316,7 @@
   letter-spacing: 0.02em;
   /* hollow — no bright blue, no solid border */
   background:     rgba(255, 255, 255, 0.05);         /* exact spec */
-  color:          #888888;                           /* muted satin grey */
+  color:          var(--text-secondary);                           /* muted satin grey */
   border:         none;                              /* no border */
   white-space:    nowrap;
   text-transform: capitalize;
@@ -510,7 +510,7 @@
 }
 .nav-create:hover  .nav-fab { transform: scale(1.06); box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2); }
 .nav-create:active .nav-fab { transform: scale(0.92); }
-.nav-create.active .nav-fab { background: #d4d4d4; }
+.nav-create.active .nav-fab { background: var(--accent-hover); }
 
 /* share modal */
 .sm-overlay {
@@ -676,9 +676,9 @@
 }
 .fc-card:hover  {
   border-color: rgba(255, 255, 255, 0.13);
-  background:   #0f0f0f;
+  background:   var(--bg-input);
 }
-.fc-card:active:not(:has(button:active)) { background: #080808; }
+.fc-card:active:not(:has(button:active)) { background: var(--bg-subtle); }
 
 /* clickable avatar / username */
 .fc-avatar-clickable {
@@ -734,7 +734,7 @@
 .fc-username {
   font-size:      15px;            /* spec */
   font-weight:    600;             /* spec */
-  color:          #ededed;         /* spec */
+  color:          var(--text-primary);         /* spec */
   line-height:    1.2;
   white-space:    nowrap;
   overflow:       hidden;
@@ -744,7 +744,7 @@
 
 .fc-time {
   font-size:   13px;               /* spec */
-  color:       #888888;            /* spec */
+  color:       var(--text-secondary);            /* spec */
   margin-top:  2px;
   line-height: 1.2;
   white-space: nowrap;
@@ -759,7 +759,7 @@
   border:        1px solid rgba(255,255,255,0.08); /* spec */
   padding:       4px 12px;                     /* spec */
   font-size:     12px;                         /* spec */
-  color:         #888888;
+  color:         var(--text-secondary);
   background:    rgba(255, 255, 255, 0.05);    /* hollow */
   font-weight:   500;
   white-space:   nowrap;
@@ -772,7 +772,7 @@
   font-size:      0.97rem;
   font-weight:    700;
   line-height:    1.35;
-  color:          #ededed;
+  color:          var(--text-primary);
   margin-bottom:  8px;
   letter-spacing: -0.015em;
 }
@@ -782,7 +782,7 @@
   font-family:        'Inter', sans-serif;
   font-size:          0.85rem;
   line-height:        1.6;
-  color:              #888888;
+  color:              var(--text-secondary);
   margin-bottom:      14px;
   /* 3-line clamp for feed */
   display:            -webkit-box;
@@ -798,7 +798,7 @@
   width:          100%;
   border-radius:  12px;
   overflow:       hidden;
-  background:     #111;
+  background:     var(--bg-elevated);
   margin-bottom:  14px;
   border:         1px solid rgba(255, 255, 255, 0.08);
   aspect-ratio:   16 / 9;
@@ -846,7 +846,7 @@
   font-family:   'Inter', sans-serif;
   font-size:     13px;
   font-weight:   500;
-  color:         #555555;
+  color:         var(--text-muted);
   line-height:   1;
   transition:    background 0.1s ease, color 0.1s ease;
   user-select:   none;
@@ -854,7 +854,7 @@
 .fc-btn svg { flex-shrink: 0; }
 .fc-btn:hover {
   background: rgba(255, 255, 255, 0.05);
-  color:      #888888;
+  color:      var(--text-secondary);
 }
 .fc-btn:active { background: rgba(255, 255, 255, 0.08); }
 
