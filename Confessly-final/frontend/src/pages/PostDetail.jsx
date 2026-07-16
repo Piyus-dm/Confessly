@@ -70,19 +70,40 @@ function buildCommentTree(comments) {
     return roots;
 }
 
-function CommentNode({ node, onReply, onReact, onDelete, viewerProfileId, postOwnerProfileId }) {
+function CommentNode({ node, onReply, onReact, onDelete, onProfileClick, viewerProfileId, postOwnerProfileId }) {
     const score     = node.net_score || 0;
     const upStyle   = node.user_reaction === 'like'    ? { color: 'var(--like)' } : {};
     const downStyle = node.user_reaction === 'dislike' ? { color: '#f97316' }     : {};
     const canDelete = node.profile_id === viewerProfileId || postOwnerProfileId === viewerProfileId;
 
+    function goToProfile() {
+        if (node.profile_id) onProfileClick(node.profile_id);
+    }
+
     return (
         <div className="comment-node">
-            <AnonAvatar size="xs" src={node.avatar_url} />
+            <div
+                className="c-avatar-link"
+                onClick={goToProfile}
+                role="button"
+                tabIndex={0}
+                aria-label={`View ${node.anonymous_username}'s profile`}
+                onKeyDown={(e) => { if (e.key === 'Enter') goToProfile(); }}
+            >
+                <AnonAvatar size="xs" src={node.avatar_url} />
+            </div>
             <div className="c-body">
                 <div className="c-bubble">
                     <div className="c-username">
-                        {node.anonymous_username}
+                        <span
+                            className="c-username-link"
+                            onClick={goToProfile}
+                            role="button"
+                            tabIndex={0}
+                            onKeyDown={(e) => { if (e.key === 'Enter') goToProfile(); }}
+                        >
+                            {node.anonymous_username}
+                        </span>
                         {node.is_post_author && (
                             <span className="op-badge">OP</span>
                         )}
@@ -143,6 +164,7 @@ function CommentNode({ node, onReply, onReact, onDelete, viewerProfileId, postOw
                                 onReply={onReply}
                                 onReact={onReact}
                                 onDelete={onDelete}
+                                onProfileClick={onProfileClick}
                                 viewerProfileId={viewerProfileId}
                                 postOwnerProfileId={postOwnerProfileId}
                             />
@@ -509,6 +531,7 @@ export default function PostDetail() {
                                 onReply={handleReply}
                                 onReact={handleReact}
                                 onDelete={handleDeleteComment}
+                                onProfileClick={(profileId) => navigate(`/user/${profileId}`)}
                                 viewerProfileId={user?.profile_id}
                                 postOwnerProfileId={post?.profile_id}
                             />
