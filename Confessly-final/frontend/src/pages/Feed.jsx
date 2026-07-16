@@ -11,6 +11,22 @@ import { apiFetch, apiUrl } from '../api.js';
 import '../styles/global.css';
 import '../styles/feed.css';
 
+const VIEWED_POSTS_KEY = 'confessly-viewed-posts';
+
+function loadViewedPosts() {
+    try {
+        return new Set(JSON.parse(sessionStorage.getItem(VIEWED_POSTS_KEY) || '[]'));
+    } catch {
+        return new Set();
+    }
+}
+
+function saveViewedPosts(set) {
+    try {
+        sessionStorage.setItem(VIEWED_POSTS_KEY, JSON.stringify(Array.from(set)));
+    } catch { /* ignore */ }
+}
+
 export default function Feed() {
     const navigate = useNavigate();
 
@@ -36,7 +52,7 @@ export default function Feed() {
     const viewObserverRef = useRef(null);
     const viewNodesRef     = useRef(new Map());
     const viewTimersRef    = useRef(new Map());
-    const viewCountedRef   = useRef(new Set());
+    const viewCountedRef   = useRef(loadViewedPosts());
     const viewPendingRef   = useRef(new Set());
 
     function registerPostNode(node, postId) {
@@ -62,6 +78,7 @@ export default function Feed() {
                     if (viewCountedRef.current.has(postId) || viewTimersRef.current.has(postId)) return;
                     const timer = setTimeout(() => {
                         viewCountedRef.current.add(postId);
+                        saveViewedPosts(viewCountedRef.current);
                         viewPendingRef.current.add(postId);
                         viewTimersRef.current.delete(postId);
                         setPosts(prev => prev.map(p =>

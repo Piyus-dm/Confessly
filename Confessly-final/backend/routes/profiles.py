@@ -145,7 +145,9 @@ def get_user_posts():
             cursor.execute('''
                 SELECT p.id, p.title, p.content, p.created_at, p.image_url, cat.name as category_name,
                        (SELECT COUNT(*) FROM reactions r WHERE r.item_id = p.id AND r.item_type = 'post' AND r.reaction_type = 'like') as likes_count,
-                       (SELECT COUNT(*) FROM comments c WHERE c.post_id = p.id) as comments_count
+                       (SELECT COUNT(*) FROM comments c WHERE c.post_id = p.id) as comments_count,
+                       COALESCE(p.view_count, 0) as view_count,
+                       COALESCE(p.engagement_count, 0) as engagement_count
                 FROM posts p JOIN categories cat ON p.category_id = cat.id
                 WHERE p.profile_id = %s ORDER BY p.created_at DESC LIMIT %s OFFSET %s
             ''', (request.profile_id, limit, offset))
@@ -300,7 +302,9 @@ def get_public_profile_posts(profile_id):
             cursor.execute('''
                 SELECT p.id, p.title, p.content, p.created_at, p.image_url, cat.name as category_name,
                        (SELECT COUNT(*) FROM reactions r WHERE r.item_id = p.id AND r.item_type = 'post' AND r.reaction_type = 'like') as likes_count,
-                       (SELECT COUNT(*) FROM comments c WHERE c.post_id = p.id) as comments_count
+                       (SELECT COUNT(*) FROM comments c WHERE c.post_id = p.id) as comments_count,
+                       COALESCE(p.view_count, 0) as view_count,
+                       COALESCE(p.engagement_count, 0) as engagement_count
                 FROM posts p JOIN categories cat ON p.category_id = cat.id
                 WHERE p.profile_id = %s ORDER BY p.created_at DESC LIMIT %s OFFSET %s
             ''', (profile_id, limit, offset))

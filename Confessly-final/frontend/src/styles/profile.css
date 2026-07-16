@@ -406,6 +406,16 @@ input:checked + .slider::before      { transform: translateX(17px); background-c
 
 .pr-post-stat svg { flex-shrink: 0; }
 
+.pr-post-share {
+  background:    none;
+  border:        none;
+  padding:       0;
+  cursor:        pointer;
+  font-family:   var(--font);
+  transition:    color var(--t-fast) ease;
+}
+.pr-post-share:hover { color: #ffffff; }
+
 /* comment cards */
 .pr-comment-card {
   padding:        14px 16px;
