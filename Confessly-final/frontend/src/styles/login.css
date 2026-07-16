@@ -4,7 +4,7 @@
   justify-content: center;
   align-items:     center;
   padding:         24px;
-  background-color: #000000;
+  background-color: var(--bg-base);
 }
 
 .auth-container {
@@ -29,7 +29,7 @@
   display:         flex;
   align-items:     center;
   justify-content: center;
-  color:           #000000;
+  color:           var(--bg-base);
   font-size:       1.1rem;
   font-weight:     800;
   flex-shrink:     0;
@@ -37,7 +37,7 @@
 .auth-brand-name {
   font-size:      1rem;
   font-weight:    700;
-  color:          #ededed;
+  color:          var(--text-primary);
   letter-spacing: -0.02em;
 }
 
@@ -47,13 +47,13 @@
   font-size:      1.8rem;
   font-weight:    800;
   letter-spacing: -0.04em;
-  color:          #ededed;
+  color:          var(--text-primary);
   margin-bottom:  6px;
   line-height:    1.1;
 }
 .auth-subtitle {
   font-size:  0.88rem;
-  color:      #555555;
+  color:      var(--text-muted);
   line-height: 1.5;
 }
 
@@ -73,7 +73,7 @@
 .form-group label {
   font-size:      0.72rem;
   font-weight:    600;
-  color:          #555555;
+  color:          var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -81,15 +81,15 @@
   width:         100%;
   padding:       11px 14px;
   font-size:     0.9rem;
-  background:    #111111;
+  background:    var(--bg-elevated);
   border:        1px solid rgba(255, 255, 255, 0.08);
   border-radius: 10px;
   outline:       none;
-  color:         #ededed;
+  color:         var(--text-primary);
   font-family:   'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   transition:    border-color 0.18s ease, box-shadow 0.18s ease;
 }
-.form-group input::placeholder { color: #555555; }
+.form-group input::placeholder { color: var(--text-muted); }
 .form-group input:focus {
   border-color: rgba(255, 255, 255, 0.30);
   box-shadow:   0 0 12px rgba(255, 255, 255, 0.05);
@@ -110,7 +110,7 @@
   cursor:     pointer;
   transition: color 0.15s ease;
 }
-.password-toggle-btn:hover { color: #ededed; }
+.password-toggle-btn:hover { color: var(--text-primary); }
 
 /* turnstile wrapper */
 .turnstile-wrap {
@@ -166,36 +166,36 @@
 /* switch auth link */
 .switch-auth-text {
   font-size:  0.84rem;
-  color:      #555555;
+  color:      var(--text-muted);
   text-align: center;
 }
 .switch-auth-text a {
-  color:          #ededed;
+  color:          var(--text-primary);
   font-weight:    600;
   text-decoration: none;
   border-bottom:  1px solid rgba(255, 255, 255, 0.12);
   padding-bottom: 1px;
   transition:     border-color 0.10s ease;
 }
-.switch-auth-text a:hover { border-color: #ededed; }
+.switch-auth-text a:hover { border-color: var(--text-primary); }
 
 /* welcome page */
 .welcome-view {
-  min-height:      100vh;
-  display:         flex;
-  justify-content: center;
-  align-items:     center;
-  padding:         24px;
-  background-color: #000000;
+  min-height:       100vh;
+  background-color: var(--bg-base);
 }
 
-.welcome-container {
-  width:          100%;
-  max-width:      400px;
-  display:        flex;
-  flex-direction: column;
-  align-items:    center;
-  text-align:     center;
+.welcome-hero {
+  min-height:      100vh;
+  width:           100%;
+  max-width:       400px;
+  margin:          0 auto;
+  padding:         24px;
+  display:         flex;
+  flex-direction:  column;
+  align-items:     center;
+  justify-content: center;
+  text-align:      center;
 }
 
 .logo-box {
@@ -212,7 +212,7 @@
 .logo-box span {
   font-size:   0.72rem;
   font-weight: 700;
-  color:       #ededed;
+  color:       var(--text-primary);
   letter-spacing: 0.05em;
 }
 
@@ -220,14 +220,14 @@
   font-size:      2.4rem;
   font-weight:    800;
   letter-spacing: -0.05em;
-  color:          #ededed;
+  color:          var(--text-primary);
   margin-bottom:  10px;
   line-height:    1;
 }
 
 .brand-tagline {
   font-size:     0.9rem;
-  color:         #555555;
+  color:         var(--text-muted);
   margin-bottom: 40px;
   line-height:   1.5;
 }
@@ -237,6 +237,113 @@
   flex-direction: column;
   gap:            10px;
   width:          100%;
+}
+
+/* "what is confessly" section */
+.wi-section {
+  padding:          72px 24px 96px;
+  border-top:       1px solid var(--border);
+  background:       var(--bg-subtle);
+}
+
+.wi-inner {
+  max-width: 780px;
+  margin:    0 auto;
+  text-align: center;
+}
+
+.wi-kicker {
+  display:        inline-block;
+  font-size:      0.72rem;
+  font-weight:    700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color:          var(--accent-hover);
+  margin-bottom:  14px;
+}
+
+.wi-headline {
+  font-size:      2rem;
+  font-weight:    800;
+  letter-spacing: -0.03em;
+  color:          var(--text-primary);
+  margin-bottom:  18px;
+  line-height:    1.15;
+}
+
+.wi-lede {
+  font-size:     0.98rem;
+  line-height:   1.7;
+  color:         var(--text-secondary);
+  max-width:     620px;
+  margin:        0 auto 48px;
+}
+
+.wi-grid {
+  display:               grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap:                   16px;
+  text-align:            left;
+  margin-bottom:         56px;
+}
+
+.wi-card {
+  background:    var(--bg-card);
+  border:        1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding:       22px 20px;
+  transition:    border-color var(--t) ease, transform var(--t) ease;
+}
+.wi-card:hover {
+  border-color: var(--border-mid);
+  transform:    translateY(-2px);
+}
+
+.wi-card-icon {
+  width:           40px;
+  height:          40px;
+  border-radius:   var(--r-md);
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  background:      var(--accent-dim);
+  color:           var(--text-primary);
+  margin-bottom:   14px;
+}
+
+.wi-card-title {
+  font-size:      0.95rem;
+  font-weight:    700;
+  color:          var(--text-primary);
+  letter-spacing: -0.01em;
+  margin-bottom:  8px;
+}
+
+.wi-card-text {
+  font-size:   0.84rem;
+  line-height: 1.6;
+  color:       var(--text-secondary);
+}
+
+.wi-cta {
+  padding-top: 8px;
+}
+
+.wi-cta-text {
+  font-size:     1.05rem;
+  font-weight:   600;
+  color:         var(--text-primary);
+  margin-bottom: 20px;
+}
+
+.wi-cta-actions {
+  max-width: 340px;
+  margin:    0 auto;
+}
+
+@media (max-width: 520px) {
+  .wi-grid { grid-template-columns: 1fr; }
+  .wi-headline { font-size: 1.6rem; }
 }
 
 /* auth divider */
