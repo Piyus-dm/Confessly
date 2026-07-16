@@ -1,4 +1,5 @@
 // shared post card used by feed, trending and other list views
+import { BarChart2 } from 'lucide-react';
 import PostMenu from './PostMenu.jsx';
 import RichText from './RichText.jsx';
 import '../styles/global.css';
@@ -162,13 +163,8 @@ export default function FeedCard({
                             <line x1="12" y1="2" x2="12" y2="15" />
                         </svg>
                     </button>
-                    <span className="fc-btn fc-views" aria-label={`${post.view_count ?? 0} views`}>
-                        <svg width="17" height="17" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" strokeWidth="2"
-                            strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                            <circle cx="12" cy="12" r="3" />
-                        </svg>
+                    <span className="fc-btn fc-views" title="Metrics" aria-label={`${post.view_count ?? 0} views`}>
+                        <BarChart2 size={17} strokeWidth={2} />
                         <span>{formatMetric(post.view_count)}</span>
                     </span>
                 </div>

@@ -1,7 +1,6 @@
 # confessions, comments, trending, feed
 from flask import Blueprint, request, jsonify
 import mysql.connector
-import redis
 
 from db import get_db
 from helpers import (
@@ -11,7 +10,6 @@ from helpers import (
 )
 from security import looks_like_image
 from cloudinary_client import upload_image, delete_image
-from redis_client import queue_post_views
 
 bp = Blueprint('posts', __name__)
 
@@ -537,12 +535,23 @@ def register_post_views():
         except (ValueError, TypeError):
             return jsonify({'status': 'error', 'message': 'post_ids must be integers'}), 400
 
+        conn = cursor = None
         try:
-            queue_post_views(clean_ids)
-        except redis.RedisError as e:
-            print(f'[redis-error] {request.path}: {e}')
-
-        return jsonify({'status': 'success'}), 200
+            conn = get_db()
+            cursor = conn.cursor()
+            placeholders = ','.join(['%s'] * len(clean_ids))
+            cursor.execute(
+                f'UPDATE posts SET view_count = COALESCE(view_count, 0) + 1 WHERE id IN ({placeholders})',
+                clean_ids
+            )
+            conn.commit()
+            return jsonify({'status': 'success'}), 200
+        except mysql.connector.Error as err:
+            print(f'[db-error] {request.path}: {err}')
+            return jsonify({'status': 'error', 'message': 'A database error occurred'}), 500
+        finally:
+            if cursor: cursor.close()
+            if conn: conn.close()
     except Exception as e:
         print(f'[error] {request.path}: {e}')
         return jsonify({'status': 'error', 'message': 'An internal error occurred'}), 500

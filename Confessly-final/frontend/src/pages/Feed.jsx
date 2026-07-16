@@ -39,8 +39,22 @@ export default function Feed() {
     const viewCountedRef   = useRef(new Set());
     const viewPendingRef   = useRef(new Set());
 
-    if (!viewObserverRef.current) {
-        viewObserverRef.current = new IntersectionObserver((entries) => {
+    function registerPostNode(node, postId) {
+        const nodes = viewNodesRef.current;
+        const prev = nodes.get(postId);
+        const observer = viewObserverRef.current;
+        if (prev && prev !== node && observer) observer.unobserve(prev);
+        if (node) {
+            node.dataset.postId = String(postId);
+            nodes.set(postId, node);
+            if (observer) observer.observe(node);
+        } else {
+            nodes.delete(postId);
+        }
+    }
+
+    useEffect(() => {
+        const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
                 const postId = entry.target.dataset.postId;
                 if (!postId) return;
@@ -50,6 +64,9 @@ export default function Feed() {
                         viewCountedRef.current.add(postId);
                         viewPendingRef.current.add(postId);
                         viewTimersRef.current.delete(postId);
+                        setPosts(prev => prev.map(p =>
+                            String(p.id) === postId ? { ...p, view_count: (p.view_count ?? 0) + 1 } : p
+                        ));
                     }, 1000);
                     viewTimersRef.current.set(postId, timer);
                 } else {
@@ -61,24 +78,10 @@ export default function Feed() {
                 }
             });
         }, { threshold: 0.5 });
-    }
 
-    function registerPostNode(node, postId) {
-        const observer = viewObserverRef.current;
-        if (!observer) return;
-        const nodes = viewNodesRef.current;
-        const prev = nodes.get(postId);
-        if (prev && prev !== node) observer.unobserve(prev);
-        if (node) {
-            node.dataset.postId = String(postId);
-            observer.observe(node);
-            nodes.set(postId, node);
-        } else {
-            nodes.delete(postId);
-        }
-    }
+        viewObserverRef.current = observer;
+        viewNodesRef.current.forEach((node) => observer.observe(node));
 
-    useEffect(() => {
         const flush = setInterval(() => {
             if (viewPendingRef.current.size === 0) return;
             const ids = Array.from(viewPendingRef.current).map(Number);
@@ -93,8 +96,10 @@ export default function Feed() {
 
         return () => {
             clearInterval(flush);
-            viewObserverRef.current?.disconnect();
+            observer.disconnect();
+            viewObserverRef.current = null;
             viewTimersRef.current.forEach((timer) => clearTimeout(timer));
+            viewTimersRef.current.clear();
         };
     }, []);
 

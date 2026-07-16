@@ -49,3 +49,31 @@ def ensure_categories():
     finally:
         if cursor: cursor.close()
         if conn: conn.close()
+
+
+def ensure_post_metric_columns():
+    # guarantees view_count/engagement_count exist even if init_db.py was never run
+    conn = cursor = None
+    try:
+        conn = get_db()
+        cursor = conn.cursor()
+        for column, ddl in (
+            ('view_count', 'view_count INT NOT NULL DEFAULT 0'),
+            ('engagement_count', 'engagement_count INT NOT NULL DEFAULT 0'),
+        ):
+            cursor.execute(
+                '''
+                SELECT COUNT(*) FROM information_schema.COLUMNS
+                WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'posts' AND COLUMN_NAME = %s
+                ''',
+                (column,),
+            )
+            if cursor.fetchone()[0] == 0:
+                cursor.execute(f'ALTER TABLE posts ADD COLUMN {ddl}')
+                print(f'[boot] added posts.{column}')
+        conn.commit()
+    except Exception as e:
+        print(f'[boot] post metric column check skipped: {e}')
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
