@@ -826,19 +826,6 @@
   padding-top:     14px;
 }
 
-/* LEFT: comment + like grouped together */
-.fc-footer-left {
-  display:     flex;
-  align-items: center;
-  gap:         20px;
-}
-
-/* RIGHT: share + views grouped together */
-.fc-footer-right {
-  display:     flex;
-  align-items: center;
-  gap:         20px;
-}
 
 /* action button base */
 .fc-btn {

@@ -121,53 +121,49 @@ export default function FeedCard({
             )}
 
             <div className="fc-footer">
-                <div className="fc-footer-left">
-                    <button
-                        className="fc-btn fc-comment"
-                        onClick={(e) => { e.stopPropagation(); onComment && onComment(post.id); }}
-                        aria-label="Comments"
-                    >
-                        <svg width="17" height="17" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" strokeWidth="2"
-                            strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                        </svg>
-                        <span>{formatMetric(post.comments_count)}</span>
-                    </button>
-                    <button
-                        className={`fc-btn fc-like${isLiked ? ' fc-liked' : ''}`}
-                        onClick={(e) => { e.stopPropagation(); onLike && onLike(post.id); }}
-                        aria-label={isLiked ? 'Unlike' : 'Like'}
-                        aria-pressed={isLiked}
-                    >
-                        <svg width="17" height="17" viewBox="0 0 24 24"
-                            fill={isLiked ? 'currentColor' : 'none'}
-                            stroke="currentColor" strokeWidth="2"
-                            strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                        </svg>
-                        <span>{formatMetric(post.likes_count)}</span>
-                    </button>
-                </div>
-                <div className="fc-footer-right">
-                    <button
-                        className="fc-btn fc-share"
-                        onClick={(e) => { e.stopPropagation(); onShare && onShare(post); }}
-                        aria-label="Share this confession"
-                    >
-                        <svg width="17" height="17" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" strokeWidth="2"
-                            strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
-                            <polyline points="16 6 12 2 8 6" />
-                            <line x1="12" y1="2" x2="12" y2="15" />
-                        </svg>
-                    </button>
-                    <span className="fc-btn fc-views" title="Metrics" aria-label={`${post.view_count ?? 0} views`}>
-                        <BarChart2 size={17} strokeWidth={2} />
-                        <span>{formatMetric(post.view_count)}</span>
-                    </span>
-                </div>
+                <button
+                    className="fc-btn fc-comment"
+                    onClick={(e) => { e.stopPropagation(); onComment && onComment(post.id); }}
+                    aria-label="Comments"
+                >
+                    <svg width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" strokeWidth="2"
+                        strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                    </svg>
+                    <span>{formatMetric(post.comments_count)}</span>
+                </button>
+                <button
+                    className="fc-btn fc-share"
+                    onClick={(e) => { e.stopPropagation(); onShare && onShare(post); }}
+                    aria-label="Share this confession"
+                >
+                    <svg width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" strokeWidth="2"
+                        strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+                        <polyline points="16 6 12 2 8 6" />
+                        <line x1="12" y1="2" x2="12" y2="15" />
+                    </svg>
+                </button>
+                <button
+                    className={`fc-btn fc-like${isLiked ? ' fc-liked' : ''}`}
+                    onClick={(e) => { e.stopPropagation(); onLike && onLike(post.id); }}
+                    aria-label={isLiked ? 'Unlike' : 'Like'}
+                    aria-pressed={isLiked}
+                >
+                    <svg width="17" height="17" viewBox="0 0 24 24"
+                        fill={isLiked ? 'currentColor' : 'none'}
+                        stroke="currentColor" strokeWidth="2"
+                        strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                    </svg>
+                    <span>{formatMetric(post.likes_count)}</span>
+                </button>
+                <span className="fc-btn fc-views" title="Metrics" aria-label={`${post.view_count ?? 0} views`}>
+                    <BarChart2 size={17} strokeWidth={2} />
+                    <span>{formatMetric(post.view_count)}</span>
+                </span>
             </div>
         </article>
     );

@@ -111,12 +111,6 @@
 .pd-stat svg { flex-shrink: 0; }
 
 /* right side of footer: save + share grouped */
-.pd-footer-right {
-  display:     flex;
-  align-items: center;
-  gap:         4px;
-}
-
 .pd-save-btn:hover {
   background: rgba(255, 255, 255, 0.05) !important;
   color:      #aaaaaa !important;

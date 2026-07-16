@@ -438,15 +438,16 @@ def get_trending():
                        COALESCE(p.view_count, 0) as view_count,
                        COALESCE(p.engagement_count, 0) as engagement_count,
                        (
-                           COALESCE(p.view_count, 0) * 1
-                           + (SELECT COUNT(*) FROM reactions r WHERE r.item_id = p.id AND r.item_type = 'post' AND r.reaction_type = 'like') * 3
-                           + (SELECT COUNT(*) FROM comments c WHERE c.post_id = p.id) * 5
+                           (COALESCE(p.view_count, 0) * 1)
+                           + ((SELECT COUNT(*) FROM reactions r WHERE r.item_id = p.id AND r.item_type = 'post' AND r.reaction_type = 'like') * 3)
+                           + ((SELECT COUNT(*) FROM comments c WHERE c.post_id = p.id) * 5)
                        ) AS metric_score
                 FROM posts p
                 JOIN profiles pr ON p.profile_id = pr.id
                 JOIN categories cat ON p.category_id = cat.id
                 JOIN users u ON u.id = pr.user_id
                 WHERE ''' + BLOCKED_FILTER + '''
+                AND p.created_at >= NOW() - INTERVAL 48 HOUR
                 ORDER BY metric_score DESC, p.created_at DESC
                 LIMIT 10
             ''', (request.profile_id, request.user_id))

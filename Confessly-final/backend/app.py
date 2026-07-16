@@ -7,7 +7,6 @@ from apscheduler.schedulers.background import BackgroundScheduler
 
 from config import MAX_CONTENT_LENGTH, FLASK_SECRET_KEY, FRONTEND_URL
 from db import init_db_pool, get_db, ensure_categories, ensure_post_metric_columns
-from scoring import calculate_trending_score
 from routes import auth, oauth, posts, users, profiles, notifications, admin
 
 app = Flask(__name__)
@@ -49,27 +48,24 @@ def health_check():
 
 
 def recalculate_trending_scores():
-    # runs hourly, recalcs scores for posts from the last 14 days
+    # runs hourly, locks in weighted metric scores for posts from the last 48 hours
     print(f'[cron] recalculating trending scores at {datetime.now(timezone.utc).isoformat()}')
     conn = cursor = None
     try:
         conn = get_db()
         cursor = conn.cursor(dictionary=True)
         cursor.execute('''
-            SELECT p.id, p.created_at,
+            SELECT p.id,
+                   COALESCE(p.view_count, 0) as view_count,
                    (SELECT COUNT(*) FROM reactions r WHERE r.item_id = p.id AND r.item_type = 'post' AND r.reaction_type = 'like') as likes_count,
                    (SELECT COUNT(*) FROM comments c WHERE c.post_id = p.id) as comments_count
             FROM posts p
-            WHERE p.created_at >= NOW() - INTERVAL 14 DAY
+            WHERE p.created_at >= NOW() - INTERVAL 48 HOUR
         ''')
         posts_rows = cursor.fetchall()
         updated = 0
         for post in posts_rows:
-            score = calculate_trending_score(
-                likes_count=post['likes_count'],
-                comments_count=post['comments_count'],
-                created_at_str=str(post['created_at']) if post['created_at'] else None,
-            )
+            score = (post['view_count'] * 1) + (post['likes_count'] * 3) + (post['comments_count'] * 5)
             cursor.execute('UPDATE posts SET trending_score = %s WHERE id = %s', (score, post['id']))
             updated += 1
         conn.commit()

@@ -11,22 +11,6 @@ import { apiFetch, apiUrl } from '../api.js';
 import '../styles/global.css';
 import '../styles/feed.css';
 
-const VIEWED_POSTS_KEY = 'confessly-viewed-posts';
-
-function loadViewedPosts() {
-    try {
-        return new Set(JSON.parse(sessionStorage.getItem(VIEWED_POSTS_KEY) || '[]'));
-    } catch {
-        return new Set();
-    }
-}
-
-function saveViewedPosts(set) {
-    try {
-        sessionStorage.setItem(VIEWED_POSTS_KEY, JSON.stringify(Array.from(set)));
-    } catch { /* ignore */ }
-}
-
 export default function Feed() {
     const navigate = useNavigate();
 
@@ -52,7 +36,6 @@ export default function Feed() {
     const viewObserverRef = useRef(null);
     const viewNodesRef     = useRef(new Map());
     const viewTimersRef    = useRef(new Map());
-    const viewCountedRef   = useRef(loadViewedPosts());
     const viewPendingRef   = useRef(new Set());
 
     function registerPostNode(node, postId) {
@@ -75,12 +58,11 @@ export default function Feed() {
                 const postId = entry.target.dataset.postId;
                 if (!postId) return;
                 if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
-                    if (viewCountedRef.current.has(postId) || viewTimersRef.current.has(postId)) return;
+                    if (sessionStorage.getItem(`viewed_${postId}`)) return;
+                    if (viewTimersRef.current.has(postId)) return;
                     const timer = setTimeout(() => {
-                        viewCountedRef.current.add(postId);
-                        saveViewedPosts(viewCountedRef.current);
-                        viewPendingRef.current.add(postId);
                         viewTimersRef.current.delete(postId);
+                        viewPendingRef.current.add(postId);
                         setPosts(prev => prev.map(p =>
                             String(p.id) === postId ? { ...p, view_count: (p.view_count ?? 0) + 1 } : p
                         ));
@@ -101,13 +83,17 @@ export default function Feed() {
 
         const flush = setInterval(() => {
             if (viewPendingRef.current.size === 0) return;
-            const ids = Array.from(viewPendingRef.current).map(Number);
+            const ids = Array.from(viewPendingRef.current);
             viewPendingRef.current.clear();
             fetch(apiUrl('/api/posts/views'), {
                 method: 'POST',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ post_ids: ids }),
+                body: JSON.stringify({ post_ids: ids.map(Number) }),
+            }).then((res) => {
+                if (res.ok) {
+                    ids.forEach((id) => sessionStorage.setItem(`viewed_${id}`, 'true'));
+                }
             }).catch(() => {});
         }, 3500);
 
