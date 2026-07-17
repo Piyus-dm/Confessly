@@ -48,24 +48,29 @@ def health_check():
 
 
 def recalculate_trending_scores():
-    # runs hourly, locks in weighted metric scores for posts from the last 48 hours
+    # runs hourly, locks in a hackernews-style gravity score so old posts naturally decay
     print(f'[cron] recalculating trending scores at {datetime.now(timezone.utc).isoformat()}')
     conn = cursor = None
     try:
         conn = get_db()
         cursor = conn.cursor(dictionary=True)
         cursor.execute('''
-            SELECT p.id,
+            SELECT p.id, p.created_at,
                    COALESCE(p.view_count, 0) as view_count,
                    (SELECT COUNT(*) FROM reactions r WHERE r.item_id = p.id AND r.item_type = 'post' AND r.reaction_type = 'like') as likes_count,
                    (SELECT COUNT(*) FROM comments c WHERE c.post_id = p.id) as comments_count
             FROM posts p
-            WHERE p.created_at >= NOW() - INTERVAL 48 HOUR
+            WHERE p.created_at >= NOW() - INTERVAL 14 DAY
         ''')
         posts_rows = cursor.fetchall()
         updated = 0
         for post in posts_rows:
-            score = (post['view_count'] * 1) + (post['likes_count'] * 3) + (post['comments_count'] * 5)
+            created_at = post['created_at']
+            if created_at.tzinfo is None:
+                created_at = created_at.replace(tzinfo=timezone.utc)
+            age_hours = max(0.0, (datetime.now(timezone.utc) - created_at).total_seconds() / 3600.0)
+            numerator = (post['view_count'] * 1) + (post['likes_count'] * 5) + (post['comments_count'] * 10)
+            score = numerator / ((age_hours + 2) ** 1.5)
             cursor.execute('UPDATE posts SET trending_score = %s WHERE id = %s', (score, post['id']))
             updated += 1
         conn.commit()

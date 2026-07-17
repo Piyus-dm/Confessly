@@ -434,21 +434,22 @@ def get_trending():
                        (SELECT COUNT(*) FROM reactions r WHERE r.item_id = p.id AND r.item_type = 'post' AND r.reaction_type = 'like') as likes_count,
                        (SELECT COUNT(*) FROM comments c WHERE c.post_id = p.id) as comments_count,
                        (SELECT COUNT(*) FROM reactions r WHERE r.item_id = p.id AND r.item_type = 'post' AND r.reaction_type = 'like' AND r.profile_id = %s) as liked_by_user,
-                       COALESCE(p.trending_score, 0.0) AS trending_score,
                        COALESCE(p.view_count, 0) as view_count,
                        COALESCE(p.engagement_count, 0) as engagement_count,
                        (
-                           (COALESCE(p.view_count, 0) * 1)
-                           + ((SELECT COUNT(*) FROM reactions r WHERE r.item_id = p.id AND r.item_type = 'post' AND r.reaction_type = 'like') * 3)
-                           + ((SELECT COUNT(*) FROM comments c WHERE c.post_id = p.id) * 5)
-                       ) AS metric_score
+                           (
+                               COALESCE(p.view_count, 0) * 1
+                               + (SELECT COUNT(*) FROM reactions r WHERE r.item_id = p.id AND r.item_type = 'post' AND r.reaction_type = 'like') * 5
+                               + (SELECT COUNT(*) FROM comments c WHERE c.post_id = p.id) * 10
+                           )
+                           / POWER((TIMESTAMPDIFF(HOUR, p.created_at, NOW()) + 2), 1.5)
+                       ) AS trending_score
                 FROM posts p
                 JOIN profiles pr ON p.profile_id = pr.id
                 JOIN categories cat ON p.category_id = cat.id
                 JOIN users u ON u.id = pr.user_id
                 WHERE ''' + BLOCKED_FILTER + '''
-                AND p.created_at >= NOW() - INTERVAL 48 HOUR
-                ORDER BY metric_score DESC, p.created_at DESC
+                ORDER BY trending_score DESC
                 LIMIT 10
             ''', (request.profile_id, request.user_id))
             rows = cursor.fetchall()

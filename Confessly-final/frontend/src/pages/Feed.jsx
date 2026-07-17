@@ -58,14 +58,22 @@ export default function Feed() {
                 const postId = entry.target.dataset.postId;
                 if (!postId) return;
                 if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
-                    if (sessionStorage.getItem(`viewed_${postId}`)) return;
+                    const viewedPosts = JSON.parse(localStorage.getItem('viewed_posts') || '[]');
+                    if (viewedPosts.includes(postId)) return;
                     if (viewTimersRef.current.has(postId)) return;
                     const timer = setTimeout(() => {
                         viewTimersRef.current.delete(postId);
-                        viewPendingRef.current.add(postId);
+
+                        const current = JSON.parse(localStorage.getItem('viewed_posts') || '[]');
+                        if (current.includes(postId)) return;
+                        current.push(postId);
+                        localStorage.setItem('viewed_posts', JSON.stringify(current));
+
                         setPosts(prev => prev.map(p =>
                             String(p.id) === postId ? { ...p, view_count: (p.view_count ?? 0) + 1 } : p
                         ));
+
+                        viewPendingRef.current.add(postId);
                     }, 1000);
                     viewTimersRef.current.set(postId, timer);
                 } else {
@@ -83,17 +91,13 @@ export default function Feed() {
 
         const flush = setInterval(() => {
             if (viewPendingRef.current.size === 0) return;
-            const ids = Array.from(viewPendingRef.current);
+            const ids = Array.from(viewPendingRef.current).map(Number);
             viewPendingRef.current.clear();
             fetch(apiUrl('/api/posts/views'), {
                 method: 'POST',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ post_ids: ids.map(Number) }),
-            }).then((res) => {
-                if (res.ok) {
-                    ids.forEach((id) => sessionStorage.setItem(`viewed_${id}`, 'true'));
-                }
+                body: JSON.stringify({ post_ids: ids }),
             }).catch(() => {});
         }, 3500);
 
